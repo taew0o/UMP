@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class MemberForm {
+public class SignupForm {
     @Id
     @GeneratedValue
     private Long id;
