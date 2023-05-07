@@ -10,23 +10,24 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import ppkjch.ump.entity.LoginForm;
-import ppkjch.ump.entity.Member;
+import ppkjch.ump.entity.User;
 import ppkjch.ump.entity.SignupForm;
-import ppkjch.ump.service.MemberService;
+import ppkjch.ump.service.UserService;
 
 @Controller
 @RequiredArgsConstructor
-public class MemberController {
+public class UserController {
 
-    private final MemberService memberService;
+    private final UserService userService;
     //회원가입 처리 메서드
     @PostMapping("/signup")
     public String signup(@ModelAttribute("SignupForm") SignupForm signupForm){
-        Member member = new Member();
-        member.setName(signupForm.getName());
-        member.setPassword(signupForm.getPassword());
+        User user = new User(); //유저 새로 만들어 form정보 받아 저장
+        user.setId(signupForm.getId());
+        user.setName(signupForm.getName());
+        user.setPassword(signupForm.getPassword());
 
-        memberService.join(member);
+        userService.join(user);
 
         return "redirect:/";
     }

@@ -8,10 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class LoginForm {
-    @Id
-    @GeneratedValue
     private Long id;
-
     private String name;
     private String password;
 }

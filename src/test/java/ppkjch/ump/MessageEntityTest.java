@@ -7,27 +7,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import ppkjch.ump.entity.Member;
-import ppkjch.ump.repository.JpaMemberRepository;
-import ppkjch.ump.service.MemberService;
+import ppkjch.ump.entity.User;
+import ppkjch.ump.repository.JpaUserRepository;
+import ppkjch.ump.service.UserService;
 
 @Transactional
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
 
-public class MemberEntityTest {
+public class MessageEntityTest {
 
     @Autowired
-    public JpaMemberRepository jpaMemberRepository;
+    public JpaUserRepository jpaUserRepository;
     @Autowired
-    public MemberService memberService;
+    public UserService userService;
 
     @Test
     @Rollback(value = true)
     public void 회원_엔티티(){
-        Member member = new Member();
-
-        member.setName("wuseong");
-        memberService.join(member);
+        User user = new User();
+        user.setName("wuseong2");
+        user.setPassword("1234");
+        userService.join(user);
     }
 }
