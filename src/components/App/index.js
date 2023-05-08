@@ -1,16 +1,23 @@
 import React, { useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Messenger from "../Messenger";
 import RegisterPage from "../RegisterPage";
 import LoginPage from "../LoginPage";
 
-export default function App() {
-  // const [isLogin, setLogin] = useState(false);
+const App = () => {
+  const [isLogin, setLogin] = useState(false);
   return (
     <div className="App">
-      {/* {isLogin ? <Messenger /> : <LoginPage />} */}
-      {/* <Messenger /> */}
-      {/* <RegisterPage /> */}
-      <LoginPage />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={isLogin ? <Messenger /> : <LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          {/* <Messenger /> */}
+          {/* <RegisterPage /> */}
+          {/* <LoginPage /> */}
+        </Routes>
+      </BrowserRouter>
     </div>
   );
-}
+};
+export default App;

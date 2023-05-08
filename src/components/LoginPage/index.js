@@ -1,10 +1,14 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Login.css";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input } from "antd";
 
 const LoginPage = () => {
+  const navigate = useNavigate();
+  const toRegister = () => {
+    navigate("/register");
+  };
   const onFinish = (values) => {
     console.log("Received values of form: ", values);
   };
@@ -61,7 +65,14 @@ const LoginPage = () => {
         <Button type="primary" htmlType="submit" className="login-form-button">
           Log in
         </Button>
-        Or <Link to="/Register">register now!</Link>
+        <Button
+          type="primary"
+          htmlType="submit"
+          className="register-form-button"
+          onClick={toRegister}
+        >
+          Sign Up
+        </Button>
       </Form.Item>
     </Form>
   );
