@@ -41,7 +41,7 @@ const App = () => {
       <Sider style={{ height: '100vh', position: 'fixed', left: 0 }}>
         <div
           style={{
-            height: 32,
+            height: 0,
             margin: 16,
             background: 'rgba(255, 255, 255, 0.2)',
           }}
@@ -53,16 +53,16 @@ const App = () => {
           onSelect={({ key }) => setSelectedPage(key)}
         >
           <Menu.Item key="1" icon={<UserOutlined />}>
-            Setting Page
+            설정
           </Menu.Item>
           <Menu.Item key="2" icon={<VideoCameraOutlined />}>
-            Friend Page
+            친구
           </Menu.Item>
           <Menu.Item key="3" icon={<UploadOutlined />}>
-            Calendar Page
+            캘린더
           </Menu.Item>
           <Menu.Item key="4" icon={<BarChartOutlined />}>
-            Chat Page
+            채팅
           </Menu.Item>
         </Menu>
       </Sider>
