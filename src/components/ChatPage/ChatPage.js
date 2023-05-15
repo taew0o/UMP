@@ -1,7 +1,14 @@
-import React from 'react';
+import React from "react";
+import ConversationList from "../ConversationList";
+import { useNavigate } from "react-router-dom";
 
 const ChatPage = () => {
-  return <div>환영합니다! 이곳은 채팅 페이지입니다.</div>;
+  const isLogin = true; // 로그인 됐는지는 서버 연결하면 제대로 바꿈
+  const navigate = useNavigate();
+  const toLogin = () => {
+    navigate("/login");
+  };
+  return <div>{isLogin ? <ConversationList /> : toLogin()}</div>;
 };
 
 export default ChatPage;
