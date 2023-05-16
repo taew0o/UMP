@@ -1,4 +1,4 @@
-package ppkjch.ump.entity;
+package ppkjch.ump;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;

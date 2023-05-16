@@ -48,7 +48,7 @@ public class UserEntityTest {
         LocalDateTime dateTime = LocalDateTime.of(date, time);
         
         message.setSendTime(dateTime);
-        message.setTextMsg("박태우는 보지를 존나 좋아한다");
+        message.setTextMsg("박태우는 를 존나 좋아한다");
         message.setChattingRoom(chattingRoom);
         message.setUser(user);
         

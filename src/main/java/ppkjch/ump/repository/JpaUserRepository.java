@@ -1,12 +1,14 @@
 package ppkjch.ump.repository;
 
 import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ppkjch.ump.entity.User;
 
 @Repository
 @RequiredArgsConstructor
+@Transactional
 public class JpaUserRepository {
     private final EntityManager em;
     public void save(User user){

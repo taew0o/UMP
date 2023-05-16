@@ -7,11 +7,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import ppkjch.ump.entity.LoginForm;
+import org.springframework.web.bind.annotation.*;
+import ppkjch.ump.LoginForm;
 import ppkjch.ump.entity.User;
-import ppkjch.ump.entity.SignupForm;
+import ppkjch.ump.SignupForm;
 import ppkjch.ump.service.UserService;
 
 @Controller
@@ -21,7 +20,9 @@ public class UserController {
     private final UserService userService;
     //회원가입 처리 메서드
     @PostMapping("/signup")
-    public String signup(@ModelAttribute("SignupForm") SignupForm signupForm){
+    @ResponseBody
+    @CrossOrigin(origins = "http://localhost:3000")
+    public User signup(@RequestBody SignupForm signupForm){
         User user = new User(); //유저 새로 만들어 form정보 받아 저장
         user.setId(signupForm.getId());
         user.setName(signupForm.getName());
@@ -29,7 +30,7 @@ public class UserController {
 
         userService.join(user);
 
-        return "redirect:/";
+        return user;
     }
     //로그인 처리 메서드
     @PostMapping("/login")
