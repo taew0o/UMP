@@ -1,12 +1,13 @@
 package ppkjch.ump.entity;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -14,11 +15,14 @@ import lombok.Setter;
 @Setter
 public class User{
     @Id
-    @GeneratedValue
     @NotNull
-    private Long id;
+    @Column(name = "user_id")
+    private String id;
     @NotNull
     private String name;
     @NotNull
     private String password;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Friend> friends = new ArrayList<>();
 }

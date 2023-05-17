@@ -28,7 +28,7 @@ const LoginPage = () =>{
             },
             data:{
                 id:account.id,
-                passwd:account.passwd,
+                password:account.passwd,
                 name:"gopumpark!gopumpark!gopumpark!"
             }
 
