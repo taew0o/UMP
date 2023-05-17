@@ -12,8 +12,11 @@ import java.time.LocalDateTime;
 public class ChattingRoom {
     @Id
     @GeneratedValue
+    @Column(name = "chattingroom_id")
     private Long id;
+
     public int numPerson = 0;
+
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createTime;
 

@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 public class Message {
     @Id
     @GeneratedValue
+    @Column(name = "message_id")
     private Long id;
 
     private String textMsg;

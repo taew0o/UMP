@@ -8,7 +8,16 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SignupForm {
-    private Long id;
+    private String id;
     private String name;
     private String password;
+
+    @Override
+    public String toString() {
+        return "SignupForm{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
 }
