@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import RegisterPage from "../RegisterPage";
 import LoginPage from "../LoginPage";
 import Home from "../Home";
+import React from 'react';
 
 const Router = () => {
   return (

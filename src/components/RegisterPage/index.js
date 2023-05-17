@@ -10,7 +10,7 @@ import {
   Row,
   Select,
 } from "antd";
-
+import React from 'react'
 import { useState } from "react";
 const { Option } = Select;
 const formItemLayout = {
