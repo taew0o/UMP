@@ -27,15 +27,13 @@ export default function FriendList(props) {
 
   return (
     <>
-      <Button className="friend-button" onClick={() => setModalIsOpen(true)}>
-        <div className="friend-list-item">
-          <img className="friend-photo" src={photo} alt="friend" />
-          <div className="friend-info">
-            <h1 className="friend-title">{name}</h1>
-            <p className="friend-snippet">{text}</p>
-          </div>
+      <div className="friend-list-item" onClick={() => setModalIsOpen(true)}>
+        <img className="friend-photo" src={photo} alt="friend" />
+        <div className="friend-info">
+          <h1 className="friend-title">{name}</h1>
+          <p className="friend-snippet">{text}</p>
         </div>
-      </Button>
+      </div>
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={() => setModalIsOpen(false)}

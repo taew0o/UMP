@@ -9,6 +9,11 @@
     padding: 10px;
   }
   
+  .friend-list-item:hover {
+    background: #eeeef1;
+    cursor: pointer;
+  }
+  
   .friend-photo {
     width: 50px;
     height: 50px;

@@ -8,11 +8,12 @@ import FriendPage from "../FriendPage/FriendPage";
 import CalendarPage from "../CalendarPage/CalendarPage";
 import ChatPage from "../ChatPage/ChatPage";
 import { Route, Routes, useNavigate } from "react-router-dom";
+import MessageList from "../MessageList";
 
 const { Header, Content, Footer, Sider } = Layout;
 
 const Home = () => {
-  const [selectedPage, setSelectedPage] = useState("1");
+  const [selectedPage, setSelectedPage] = useState();
   const navigate = useNavigate();
   function movePage(page) {
     navigate("/" + page);
@@ -93,6 +94,7 @@ const Home = () => {
                   <Route path="/friend" element={<FriendPage />} />
                   <Route path="/calendar" element={<CalendarPage />} />
                   <Route path="/setting" element={<SettingPage />} />
+                  <Route path="/room" element={<MessageList />} />
                 </Routes>
               </div>
             </Content>
