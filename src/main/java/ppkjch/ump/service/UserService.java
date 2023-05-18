@@ -20,9 +20,8 @@ public class UserService {
     }
 
     public Long addFriend(Friend friend){
-        Long id = friend.getId();
         jpaFriendRepository.save(friend);
-        return id;
+        return friend.getId();
     }
 
     public User findMember(Long memberId){

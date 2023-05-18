@@ -36,7 +36,7 @@ public class FriendEntityTest {
 
     @Test
     @Rollback(value = false)
-    public void 메세지_엔티티(){
+    public void 친구_엔티티(){
         User user1 = new User(); //유저 만들기
         user1.setId("taewoo");
         user1.setName("taewoo");
@@ -46,6 +46,9 @@ public class FriendEntityTest {
         user2.setId("wuseong");
         user2.setName("wuseong");
         user2.setPassword("12345");
+
+        userService.join(user1);// 유저 DB에 저장
+        userService.join(user2);
 
         Friend f = new Friend();
         f.setUser1(user1);
