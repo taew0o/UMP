@@ -8,7 +8,9 @@ import LoginPage from "./test/test";
 
 ReactDOM.render(
   <BrowserRouter>
-    <LoginPage />
+    {/* <LoginPage /> */}
+
+    <App />
   </BrowserRouter>,
   document.getElementById("root")
 );
