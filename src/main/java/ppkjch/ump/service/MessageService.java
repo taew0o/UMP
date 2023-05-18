@@ -12,7 +12,7 @@ public class MessageService {
 
     final private JpaMessageRepository jpaMessageRepository;
 
-    public Long send(Message message){ //보내고 MessageID반환
+    public Long send(Message message){ //DB로 보내고 MessageID반환
         jpaMessageRepository.save(message);
         return message.getId();
     }

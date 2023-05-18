@@ -2,7 +2,9 @@ package ppkjch.ump.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ppkjch.ump.entity.Friend;
 import ppkjch.ump.entity.User;
+import ppkjch.ump.repository.JpaFriendRepository;
 import ppkjch.ump.repository.JpaUserRepository;
 
 @Service
@@ -10,10 +12,17 @@ import ppkjch.ump.repository.JpaUserRepository;
 public class UserService {
 
     private final JpaUserRepository jpaMemberRepository;
+    private final JpaFriendRepository jpaFriendRepository;
 
-    public Long join(User user){
-        jpaMemberRepository.save(user);
+    public String join(User user){
+            jpaMemberRepository.save(user);
         return user.getId();
+    }
+
+    public Long addFriend(Friend friend){
+        Long id = friend.getId();
+        jpaFriendRepository.save(friend);
+        return id;
     }
 
     public User findMember(Long memberId){
