@@ -1,101 +1,106 @@
-import React from 'react';
-import "./CalendarPage.css"
-import { Badge, Calendar } from 'antd';
-const getListData = (value) => {
-  let listData;//calendar 표시
-  switch (value.date()) {
-    case 8:
-      listData = [
-        {
-          type: 'warning',
-          content: 'This is warning event.',
-        },
-        {
-          type: 'success',
-          content: 'This is usual event.',
-        },
-      ];
-      break;
-    case 10:
-      listData = [
-        {
-          type: 'warning',
-          content: 'This is warning event.',
-        },
-        {
-          type: 'success',
-          content: 'This is usual event.',
-        },
-        {
-          type: 'error',
-          content: 'This is error event.',
-        },
-      ];
-      break;
-    case 15:
-      listData = [
-        {
-          type: 'warning',
-          content: 'This is warning event',
-        },
-        {
-          type: 'success',
-          content: 'This is very long usual event。。....',
-        },
-        {
-          type: 'error',
-          content: 'This is error event 1.',
-        },
-        {
-          type: 'error',
-          content: 'This is error event 2.',
-        },
-        {
-          type: 'error',
-          content: 'This is error event 3.',
-        },
-        {
-          type: 'error',
-          content: 'This is error event 4.',
-        },
-      ];
-      break;
-    default:
-  }
-  return listData || [];
-};
-const getMonthData = (value) => {
-  if (value.month() === 8) {
-    return 1394;
-  }
-};
+import React, { useState } from 'react';
+import './CalendarPage.css';
+import { Badge, Calendar, Modal, Input, Button, List } from 'antd';
+
 const CalendarPage = () => {
-  const monthCellRender = (value) => {
-    const num = getMonthData(value);
-    return num ? (
-      <div className="notes-month">
-        <section>{num}</section>
-        <span>Backlog number</span>
-      </div>
-    ) : null;
+  const [events, setEvents] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [editEventIndex, setEditEventIndex] = useState(null);
+  const [inputValue, setInputValue] = useState(''); // 추가: inputValue 상태
+
+  const handleDateClick = (value) => {
+    setSelectedDate(value);
+    setModalVisible(true);
   };
+
+  const handleModalCancel = () => {
+    setSelectedDate(null);
+    setModalVisible(false);
+    setEditEventIndex(null);
+  };
+
   const dateCellRender = (value) => {
-    const listData = getListData(value);
+    const dateEvents = events.filter(event => event.date.isSame(value, 'day'));
+
     return (
-      <ul className="events">
-        {listData.map((item) => (
-          <li key={item.content}>
-            <Badge status={item.type} text={item.content} />
+      <ul className="event-list">
+        {dateEvents.map((elem, index) => (
+          <li key={index}>
+            <Badge status="success" text={elem.content} />
           </li>
         ))}
       </ul>
     );
   };
-  const cellRender = (current, info) => {
-    if (info.type === 'date') return dateCellRender(current);
-    if (info.type === 'month') return monthCellRender(current);
-    return info.originNode;
+
+  const handleOk = (content) => {
+    if (content && content.trim()) {
+      if (editEventIndex === null) {
+        // 새 이벤트 추가
+        const newEvent = { content: content.trim(), date: selectedDate };
+        const newEvents = [...events, newEvent];
+        setEvents(newEvents);
+      } else {
+        // 기존 이벤트 수정
+        const newEvents = events.map((event, index) => {
+          if (index === editEventIndex) {
+            return { content: content.trim(), date: selectedDate };
+          } else {
+            return event;
+          }
+        });
+        setEvents(newEvents);
+        setEditEventIndex(null);
+      }
+
+      setInputValue(''); // 추가: 입력창 비우기
+    }
+    handleModalCancel();
   };
-  return <Calendar className="my-calendar" cellRender={cellRender} />;
+
+  const handleDeleteEvent = (index) => {
+    const newEvents = events.filter((_, idx) => idx !== index);
+    setEvents(newEvents);
+  };
+
+  const getDateEvents = () => {
+    return events.filter(event => event.date.isSame(selectedDate, 'day'));
+  };
+
+  return (
+    <div>
+      <Calendar
+        className="my-calendar"
+        dateCellRender={dateCellRender}
+        onSelect={handleDateClick}
+      />
+      <Modal
+        title={`Events on ${selectedDate ? selectedDate.format('YYYY-MM-DD') : ''}`}
+        visible={modalVisible}
+        onCancel={handleModalCancel}
+        footer={null}
+      >
+        <Input
+          placeholder="Enter event"
+          value={inputValue} // 추가: inputValue 전달
+          onChange={(e) => setInputValue(e.target.value)} // 추가: 입력값에 따라 inputValue 업데이트
+          onPressEnter={(e) => handleOk(e.target.value)}
+        />
+        <Button onClick={() => handleOk()}>Save</Button>
+        <List
+          dataSource={getDateEvents()}
+          renderItem={(item, index) => (
+            <List.Item>
+              <span>{item.content}</span>
+              <Button onClick={() => { setEditEventIndex(index); }}>Edit</Button>
+              <Button onClick={() => handleDeleteEvent(index)}>Delete</Button>
+            </List.Item>
+          )}
+        />
+      </Modal>
+    </div>
+  );
 };
+
 export default CalendarPage;
