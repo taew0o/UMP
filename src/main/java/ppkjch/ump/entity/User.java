@@ -23,6 +23,7 @@ public class User{
     @NotNull
     private String password;
 
+    //객체 참조용(DB엔 안들감)
     @OneToMany(mappedBy = "user1", fetch = FetchType.LAZY) //friend 테이블의 user1에 매핑된 리스트
     private List<Friend> friends1 = new ArrayList<>();
 

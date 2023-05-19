@@ -1,5 +1,6 @@
 package ppkjch.ump.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ppkjch.ump.entity.Friend;
@@ -14,17 +15,19 @@ public class UserService {
     private final JpaUserRepository jpaMemberRepository;
     private final JpaFriendRepository jpaFriendRepository;
 
+    @Transactional
     public String join(User user){
             jpaMemberRepository.save(user);
         return user.getId();
     }
 
+    @Transactional
     public Long addFriend(Friend friend){
         jpaFriendRepository.save(friend);
         return friend.getId();
     }
 
-    public User findMember(Long memberId){
-        return jpaMemberRepository.findOne(memberId);
+    public User findUser(Long userId){
+        return jpaMemberRepository.findOne(userId);
     }
 }
