@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ppkjch.ump.entity.User;
 
+import java.util.List;
+
 @Repository
 @RequiredArgsConstructor
 @Transactional
@@ -18,3 +20,4 @@ public class JpaUserRepository {
         return em.find(User.class, id);
     }
 }
+

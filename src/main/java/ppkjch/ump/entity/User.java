@@ -23,6 +23,10 @@ public class User{
     @NotNull
     private String password;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<Friend> friends = new ArrayList<>();
+    //객체 참조용(DB엔 안들감)
+    @OneToMany(mappedBy = "user1", fetch = FetchType.LAZY) //friend 테이블의 user1에 매핑된 리스트
+    private List<Friend> friends1 = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user2", fetch = FetchType.LAZY) //friend 테이블의 user2에 매핑된 리스트
+    private List<Friend> friends2 = new ArrayList<>();
 }

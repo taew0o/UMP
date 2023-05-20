@@ -26,6 +26,7 @@ public class MessageEntityTest {
     @Rollback(value = true)
     public void 회원_엔티티(){
         User user = new User();
+        user.setId("jws1228");
         user.setName("wuseong2");
         user.setPassword("1234");
         userService.join(user);
