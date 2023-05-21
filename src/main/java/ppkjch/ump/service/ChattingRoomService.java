@@ -19,8 +19,9 @@ public class ChattingRoomService {
     private final JpaUserRepository jpaUserRepository;
 
     @Transactional
-    public Long makeRoom(int numPerson, List<String> userIds){
+    public Long makeRoom(List<String> userIds){
         //유저 채팅방 생성
+        int numPerson = userIds.size();
         List<UserChattingRoom> userChattingRooms = new ArrayList<>();
         for (String userId: userIds) {
             User findUser = jpaUserRepository.findOne(userId);
@@ -34,4 +35,7 @@ public class ChattingRoomService {
         jpaChattingRoomRepository.save(chattingRoom);
         return chattingRoom.getId();
     }
+
+//    public Long invite(List<String> userIds) {
+//    }
 }

@@ -36,6 +36,7 @@ public class UserController {
     }
     //로그인 처리 메서드
     @PostMapping("/login")
+    @CrossOrigin(origins = "http://localhost:3000")
     public String login(HttpServletRequest request, HttpServletResponse response, @RequestBody LoginForm loginForm) {
         HttpSession session = request.getSession();
         //로그인 검사
