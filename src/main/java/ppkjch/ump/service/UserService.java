@@ -11,7 +11,7 @@ public class UserService {
 
     private final JpaUserRepository jpaMemberRepository;
 
-    public Long join(User user){
+    public String join(User user){
         jpaMemberRepository.save(user);
         return user.getId();
     }
