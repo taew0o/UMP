@@ -1,4 +1,3 @@
-import React from "react"
 import {
   AutoComplete,
   Button,
@@ -11,7 +10,7 @@ import {
   Row,
   Select,
 } from "antd";
-
+import React from 'react'
 import { useState } from "react";
 const { Option } = Select;
 const formItemLayout = {
@@ -103,7 +102,7 @@ const RegisterPage = () => {
     >
       <Form.Item
         name="email"
-        label="E-mail"
+        label="메일"
         rules={[
           {
             type: "email",
@@ -120,7 +119,7 @@ const RegisterPage = () => {
 
       <Form.Item
         name="password"
-        label="Password"
+        label="비밀번호"
         rules={[
           {
             required: true,
@@ -134,7 +133,7 @@ const RegisterPage = () => {
 
       <Form.Item
         name="confirm"
-        label="Confirm Password"
+        label="비밀번호 확인"
         dependencies={["password"]}
         hasFeedback
         rules={[
@@ -159,7 +158,7 @@ const RegisterPage = () => {
 
       <Form.Item
         name="nickname"
-        label="Nickname"
+        label="이름"
         tooltip="What do you want others to call you?"
         rules={[
           {
@@ -174,7 +173,7 @@ const RegisterPage = () => {
 
       <Form.Item
         name="phone"
-        label="Phone Number"
+        label="전화번호"
         rules={[
           {
             required: true,
@@ -190,46 +189,10 @@ const RegisterPage = () => {
         />
       </Form.Item>
 
-      <Form.Item
-        name="donation"
-        label="Donation"
-        rules={[
-          {
-            required: true,
-            message: "Please input donation amount!",
-          },
-        ]}
-      >
-        <InputNumber
-          addonAfter={suffixSelector}
-          style={{
-            width: "100%",
-          }}
-        />
-      </Form.Item>
-
-      <Form.Item
-        name="website"
-        label="Website"
-        rules={[
-          {
-            required: true,
-            message: "Please input website!",
-          },
-        ]}
-      >
-        <AutoComplete
-          options={websiteOptions}
-          onChange={onWebsiteChange}
-          placeholder="website"
-        >
-          <Input />
-        </AutoComplete>
-      </Form.Item>
-
+    
       <Form.Item
         name="intro"
-        label="Intro"
+        label="자기소개"
         rules={[
           {
             required: true,
@@ -242,7 +205,7 @@ const RegisterPage = () => {
 
       <Form.Item
         name="gender"
-        label="Gender"
+        label="성별"
         rules={[
           {
             required: true,
@@ -257,30 +220,6 @@ const RegisterPage = () => {
         </Select>
       </Form.Item>
 
-      <Form.Item
-        label="Captcha"
-        extra="We must make sure that your are a human."
-      >
-        <Row gutter={8}>
-          <Col span={12}>
-            <Form.Item
-              name="captcha"
-              noStyle
-              rules={[
-                {
-                  required: true,
-                  message: "Please input the captcha you got!",
-                },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Button>Get captcha</Button>
-          </Col>
-        </Row>
-      </Form.Item>
 
       <Form.Item
         name="agreement"

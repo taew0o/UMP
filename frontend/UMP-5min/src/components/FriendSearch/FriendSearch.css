@@ -1,0 +1,21 @@
+.friend-search {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .friend-search-input {
+    background: #f4f4f8;
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: none;
+    font-size: 14px;
+  }
+  
+  .friend-search-input::placeholder {
+    text-align: center;
+  }
+  
+  .friend-search-input:focus::placeholder {
+    text-align: left;
+  }

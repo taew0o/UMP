@@ -20,6 +20,7 @@ const LoginPage = () =>{
         })
     }
     const signup = () => {
+
         axios({
             method:"post",
             url:"http://localhost:8080/signup",
