@@ -16,7 +16,7 @@ public class JpaUserRepository {
     public void save(User user){
         em.persist(user);
     }
-    public User findOne(Long id){
+    public User findOne(String id){
         return em.find(User.class, id);
     }
 }
