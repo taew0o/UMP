@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import './CalendarPage.css';
 import { Badge, Calendar, Modal, Input, Button, List } from 'antd';
 
@@ -7,7 +6,7 @@ const CalendarPage = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [editEventIndex, setEditEventIndex] = useState(null);
-  const [inputValue, setInputValue] = useState(''); // 추가: inputValue 상태
+  const [inputValue, setInputValue] = useState('');
 
   const handleDateClick = (value) => {
     setSelectedDate(value);
@@ -34,18 +33,18 @@ const CalendarPage = () => {
     );
   };
 
-  const handleOk = (content) => {
-    if (content && content.trim()) {
+  const handleOk = () => {
+    if (inputValue && inputValue.trim()) {
       if (editEventIndex === null) {
         // 새 이벤트 추가
-        const newEvent = { content: content.trim(), date: selectedDate };
+        const newEvent = { content: inputValue.trim(), date: selectedDate };
         const newEvents = [...events, newEvent];
         setEvents(newEvents);
       } else {
         // 기존 이벤트 수정
         const newEvents = events.map((event, index) => {
           if (index === editEventIndex) {
-            return { content: content.trim(), date: selectedDate };
+            return { content: inputValue.trim(), date: selectedDate };
           } else {
             return event;
           }
@@ -54,7 +53,7 @@ const CalendarPage = () => {
         setEditEventIndex(null);
       }
 
-      setInputValue(''); // 추가: 입력창 비우기
+      setInputValue("");
     }
     handleModalCancel();
   };
@@ -68,6 +67,13 @@ const CalendarPage = () => {
     return events.filter(event => event.date.isSame(selectedDate, 'day'));
   };
 
+  // 이벤트 수정 시 inputValue를 이벤트 내용으로 설정
+  useEffect(() => {
+    if (editEventIndex !== null) {
+      setInputValue(events[editEventIndex].content);
+    }
+  }, [editEventIndex]);
+
   return (
     <div>
       <Calendar
@@ -76,24 +82,27 @@ const CalendarPage = () => {
         onSelect={handleDateClick}
       />
       <Modal
-        title={`약속 ${selectedDate ? selectedDate.format('YYYY-MM-DD') : ''}`}
+        title={`event ${selectedDate ? selectedDate.format('YYYY-MM-DD') : ''}`}
         visible={modalVisible}
         onCancel={handleModalCancel}
         footer={null}
       >
         <Input
           placeholder="Enter event"
-          value={inputValue} // 추가: inputValue 전달
-          onChange={(e) => setInputValue(e.target.value)} // 추가: 입력값에 따라 inputValue 업데이트
-          onPressEnter={(e) => handleOk(e.target.value)}
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          onPressEnter={() => handleOk()}
         />
-        <Button onClick={() => handleOk()}>Save</Button>
+        <Button onClick={handleOk}>Save</Button>
         <List
           dataSource={getDateEvents()}
           renderItem={(item, index) => (
             <List.Item>
               <span>{item.content}</span>
-              <Button onClick={() => { setEditEventIndex(index); }}>Edit</Button>
+              <Button onClick={() => {
+                setEditEventIndex(index);
+                setInputValue(events[index].content);
+              }}>Edit</Button>
               <Button onClick={() => handleDeleteEvent(index)}>Delete</Button>
             </List.Item>
           )}
