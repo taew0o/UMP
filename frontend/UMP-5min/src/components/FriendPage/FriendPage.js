@@ -4,7 +4,6 @@ import Toolbar from "../Toolbar";
 import ToolbarButton from "../ToolbarButton";
 import FriendSearch from "../FriendSearch";
 import FriendList from "../FriendList/FriendList";
-import FriendAddModal from "../FriendAddModal/FriendAddModal";
 import axios from 'axios';
 import { Input, Button } from "antd";
 
@@ -67,7 +66,6 @@ const FriendPage = (props) => {
       {conversations.map((conversation) => (
         <FriendList key={conversation.name} data={conversation} />
       ))}
-      <FriendAddModal showModal={showAddModal} closeModal={closeModal} addFriend={addFriend} />
     </div>
   );
 };
