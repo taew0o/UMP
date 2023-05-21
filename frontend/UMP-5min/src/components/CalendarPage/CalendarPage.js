@@ -76,7 +76,7 @@ const CalendarPage = () => {
         onSelect={handleDateClick}
       />
       <Modal
-        title={`Events on ${selectedDate ? selectedDate.format('YYYY-MM-DD') : ''}`}
+        title={`약속 ${selectedDate ? selectedDate.format('YYYY-MM-DD') : ''}`}
         visible={modalVisible}
         onCancel={handleModalCancel}
         footer={null}
