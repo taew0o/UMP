@@ -1,0 +1,28 @@
+.review-container {
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .review-heading {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .user-review {
+    margin-bottom: 10px;
+  }
+  
+  .total-stats {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  
+  .to-chat-button {
+    margin-top: 20px;
+    margin-left: 20px;
+  }
+  

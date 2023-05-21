@@ -9,6 +9,7 @@ import CalendarPage from "../CalendarPage/CalendarPage";
 import ChatPage from "../ChatPage/ChatPage";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import MessageList from "../MessageList";
+import Review from "../Review/Review";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -95,6 +96,7 @@ const Home = () => {
                   <Route path="/calendar" element={<CalendarPage />} />
                   <Route path="/setting" element={<SettingPage />} />
                   <Route path="/room/:id" element={<MessageList />} />
+                  <Route path="/review/:id" element={<Review />} />
                 </Routes>
               </div>
             </Content>

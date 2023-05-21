@@ -21,7 +21,7 @@ export default function Compose(props) {
         <input
           type="text"
           className="compose-input"
-          placeholder="Type a message, @name"
+          placeholder="Type a message"
           value={msg}
           onChange={(e) => {
             setMsg(e.target.value);
@@ -34,7 +34,7 @@ export default function Compose(props) {
             }
           }}
         />
-        <input type="submit" value="제출" />
+        {/* <input type="submit" value="제출" /> */}
       </form>
 
       {props.rightItems}
