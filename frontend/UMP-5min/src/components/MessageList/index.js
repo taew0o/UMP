@@ -6,19 +6,44 @@ import Message from "../Message";
 import moment from "moment";
 
 import "./MessageList.css";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 
 const MY_USER_ID = "apple";
 
 export default function MessageList(props) {
   const [messages, setMessages] = useState([]);
   const location = useLocation();
-  const name = location.state.name;
+  const { id } = useParams();
+  const state = location.state;
 
+  const [result, setResult] = useState([]);
+  const [text, setText] = useState();
+  // useEffect(() => {
+  //   renderMessages();
+  //   // console.log(messages);
+  // }, []);
   useEffect(() => {
-    getMessages();
-  }, []);
+    console.log(text);
+    makeMsg();
+    renderMessages();
 
+    console.log(messages);
+  }, [text]);
+
+  const getText = (prop) => {
+    setText(prop);
+  };
+
+  const makeMsg = () => {
+    if (text) {
+      setMessages([...messages, ...text]);
+    }
+  };
+  
+  useEffect(() => {
+    renderMessages();
+  }, [messages]);
+  
   const getMessages = () => {
     var tempMessages = [
       {
@@ -152,14 +177,14 @@ export default function MessageList(props) {
       // Proceed to the next message.
       i += 1;
     }
-
-    return tempMessages;
+    console.log("?????????????");
+    setResult(tempMessages);
   };
 
   return (
     <div className="message-list">
       <Toolbar
-        title={name}
+        title={"test"}
         rightItems={[
           <ToolbarButton
             key="info"
@@ -170,9 +195,12 @@ export default function MessageList(props) {
         ]}
       />
 
-      <div className="message-list-container">{renderMessages()}</div>
+      <div className="message-list-container">{result}</div>
 
       <Compose
+        messages={messages}
+        getText={getText}
+        setMessages={setMessages}
         rightItems={[
           <ToolbarButton key="photo" icon="ion-ios-camera" />,
           <ToolbarButton key="image" icon="ion-ios-image" />,

@@ -24,7 +24,7 @@ const Home = () => {
   const renderContent = () => {
     switch (selectedPage) {
       case "1":
-        return movePage("chat");
+        return movePage("");
       case "2":
         return movePage("friend");
       case "3":
@@ -90,11 +90,11 @@ const Home = () => {
               >
                 {/* 경로 지정 */}
                 <Routes>
-                  <Route path="/chat" exact element={<ChatPage />} />
+                  <Route path="/" exact element={<ChatPage />} />
                   <Route path="/friend" element={<FriendPage />} />
                   <Route path="/calendar" element={<CalendarPage />} />
                   <Route path="/setting" element={<SettingPage />} />
-                  <Route path="/room" element={<MessageList />} />
+                  <Route path="/room/:id" element={<MessageList />} />
                 </Routes>
               </div>
             </Content>

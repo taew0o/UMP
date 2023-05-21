@@ -1,18 +1,43 @@
-import React from 'react';
-import './Compose.css';
+import React, { useState } from "react";
+import "./Compose.css";
 
 export default function Compose(props) {
-    return (
-      <div className="compose">
+  const [msg, setMsg] = useState();
+
+  const sendMessage = (e) => {
+    props.getText([
+      {
+        id: props.messages.length,
+        author: "apple",
+        message: msg,
+        timestamp: new Date().getTime(),
+      },
+    ]);
+  };
+
+  return (
+    <div className="compose">
+      <form onSubmit={sendMessage}>
         <input
           type="text"
           className="compose-input"
           placeholder="Type a message, @name"
+          value={msg}
+          onChange={(e) => {
+            setMsg(e.target.value);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              sendMessage(e);
+              setMsg("");
+            }
+          }}
         />
+        <input type="submit" value="제출" />
+      </form>
 
-        {
-          props.rightItems
-        }
-      </div>
-    );
+      {props.rightItems}
+    </div>
+  );
 }
