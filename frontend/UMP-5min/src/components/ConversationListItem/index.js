@@ -10,9 +10,9 @@ const ConversationListItem = (props) => {
   });
   const clickHandler = () => {
     console.log(name);
-    navigate(`/room`, { state: { name, photo, text } });
+    navigate(`/room/${id}`, { state: { id, name, photo, text } });
   };
-  const { photo, name, text } = props.data;
+  const { id, photo, name, text } = props.data;
 
   return (
     <div className="conversation-list-item" onClick={clickHandler}>
