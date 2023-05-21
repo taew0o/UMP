@@ -35,20 +35,15 @@ export default function MessageList(props) {
   };
 
   const makeMsg = () => {
-    if (text === undefined) {
-      console.log("text== undefined");
-      return;
+    if (text) {
+      setMessages([...messages, ...text]);
     }
-    // const tempMessages = [
-    //   {
-    //     id: messages.length,
-    //     author: "apple",
-    //     message: text,
-    //     timestamp: new Date().getTime(),
-    //   },
-    // ];
-    setMessages([...messages, ...text]);
   };
+  
+  useEffect(() => {
+    renderMessages();
+  }, [messages]);
+  
   const getMessages = () => {
     var tempMessages = [
       {
