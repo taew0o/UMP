@@ -2,3 +2,22 @@
   padding: 10px;
   padding-bottom: 70px;
 }
+
+/* 기존 스타일이 있다면 유지한 상태에서 추가 작성합니다. */
+
+.message-list {
+  /* 추가로 원하는 CSS 스타일을 작성하세요. */
+}
+
+.ant-btn {
+  /* Ant Design 버튼 기본 스타일을 수정하세요. */
+  background-color: #108ee9;
+  border-color: #108ee9;
+}
+
+.ant-btn:hover,
+.ant-btn:focus {
+  /* 마우스 오버 및 포커스 스타일을 수정하세요. */
+  background-color: #85d9f0;
+  border-color: #85d9f0;
+}
