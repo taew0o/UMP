@@ -8,6 +8,8 @@ import moment from "moment";
 import "./MessageList.css";
 import { useLocation, useParams } from "react-router-dom";
 import ReactModal from "react-modal";
+import Review from "../Review/Review";
+import { Button } from "antd";
 
 const MY_USER_ID = "apple";
 
@@ -34,6 +36,7 @@ export default function MessageList(props) {
   };
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [reviewIsOpen, setReviewIsOpen] = useState(false);
 
   useEffect(() => {
     console.log(text);
@@ -56,7 +59,7 @@ export default function MessageList(props) {
   useEffect(() => {
     renderMessages();
   }, [messages]);
-  
+
   const getMessages = () => {
     var tempMessages = [
       {
@@ -193,7 +196,7 @@ export default function MessageList(props) {
     console.log("?????????????");
     setResult(tempMessages);
   };
-  
+
   return (
     <div className="message-list">
       <Toolbar
@@ -204,12 +207,8 @@ export default function MessageList(props) {
               setModalIsOpen(true);
             }}
           >
-            <ToolbarButton key="exit" icon="ion-ios-exit" />
+            <ToolbarButton key="menu" icon="ion-ios-menu" />
           </div>,
-          <ToolbarButton
-            key="info"
-            icon="ion-ios-information-circle-outline"
-          />,
         ]}
       />
 
@@ -227,11 +226,27 @@ export default function MessageList(props) {
         onRequestClose={() => setModalIsOpen(false)}
         style={customStyles}
       >
+        <Toolbar
+          title={"메뉴"}
+          rightItems={[
+            <div
+              onClick={() => {
+                if (window.confirm(`이 채팅방을 나가시겠습니까?`)) {
+                  setModalIsOpen(false);
+                  setReviewIsOpen(true);
+                }
+              }}
+            >
+              <ToolbarButton key="exit" icon="ion-ios-exit" />
+            </div>,
+          ]}
+        />
+
         <div>
           <h2>채팅 설정</h2>
           <div>
             <div>채팅 정보: {id}</div>
-            <button>친구 초대</button>
+            <Button>친구 초대</Button>
           </div>
           <div>
             <label>
@@ -248,11 +263,17 @@ export default function MessageList(props) {
             </label>
           </div>
           <div>
-            <button onClick={() => setModalIsOpen(false)}>나가기</button>
-            <button>약속 잡기</button>
+            <Button>약속 잡기</Button>
           </div>
         </div>
       </ReactModal>
+      <ReactModal
+        isOpen={reviewIsOpen}
+        onRequestClose={() => setReviewIsOpen(false)}
+        style={customStyles}
+      >
+        <Review />
+      </ReactModal>
     </div>
   );
-}  
+}
