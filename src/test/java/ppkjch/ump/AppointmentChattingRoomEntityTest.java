@@ -33,7 +33,7 @@ public class AppointmentChattingRoomEntityTest {
     public UserService userService;
 
     @Test
-    @Rollback(value = false)
+    @Rollback(value = true)
     public void 약속채팅방_엔티티(){
 //
 
@@ -47,9 +47,6 @@ public class AppointmentChattingRoomEntityTest {
         jpaAppointmentChattingRoomRepository.save(apcRoom);
 
         //int numPerson = jpaAppointmentChattingRoomRepository.findOne();
-
-
-
 
     }
 }

@@ -27,7 +27,7 @@ public class UserService {
         return friend.getId();
     }
 
-    public User findUser(Long userId){
+    public User findUser(String userId){
         return jpaMemberRepository.findOne(userId);
     }
 }
