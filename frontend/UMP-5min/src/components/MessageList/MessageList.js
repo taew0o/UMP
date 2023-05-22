@@ -1,23 +1,63 @@
 import React, { useEffect, useState } from "react";
-import Compose from "../Compose";
-import Toolbar from "../Toolbar";
-import ToolbarButton from "../ToolbarButton";
-import Message from "../Message";
+import Compose from "../Compose/Compose";
+import Toolbar from "../Toolbar/Toolbar";
+import ToolbarButton from "../ToolbarButton/ToolbarButton";
+import Message from "../Message/Message";
 import moment from "moment";
 
 import "./MessageList.css";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
+import ReactModal from "react-modal";
+import Review from "../Review/Review";
+import { Button } from "antd";
 
 const MY_USER_ID = "apple";
 
 export default function MessageList(props) {
   const [messages, setMessages] = useState([]);
   const location = useLocation();
-  const name = location.state.name;
+  const { id } = useParams();
+  const state = location.state;
+
+  const [result, setResult] = useState([]);
+  const [text, setText] = useState();
+
+  // const customStyles = {
+  //   content: {
+  //     top: "10%",
+  //     left: "85%",
+  //     right: "auto",
+  //     bottom: "auto",
+  //     height: "100%",
+  //     width: "20%",
+  //     transform: "translate(-40%, -10%)",
+  //   },
+  // };
+
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [reviewIsOpen, setReviewIsOpen] = useState(false);
 
   useEffect(() => {
-    getMessages();
-  }, []);
+    console.log(text);
+    makeMsg();
+    renderMessages();
+
+    console.log(messages);
+  }, [text]);
+
+  const getText = (prop) => {
+    setText(prop);
+  };
+
+  const makeMsg = () => {
+    if (text) {
+      setMessages([...messages, ...text]);
+    }
+  };
+
+  useEffect(() => {
+    renderMessages();
+  }, [messages]);
 
   const getMessages = () => {
     var tempMessages = [
@@ -152,36 +192,87 @@ export default function MessageList(props) {
       // Proceed to the next message.
       i += 1;
     }
-
-    return tempMessages;
+    console.log("?????????????");
+    setResult(tempMessages);
   };
 
   return (
     <div className="message-list">
       <Toolbar
-        title={name}
+        title={"test"}
         rightItems={[
-          <ToolbarButton
-            key="info"
-            icon="ion-ios-information-circle-outline"
-          />,
-          <ToolbarButton key="video" icon="ion-ios-videocam" />,
-          <ToolbarButton key="phone" icon="ion-ios-call" />,
+          <div
+            onClick={() => {
+              setModalIsOpen(true);
+            }}
+          >
+            <ToolbarButton key="menu" icon="ion-ios-menu" />
+          </div>,
         ]}
       />
 
-      <div className="message-list-container">{renderMessages()}</div>
+      <div className="message-list-container">{result}</div>
 
       <Compose
-        rightItems={[
-          <ToolbarButton key="photo" icon="ion-ios-camera" />,
-          <ToolbarButton key="image" icon="ion-ios-image" />,
-          <ToolbarButton key="audio" icon="ion-ios-mic" />,
-          <ToolbarButton key="money" icon="ion-ios-card" />,
-          <ToolbarButton key="games" icon="ion-logo-game-controller-b" />,
-          <ToolbarButton key="emoji" icon="ion-ios-happy" />,
-        ]}
+        messages={messages}
+        getText={getText}
+        setMessages={setMessages}
       />
+
+      <ReactModal
+        isOpen={modalIsOpen}
+        onRequestClose={() => setModalIsOpen(false)}
+        className={`modal ${modalIsOpen ? "open" : ""}`}
+        overlayClassName={`overlay ${modalIsOpen ? "open" : ""}`}
+      >
+        <Toolbar
+          title={"메뉴"}
+          rightItems={[
+            <div
+              onClick={() => {
+                if (window.confirm(`이 채팅방을 나가시겠습니까?`)) {
+                  setModalIsOpen(false);
+                  setReviewIsOpen(true);
+                }
+              }}
+            >
+              <ToolbarButton key="exit" icon="ion-ios-exit" />
+            </div>,
+          ]}
+        />
+
+        <div className="modal-content">
+          <div className="room-info">
+            <div>채팅방 정보: {id}</div>
+          </div>
+          <div className="appointment-info">
+            <div>
+              약속 날짜:
+              <input type="date" />
+            </div>
+            <div>
+              약속 장소:
+              <input type="text" />
+            </div>
+            <div>
+              약속 이름:
+              <input type="text" />
+            </div>
+          </div>
+          <div className="button-group">
+            <Button className="appointment-button">약속 잡기</Button>
+            <Button className="invite-button">친구 초대</Button>
+          </div>
+        </div>
+      </ReactModal>
+      <ReactModal
+        isOpen={reviewIsOpen}
+        onRequestClose={() => setReviewIsOpen(false)}
+        className={`modal ${reviewIsOpen ? "open" : ""}`}
+        overlayClassName={`overlay ${reviewIsOpen ? "open" : ""}`}
+      >
+        <Review />
+      </ReactModal>
     </div>
   );
 }

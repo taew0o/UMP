@@ -34,3 +34,36 @@
     color: #888;
     margin: 0;
   }
+  .attendance-rate-box {
+    border: 2px solid black;
+    width: 100%;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* 기존 css의 수정 및 추가 */
+.friend-modal-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.attendance-rate-container h2 {
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.attendance-rate-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.modal-button-container {
+  display: flex;
+  justify-content: space-between;
+  width: 40%;
+  margin-bottom: 15px;
+}

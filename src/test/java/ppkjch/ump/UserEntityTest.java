@@ -36,6 +36,7 @@ public class UserEntityTest {
     public void 메세지_엔티티(){
         Message message = new Message();
         User user = new User(); //유저 만들기
+        user.setId("park");
         user.setName("taewoo");
         user.setPassword("12345");
 

@@ -1,8 +1,8 @@
 import { Route, Routes } from "react-router-dom";
-import RegisterPage from "../RegisterPage";
-import LoginPage from "../LoginPage";
-import Home from "../Home";
-import React from 'react';
+import RegisterPage from "../RegisterPage/RegisterPage";
+import LoginPage from "../LoginPage/LoginPage";
+import Home from "../Home/Home";
+import React from "react";
 
 const Router = () => {
   return (

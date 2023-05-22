@@ -21,6 +21,8 @@ public class ChattingRoom {
 
     public int numPerson = 0;
 
+    public String ChattingRoomName;
+
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createTime;
 
@@ -41,6 +43,7 @@ public class ChattingRoom {
         ChattingRoom chattingRoom = new ChattingRoom();
         chattingRoom.setCreateTime(LocalDateTime.now());
         chattingRoom.setNumPerson(numPerson);
+        System.out.println("userChattingRooms.isEmpty() = " + userChattingRooms.isEmpty());
         for (UserChattingRoom userChattingRoom : userChattingRooms) {
             chattingRoom.addUserChattingRoom(userChattingRoom);
         }

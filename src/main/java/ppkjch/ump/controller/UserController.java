@@ -24,6 +24,7 @@ public class UserController {
     @CrossOrigin(origins = "http://localhost:3000")
     public User signup(@RequestBody SignupForm signupForm){
         System.out.printf(signupForm.toString());
+
         User user = new User(); //유저 새로 만들어 form정보 받아 저장
         user.setId(signupForm.getId());
         user.setName(signupForm.getName());
@@ -35,6 +36,7 @@ public class UserController {
     }
     //로그인 처리 메서드
     @PostMapping("/login")
+    @CrossOrigin(origins = "http://localhost:3000")
     public String login(HttpServletRequest request, HttpServletResponse response, @RequestBody LoginForm loginForm) {
         HttpSession session = request.getSession();
         //로그인 검사

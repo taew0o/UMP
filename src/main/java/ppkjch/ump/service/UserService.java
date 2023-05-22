@@ -12,12 +12,12 @@ import ppkjch.ump.repository.JpaUserRepository;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final JpaUserRepository jpaMemberRepository;
+    private final JpaUserRepository jpaUserRepository;
     private final JpaFriendRepository jpaFriendRepository;
 
     @Transactional
     public String join(User user){
-            jpaMemberRepository.save(user);
+            jpaUserRepository.save(user);
         return user.getId();
     }
 
@@ -28,6 +28,6 @@ public class UserService {
     }
 
     public User findUser(String userId){
-        return jpaMemberRepository.findOne(userId);
+        return jpaUserRepository.findOne(userId);
     }
 }
