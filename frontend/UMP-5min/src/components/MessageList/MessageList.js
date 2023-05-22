@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import Compose from "../Compose";
-import Toolbar from "../Toolbar";
-import ToolbarButton from "../ToolbarButton";
-import Message from "../Message";
+import Compose from "../Compose/Compose";
+import Toolbar from "../Toolbar/Toolbar";
+import ToolbarButton from "../ToolbarButton/ToolbarButton";
+import Message from "../Message/Message";
 import moment from "moment";
 
 import "./MessageList.css";

@@ -1,26 +1,26 @@
 import React, { useState, useEffect } from "react";
 import "./FriendPage.css";
-import Toolbar from "../Toolbar";
-import ToolbarButton from "../ToolbarButton";
-import FriendSearch from "../FriendSearch";
+import Toolbar from "../Toolbar/Toolbar";
+import ToolbarButton from "../ToolbarButton/ToolbarButton";
+import FriendSearch from "../FriendSearch/FriendSearch";
 import FriendList from "../FriendList/FriendList";
-import axios from 'axios';
+import axios from "axios";
 import { Input, Button } from "antd";
 
 const FriendPage = (props) => {
   const [conversations, setConversations] = useState([]);
   const [showAddModal, setShowAddModal] = useState(false);
   const [friendId, setFriendId] = useState("");
-  
+
   useEffect(() => {
     getConversations();
   }, []);
-  
+
   const getConversations = () => {
     axios.get("https://randomuser.me/api/?results=20").then((response) => {
       let newConversations = response.data.results.map((result) => {
         return {
-          photo: result.picture.large,
+          photo: `${result.name.last}`,
           name: `${result.name.first} ${result.name.last}`,
           text: "친구 정보",
         };
@@ -58,7 +58,11 @@ const FriendPage = (props) => {
         title="Friend"
         leftItems={[<ToolbarButton key="cog" icon="ion-ios-cog" />]}
         rightItems={[
-          <ToolbarButton key="add" icon="ion-ios-add-circle-outline" onClick={openModal} />,
+          <ToolbarButton
+            key="add"
+            icon="ion-ios-add-circle-outline"
+            onClick={openModal}
+          />,
         ]}
         popoverContent={popoverContent}
       />

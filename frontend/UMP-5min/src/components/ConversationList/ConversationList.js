@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import ConversationSearch from "../ConversationSearch";
-import ConversationListItem from "../ConversationListItem";
-import Toolbar from "../Toolbar";
-import ToolbarButton from "../ToolbarButton";
+import ConversationListItem from "../ConversationListItem/ConversationListItem";
+import Toolbar from "../Toolbar/Toolbar";
+import ToolbarButton from "../ToolbarButton/ToolbarButton";
 import axios from "axios";
 import { Button, Popover, Input } from "antd";
 import "./ConversationList.css";
+import ConversationSearch from "../ConversationSearch/ConversationSearch";
 
 export default function ConversationList(props) {
   const [conversations, setConversations] = useState([]);
@@ -20,9 +20,9 @@ export default function ConversationList(props) {
     axios.get("https://randomuser.me/api/?results=20").then((response) => {
       let newConversations = response.data.results.map((result) => {
         return {
-          photo: result.picture.large,
+          photo: `${result.name.last}`,
           name: `${result.name.first} ${result.name.last}`,
-          text: "Hello world! This is a long message that needs to be truncated.",
+          text: "기존 채팅 기록",
         };
       });
       setConversations([...conversations, ...newConversations]);

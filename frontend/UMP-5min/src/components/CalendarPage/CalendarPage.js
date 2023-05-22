@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import './CalendarPage.css';
-import { Badge, Calendar, Modal, Input, Button, List } from 'antd';
-
+import React, { useState, useEffect } from "react";
+import "./CalendarPage.css";
+import { Badge, Calendar, Modal, Input, Button, List } from "antd";
 
 const CalendarPage = () => {
   const [events, setEvents] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [editEventIndex, setEditEventIndex] = useState(null);
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
 
   const handleDateClick = (value) => {
     setSelectedDate(value);
@@ -22,7 +21,9 @@ const CalendarPage = () => {
   };
 
   const dateCellRender = (value) => {
-    const dateEvents = events.filter(event => event.date.isSame(value, 'day'));
+    const dateEvents = events.filter((event) =>
+      event.date.isSame(value, "day")
+    );
 
     return (
       <ul className="event-list">
@@ -66,7 +67,7 @@ const CalendarPage = () => {
   };
 
   const getDateEvents = () => {
-    return events.filter(event => event.date.isSame(selectedDate, 'day'));
+    return events.filter((event) => event.date.isSame(selectedDate, "day"));
   };
 
   // 이벤트 수정 시 inputValue를 이벤트 내용으로 설정
@@ -84,7 +85,7 @@ const CalendarPage = () => {
         onSelect={handleDateClick}
       />
       <Modal
-        title={`event ${selectedDate ? selectedDate.format('YYYY-MM-DD') : ''}`}
+        title={`event ${selectedDate ? selectedDate.format("YYYY-MM-DD") : ""}`}
         visible={modalVisible}
         onCancel={handleModalCancel}
         footer={null}
@@ -101,10 +102,14 @@ const CalendarPage = () => {
           renderItem={(item, index) => (
             <List.Item>
               <span>{item.content}</span>
-              <Button onClick={() => {
-                setEditEventIndex(index);
-                setInputValue(events[index].content);
-              }}>Edit</Button>
+              <Button
+                onClick={() => {
+                  setEditEventIndex(index);
+                  setInputValue(events[index].content);
+                }}
+              >
+                Edit
+              </Button>
               <Button onClick={() => handleDeleteEvent(index)}>Delete</Button>
             </List.Item>
           )}

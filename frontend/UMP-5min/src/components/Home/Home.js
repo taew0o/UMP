@@ -8,7 +8,7 @@ import FriendPage from "../FriendPage/FriendPage";
 import CalendarPage from "../CalendarPage/CalendarPage";
 import ChatPage from "../ChatPage/ChatPage";
 import { Route, Routes, useNavigate } from "react-router-dom";
-import MessageList from "../MessageList";
+import MessageList from "../MessageList/MessageList";
 import Review from "../Review/Review";
 
 const { Header, Content, Footer, Sider } = Layout;
