@@ -1,29 +1,22 @@
-import React, { useEffect, useState } from "react";
-import shave from "shave";
+import React, { useState } from "react";
 import "./FriendList.css";
-import { Button } from "antd";
-import Modal from "react-modal";
+import { Button, Modal } from "antd";
 
 export default function FriendList(props) {
-  //   useEffect(() => {
-  //     shave(".friend-snippet", 20);
-  //   });
-
-  const customStyles = {
-    content: {
-      top: "35%",
-      left: "50%",
-      right: "auto",
-      bottom: "auto",
-      marginRight: "-50%",
-      height: "50%",
-      width: "50%",
-      transform: "translate(-40%, -10%)",
-    },
-  };
-
   const { photo, name, text } = props.data;
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [confirmModalIsOpen, setConfirmModalIsOpen] = useState(false);
+  const [confirmModalTitle, setConfirmModalTitle] = useState('');
+
+  const handleDeleteClick = () => {
+    setConfirmModalTitle('친구 삭제');
+    setConfirmModalIsOpen(true);
+  };
+
+  const handleBlockClick = () => {
+    setConfirmModalTitle('친구 차단');
+    setConfirmModalIsOpen(true);
+  };
 
   return (
     <>
@@ -35,18 +28,41 @@ export default function FriendList(props) {
         </div>
       </div>
       <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={() => setModalIsOpen(false)}
-        style={customStyles}
+        visible={modalIsOpen}
+        onCancel={() => setModalIsOpen(false)}
+        footer={null}
       >
-        <div className="friend-list-item">
-          <img className="friend-photo" src={photo} alt="friend" />
-          <div className="friend-info">
-            <h1 className="friend-title">{name}</h1>
+        <div className="friend-modal-content">
+          <div className="friend-list-item">
+            <img className="friend-photo" src={photo} alt="friend" />
+            <div className="friend-info">
+              <h1 className="friend-title">{name}</h1>
+            </div>
+          </div>
+          <div className="modal-button-container">
+            <Button onClick={handleDeleteClick}>친구 삭제</Button>
+            <Button onClick={handleBlockClick}>친구 차단</Button>
+          </div>
+          <div className="attendance-rate-container">
+            <h2>약속 참여율:</h2>
+            <div className="attendance-rate-box">
+              {/* 약속 참여율 정보를 출력하는 코드가 들어갈 위치입니다. */}
+            </div>
           </div>
         </div>
-        <div className="friend-snippet">{text}</div>
       </Modal>
+      <Modal
+      title={confirmModalTitle}
+      visible={confirmModalIsOpen}
+      onCancel={() => setConfirmModalIsOpen(false)}
+      onOk={() => console.log(`${confirmModalTitle} 완료`)}
+      okButtonProps={{style: {float: "left"}}}
+      okText="예"
+      cancelText="아니오"
+    >
+      {`${confirmModalTitle === "친구 삭제" ? `${name}을(를) 삭제` : `${name}을(를) 차단`}하시겠습니까?`}
+    </Modal>
+
     </>
   );
 }
