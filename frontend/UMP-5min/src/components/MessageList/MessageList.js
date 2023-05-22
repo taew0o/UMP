@@ -8,7 +8,6 @@ import moment from "moment";
 import "./MessageList.css";
 import { useLocation, useParams } from "react-router-dom";
 import ReactModal from "react-modal";
-import Review from "../Review/Review";
 
 const MY_USER_ID = "apple";
 
@@ -57,7 +56,7 @@ export default function MessageList(props) {
   useEffect(() => {
     renderMessages();
   }, [messages]);
-
+  
   const getMessages = () => {
     var tempMessages = [
       {
@@ -194,7 +193,7 @@ export default function MessageList(props) {
     console.log("?????????????");
     setResult(tempMessages);
   };
-
+  
   return (
     <div className="message-list">
       <Toolbar
@@ -202,10 +201,7 @@ export default function MessageList(props) {
         rightItems={[
           <div
             onClick={() => {
-              if (window.confirm(`이 채팅방을 나가시겠습니까?`)) {
-                setModalIsOpen(true);
-              }
-              console.log("클릭");
+              setModalIsOpen(true);
             }}
           >
             <ToolbarButton key="exit" icon="ion-ios-exit" />
@@ -225,13 +221,38 @@ export default function MessageList(props) {
         setMessages={setMessages}
       />
 
+      {/* 채팅 설정 모달 */}
       <ReactModal
         isOpen={modalIsOpen}
         onRequestClose={() => setModalIsOpen(false)}
         style={customStyles}
       >
-        <Review />
+        <div>
+          <h2>채팅 설정</h2>
+          <div>
+            <div>채팅 정보: {id}</div>
+            <button>친구 초대</button>
+          </div>
+          <div>
+            <label>
+              약속 날짜:
+              <input type="date" />
+            </label>
+            <label>
+              약속 장소:
+              <input type="text" />
+            </label>
+            <label>
+              약속 이름:
+              <input type="text" />
+            </label>
+          </div>
+          <div>
+            <button onClick={() => setModalIsOpen(false)}>나가기</button>
+            <button>약속 잡기</button>
+          </div>
+        </div>
       </ReactModal>
     </div>
   );
-}
+}  
