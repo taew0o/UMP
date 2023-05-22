@@ -2,7 +2,7 @@ import { Button } from "antd";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Review.css"; // Review 컴포넌트를 위한 CSS 파일 import
-
+import React from "react";
 const Review = () => {
   const navigate = useNavigate();
   const toChat = () => {
