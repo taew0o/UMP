@@ -8,9 +8,9 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import ppkjch.ump.LoginForm;
+import ppkjch.ump.dto.LoginForm;
 import ppkjch.ump.entity.User;
-import ppkjch.ump.SignupForm;
+import ppkjch.ump.dto.SignupForm;
 import ppkjch.ump.service.UserService;
 
 @Controller
