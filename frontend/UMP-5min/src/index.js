@@ -5,6 +5,9 @@ import * as serviceWorker from "./serviceWorker";
 import { BrowserRouter } from "react-router-dom";
 import LoginPage from "./test/test";
 import App from "./components/App/App";
+import ReactModal from "react-modal";
+
+ReactModal.setAppElement("#root");
 
 ReactDOM.render(
   <BrowserRouter>
