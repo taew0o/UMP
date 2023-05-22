@@ -55,8 +55,8 @@ const RegisterPage = () => {
           width: 70,
         }}
       >
-        <Option value="86">+86</Option>
-        <Option value="87">+87</Option>
+        <Option value="86">+010</Option>
+        <Option value="87">+011</Option>
       </Select>
     </Form.Item>
   );
@@ -214,8 +214,8 @@ const RegisterPage = () => {
         ]}
       >
         <Select placeholder="select your gender">
-          <Option value="male">Male</Option>
-          <Option value="female">Female</Option>
+          <Option value="male">남성</Option>
+          <Option value="female">여성</Option>
           <Option value="other">Other</Option>
         </Select>
       </Form.Item>
