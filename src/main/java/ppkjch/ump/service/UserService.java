@@ -22,7 +22,7 @@ public class UserService {
     }
 
     @Transactional
-    public Long addFriend(Friend friend){
+    public Long makeFriend(Friend friend){
         jpaFriendRepository.save(friend);
         return friend.getId();
     }
