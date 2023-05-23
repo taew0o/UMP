@@ -3,7 +3,6 @@ package ppkjch.ump.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ppkjch.ump.dto.InviteDTO;
 import ppkjch.ump.entity.ChattingRoom;
 import ppkjch.ump.entity.User;
 import ppkjch.ump.entity.UserChattingRoom;

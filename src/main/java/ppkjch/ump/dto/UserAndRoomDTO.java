@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class InviteDTO {
+public class UserAndRoomDTO {
     private Long RoomId;
     private String InviteeId;
 }

@@ -12,7 +12,6 @@ import ppkjch.ump.repository.JpaMessageRepository;
 public class MessageService {
 
     final private JpaMessageRepository jpaMessageRepository;
-
     @Transactional
     public Long send(Message message){ //DB로 보내고 MessageID반환
         jpaMessageRepository.save(message);
