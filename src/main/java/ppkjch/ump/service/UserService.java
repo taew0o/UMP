@@ -27,6 +27,23 @@ public class UserService {
         return friend.getId();
     }
 
+    public boolean signUp(String id, String name, String pw, String pw_re){
+        if (findUser(id) == null) {
+            return false;
+        }
+        else if(!pw.equals(pw_re)){
+            return false;
+        }
+        else{
+            User user = new User();
+            user.setId(id);
+            user.setName(name);
+            user.setPassword(pw);
+            jpaUserRepository.save(user);
+            return true;
+        }
+    }
+
     public User findUser(String userId){
         return jpaUserRepository.findOne(userId);
     }
