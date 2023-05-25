@@ -8,6 +8,8 @@ import ppkjch.ump.entity.User;
 import ppkjch.ump.repository.JpaFriendRepository;
 import ppkjch.ump.repository.JpaUserRepository;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -30,4 +32,5 @@ public class UserService {
     public User findUser(String userId){
         return jpaUserRepository.findOne(userId);
     }
+    
 }
