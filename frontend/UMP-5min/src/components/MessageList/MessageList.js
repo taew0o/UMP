@@ -22,18 +22,17 @@ export default function MessageList(props) {
   const [result, setResult] = useState([]);
   const [text, setText] = useState();
 
-  const customStyles = {
-    content: {
-      top: "35%",
-      left: "50%",
-      right: "auto",
-      bottom: "auto",
-      marginRight: "-50%",
-      height: "50%",
-      width: "50%",
-      transform: "translate(-40%, -10%)",
-    },
-  };
+  // const customStyles = {
+  //   content: {
+  //     top: "10%",
+  //     left: "85%",
+  //     right: "auto",
+  //     bottom: "auto",
+  //     height: "100%",
+  //     width: "20%",
+  //     transform: "translate(-40%, -10%)",
+  //   },
+  // };
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [reviewIsOpen, setReviewIsOpen] = useState(false);
@@ -220,11 +219,11 @@ export default function MessageList(props) {
         setMessages={setMessages}
       />
 
-      {/* 채팅 설정 모달 */}
       <ReactModal
         isOpen={modalIsOpen}
         onRequestClose={() => setModalIsOpen(false)}
-        style={customStyles}
+        className={`modal ${modalIsOpen ? "open" : ""}`}
+        overlayClassName={`overlay ${modalIsOpen ? "open" : ""}`}
       >
         <Toolbar
           title={"메뉴"}
@@ -242,35 +241,35 @@ export default function MessageList(props) {
           ]}
         />
 
-        <div>
-          <h2>채팅 설정</h2>
-          <div>
-            <div>채팅 정보: {id}</div>
-            <Button>친구 초대</Button>
+        <div className="modal-content">
+          <div className="room-info">
+            <div>채팅방 정보: {id}</div>
           </div>
-          <div>
-            <label>
+          <div className="appointment-info">
+            <div>
               약속 날짜:
               <input type="date" />
-            </label>
-            <label>
+            </div>
+            <div>
               약속 장소:
               <input type="text" />
-            </label>
-            <label>
+            </div>
+            <div>
               약속 이름:
               <input type="text" />
-            </label>
+            </div>
           </div>
-          <div>
-            <Button>약속 잡기</Button>
+          <div className="button-group">
+            <Button className="appointment-button">약속 잡기</Button>
+            <Button className="invite-button">친구 초대</Button>
           </div>
         </div>
       </ReactModal>
       <ReactModal
         isOpen={reviewIsOpen}
         onRequestClose={() => setReviewIsOpen(false)}
-        style={customStyles}
+        className={`modal ${reviewIsOpen ? "open" : ""}`}
+        overlayClassName={`overlay ${reviewIsOpen ? "open" : ""}`}
       >
         <Review />
       </ReactModal>

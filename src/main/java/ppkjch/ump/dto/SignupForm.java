@@ -1,4 +1,4 @@
-package ppkjch.ump;
+package ppkjch.ump.dto;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;

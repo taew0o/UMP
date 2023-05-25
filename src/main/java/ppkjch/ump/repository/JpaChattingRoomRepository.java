@@ -27,12 +27,6 @@ public class JpaChattingRoomRepository {
                 .getResultList();
     }
 
-    public List<ChattingRoom> findById(Long id) {
-        return em.createQuery("select cr from ChattingRoom cr where cr.id = :id", ChattingRoom.class)
-                .setParameter("id", id)
-                .getResultList();
-    }
-
     public List<UserChattingRoom> findChatRoomByUser(User user){
         return em.createQuery( "select ucr from UserChattingRoom ucr where ucr.user = :user", UserChattingRoom.class)
                 .setParameter("user", user)

@@ -54,7 +54,7 @@ public class FriendEntityTest {
         f.setUser1(user1);
         f.setUser2(user2);
 
-        Long id = userService.addFriend(f);
+        Long id = userService.makeFriend(f);
         Long findId = jpaFriendRepository.findOne(id).getId();
 
         Assertions.assertEquals(id,findId);

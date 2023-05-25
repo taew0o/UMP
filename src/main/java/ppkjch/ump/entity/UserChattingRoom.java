@@ -23,4 +23,12 @@ public class UserChattingRoom {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private ChattingRoom chattingRoom;
 
+    @Override
+    public String toString() {
+        return "UserChattingRoom{" +
+                "id=" + id +
+                ", user=" + user +
+                ", chattingRoom=" + chattingRoom +
+                '}';
+    }
 }

@@ -2,3 +2,60 @@
   padding: 10px;
   padding-bottom: 70px;
 }
+.modal-content {
+  margin-top: 20px;
+}
+
+.room-info {
+  margin-bottom: 20px;
+}
+
+.appointment-info {
+  margin-bottom: 20px;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.appointment-button,
+.invite-button {
+  width: 48%;
+}
+
+.modal {
+  background-color: #fff;
+  width: 20%;
+  height: 100%;
+  position: fixed;
+  top: 10%;
+  left: auto;
+  right: 0;
+  bottom: auto;
+  transform: translateX(0);
+  transition: right 0.5s ease, transform 0.5s ease;
+  overflow-y: auto;
+}
+
+.modal.open {
+  opacity: 1;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.overlay.open {
+  opacity: 1;
+}
+
