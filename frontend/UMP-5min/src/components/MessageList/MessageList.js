@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Compose from "../Compose/Compose";
 import Toolbar from "../Toolbar/Toolbar";
 import ToolbarButton from "../ToolbarButton/ToolbarButton";
@@ -22,20 +22,16 @@ export default function MessageList(props) {
   const [result, setResult] = useState([]);
   const [text, setText] = useState();
 
-  // const customStyles = {
-  //   content: {
-  //     top: "10%",
-  //     left: "85%",
-  //     right: "auto",
-  //     bottom: "auto",
-  //     height: "100%",
-  //     width: "20%",
-  //     transform: "translate(-40%, -10%)",
-  //   },
-  // };
-
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [reviewIsOpen, setReviewIsOpen] = useState(false);
+
+  const [msg, setMsg] = useState("");
+  const [name, setName] = useState("");
+  const [chatt, setChatt] = useState([]);
+  const [chkLog, setChkLog] = useState(false);
+  const [socketData, setSocketData] = useState();
+
+  const ws = useRef(null);
 
   useEffect(() => {
     console.log(text);
@@ -52,6 +48,7 @@ export default function MessageList(props) {
   const makeMsg = () => {
     if (text) {
       setMessages([...messages, ...text]);
+      send();
     }
   };
 
@@ -59,81 +56,60 @@ export default function MessageList(props) {
     renderMessages();
   }, [messages]);
 
-  const getMessages = () => {
-    var tempMessages = [
-      {
-        id: 1,
-        author: "apple",
-        message:
-          "Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.",
-        timestamp: new Date().getTime(),
-      },
-      {
-        id: 2,
-        author: "orange",
-        message:
-          "It looks like it wraps exactly as it is supposed to. Lets see what a reply looks like!",
-        timestamp: new Date().getTime(),
-      },
-      {
-        id: 3,
-        author: "orange",
-        message:
-          "Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.",
-        timestamp: new Date().getTime(),
-      },
-      {
-        id: 4,
-        author: "apple",
-        message:
-          "It looks like it wraps exactly as it is supposed to. Lets see what a reply looks like!",
-        timestamp: new Date().getTime(),
-      },
-      {
-        id: 5,
-        author: "apple",
-        message:
-          "Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.",
-        timestamp: new Date().getTime(),
-      },
-      {
-        id: 6,
-        author: "apple",
-        message:
-          "It looks like it wraps exactly as it is supposed to. Lets see what a reply looks like!",
-        timestamp: new Date().getTime(),
-      },
-      {
-        id: 7,
-        author: "orange",
-        message:
-          "Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.",
-        timestamp: new Date().getTime(),
-      },
-      {
-        id: 8,
-        author: "orange",
-        message:
-          "It looks like it wraps exactly as it is supposed to. Lets see what a reply looks like!",
-        timestamp: new Date().getTime(),
-      },
-      {
-        id: 9,
-        author: "apple",
-        message:
-          "Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.",
-        timestamp: new Date().getTime(),
-      },
-      {
-        id: 10,
-        author: "orange",
-        message:
-          "It looks like it wraps exactly as it is supposed to. Lets see what a reply looks like!",
-        timestamp: new Date().getTime(),
-      },
-    ];
-    setMessages([...messages, ...tempMessages]);
-  };
+  useEffect(() => {
+    if (socketData !== undefined) {
+      const tempData = chatt.concat(socketData);
+      console.log(tempData);
+      setChatt(tempData);
+    }
+  }, [socketData]);
+
+  const webSocketLogin = useCallback(() => {
+    ws.current = new WebSocket("ws://localhost:8080/websocket");
+
+    ws.current.onmessage = (message) => {
+      const dataSet = JSON.parse(message.data);
+      setSocketData(dataSet);
+    };
+  });
+
+  const send = useCallback(() => {
+    if (!chkLog) {
+      // if (name === "") {
+      //   alert("이름을 입력하세요.");
+      //   document.getElementById("name").focus();
+      //   return;
+      // }
+      webSocketLogin();
+      setChkLog(true);
+    }
+
+    if (text) {
+      // const data = {
+      //   name,
+      //   msg,
+      //   date: new Date().toLocaleString(),
+      // }; //전송 데이터(JSON)
+
+      const temp = JSON.stringify(text);
+
+      if (ws.current.readyState === 0) {
+        //readyState는 웹 소켓 연결 상태를 나타냄
+        ws.current.onopen = () => {
+          //webSocket이 맺어지고 난 후, 실행
+          console.log(ws.current.readyState);
+          ws.current.send(temp);
+        };
+      } else {
+        ws.current.send(temp);
+      }
+    } else {
+      // alert("메세지를 입력하세요.");
+      // document.getElementById("msg").focus();
+      return;
+    }
+    // setMsg("");
+  });
 
   const renderMessages = () => {
     let i = 0;
@@ -192,7 +168,6 @@ export default function MessageList(props) {
       // Proceed to the next message.
       i += 1;
     }
-    console.log("?????????????");
     setResult(tempMessages);
   };
 
