@@ -6,6 +6,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ppkjch.ump.dto.LoginForm;
@@ -13,15 +15,17 @@ import ppkjch.ump.entity.User;
 import ppkjch.ump.dto.SignupForm;
 import ppkjch.ump.service.UserService;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
 
     private final UserService userService;
     //회원가입 처리 메서드
     @PostMapping("/signup")
     @ResponseBody
-    @CrossOrigin(origins = "http://localhost:3000")
     public User signup(@RequestBody SignupForm signupForm){
         System.out.printf(signupForm.toString());
 
@@ -36,18 +40,24 @@ public class UserController {
     }
     //로그인 처리 메서드
     @PostMapping("/login")
-    @CrossOrigin(origins = "http://localhost:3000")
-    public String login(HttpServletRequest request, HttpServletResponse response, @RequestBody LoginForm loginForm) {
+    public ResponseEntity<?> login(HttpServletRequest request, HttpServletResponse response, @RequestBody LoginForm loginForm) {
         HttpSession session = request.getSession();
         //로그인 검사
-        if (true) {
+        try{
             session.setAttribute("loginUser", loginForm.getId());
             Cookie cookie = new Cookie("sessionId", session.getId());
             cookie.setMaxAge(60 * 60 * 24); // 쿠키의 유효 시간 설정 (초 단위)
             response.addCookie(cookie);
-            return "redirect:/main";
-        } else {
-            return "redirect:/loginForm";
+
+            return new ResponseEntity<>("Success", HttpStatus.OK);
+        } catch (RuntimeException r){
+            return new ResponseEntity<>(r.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @GetMapping("friends")
+    public ResponseEntity<List<User>> getFriends(@CookieValue){
+
+    }
+
 }
