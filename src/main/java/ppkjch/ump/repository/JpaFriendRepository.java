@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ppkjch.ump.entity.Friend;
 import ppkjch.ump.entity.User;
+import ppkjch.ump.entity.UserChattingRoom;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +23,11 @@ public class JpaFriendRepository {
     public void save(Friend friend){
         em.persist(friend);
     }
-    public Friend findOne(Long id){
-        return em.find(Friend.class, id);
-    }
+
+//    public List<Friend> findByUser(User user){
+//        return em.createQuery( "select f from Friend where f. = :user", UserChattingRoom.class)
+//                .setParameter("user", user)
+//                .getResultList();
+//    }
+
 }

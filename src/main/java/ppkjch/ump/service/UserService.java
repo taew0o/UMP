@@ -11,6 +11,8 @@ import ppkjch.ump.exception.passwordNotEqualException;
 import ppkjch.ump.repository.JpaFriendRepository;
 import ppkjch.ump.repository.JpaUserRepository;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -38,9 +40,6 @@ public class UserService {
         if (findUser(id) != null) {
             throw new IdDuplicateException("이미 입력하신 아이디가 존재합니다.");
         }
-        else if(!pw.equals(pw_re)){
-            throw new passwordNotEqualException("패스워드가 동일하지 않습니다.");
-        }
         else{
             User user = new User();
             user.setId(id);
@@ -58,5 +57,9 @@ public class UserService {
             return findUser(user_id);
         }
     }
+
+//    public List<User> findFriend(User user){
+//
+//    }
 
 }
