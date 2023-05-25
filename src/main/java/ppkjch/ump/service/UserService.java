@@ -59,7 +59,8 @@ public class UserService {
     }
 
     public List<User> findFriend(User user){
-
+        List<Friend> findFriend = jpaFriendRepository.findByUser(user);
+        return null;
     }
 
 }

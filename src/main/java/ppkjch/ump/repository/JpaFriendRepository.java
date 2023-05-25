@@ -25,9 +25,17 @@ public class JpaFriendRepository {
     }
 
     public List<Friend> findByUser(User user){
-        return em.createQuery( "select f from Friend where f. = :user", UserChattingRoom.class)
+        List<Friend> findFriendByUser1 = em.createQuery("select f from Friend f where f.user1 = :user", Friend.class)
                 .setParameter("user", user)
                 .getResultList();
+        List<Friend> findFriendByUser2 = em.createQuery("select f from Friend f where f.user2 = :user", Friend.class)
+                .setParameter("user", user)
+                .getResultList();
+        List<Friend> joinedUser = new ArrayList<>();
+        joinedUser.addAll(findFriendByUser1);
+        joinedUser.addAll(findFriendByUser2);
+        return joinedUser;
     }
+
 
 }

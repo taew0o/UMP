@@ -58,7 +58,7 @@ public class UserController {
     @GetMapping("friends")
     public ResponseEntity<List<User>> getFriends(@CookieValue String userId){
         User findUser = userService.findUser(userId);
-
+        return null;
     }
 
 }
