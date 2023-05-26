@@ -22,5 +22,16 @@ public class User{
     private String name;
     @NotNull
     private String password;
-    
+
+    @Embedded
+    private AppointmentScore appointmentScore;
+
+}
+
+@Embeddable
+class AppointmentScore{
+    private int numAttend;
+    private int numNotAttend;
+    private int numLate;
+
 }

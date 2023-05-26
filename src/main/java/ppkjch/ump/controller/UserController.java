@@ -61,6 +61,16 @@ public class UserController {
     @GetMapping("friends")
     public ResponseEntity<List<User>> getFriends(@CookieValue String userId) {
         User findUser = userService.findUser(userId);
-        return null;
+        List<User> friends = userService.findFriend(findUser);
+
+        return ResponseEntity.status(HttpStatus.OK).body(friends);
     }
+
+    @GetMapping("user")
+    public ResponseEntity<User> getUserInfo(@CookieValue String userId){
+        User findUser = userService.findUser(userId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(findUser);
+    }
+
 }

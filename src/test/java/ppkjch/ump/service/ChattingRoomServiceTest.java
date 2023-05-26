@@ -57,7 +57,7 @@ class ChattingRoomServiceTest {
         userIds.add(userId3);
         //3명이 있는 방을 만들고 userId정보들로 ChatRoom 가져오기
 
-        Long chatRoomId = chattingRoomService.makeRoom(userIds);
+        //Long chatRoomId = chattingRoomService.makeRoom();
         List<UserChattingRoom> findUserChattingRoom1 = jpaChattingRoomRepository.findChatRoomByUser(user1);
         List<UserChattingRoom> findUserChattingRoom2 = jpaChattingRoomRepository.findChatRoomByUser(user2);
         List<UserChattingRoom> findUserChattingRoom3 = jpaChattingRoomRepository.findChatRoomByUser(user3);

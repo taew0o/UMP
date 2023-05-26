@@ -4,10 +4,12 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ppkjch.ump.entity.ChattingRoom;
+import ppkjch.ump.entity.Message;
 import ppkjch.ump.entity.User;
 import ppkjch.ump.entity.UserChattingRoom;
 import ppkjch.ump.exception.RoomFullException;
 import ppkjch.ump.repository.JpaChattingRoomRepository;
+import ppkjch.ump.repository.JpaMessageRepository;
 import ppkjch.ump.repository.JpaUserRepository;
 
 import java.util.ArrayList;
@@ -19,15 +21,18 @@ public class ChattingRoomService {
     private final JpaChattingRoomRepository jpaChattingRoomRepository;
     private final JpaUserRepository jpaUserRepository;
 
+    public ChattingRoom findRoom(Long roomId){
+        return jpaChattingRoomRepository.findOne(roomId);
+    }
+
     @Transactional
-    public Long makeRoom(List<String> userIds){
+    public Long makeRoom(List<User> users){
         //유저 채팅방 생성
-        int numPerson = userIds.size();
+        int numPerson = users.size();
         List<UserChattingRoom> userChattingRooms = new ArrayList<>();
-        for (String userId: userIds) { //각 유저ID로 User 찾아 UserChattingroom객체 만들어 매핑
-            User findUser = jpaUserRepository.findOne(userId);
+        for (User user: users) { //각 유저ID로 User 찾아 UserChattingroom객체 만들어 매핑
             UserChattingRoom userChattingRoom = new UserChattingRoom();
-            userChattingRoom.setUser(findUser);
+            userChattingRoom.setUser(user);
             userChattingRooms.add(userChattingRoom);
         }
 

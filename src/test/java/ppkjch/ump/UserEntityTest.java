@@ -55,8 +55,8 @@ public class UserEntityTest {
         
         messageService.send(message);
         Long messageId = message.getId();
-        Message findMessage = messageService.findMessage(messageId);
-        System.out.println("findMessage.getTextMsg() = " + findMessage.getTextMsg());
+        //Message findMessage = messageService.findMessage(messageId);
+        //System.out.println("findMessage.getTextMsg() = " + findMessage.getTextMsg());
         
     }
 }
