@@ -10,8 +10,10 @@ import {
   Row,
   Select,
 } from "antd";
-import React from 'react'
+import axios from "axios";
+import React from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 const { Option } = Select;
 const formItemLayout = {
   labelCol: {
@@ -45,47 +47,31 @@ const tailFormItemLayout = {
 };
 const RegisterPage = () => {
   const [form] = Form.useForm();
+  const navigate = useNavigate();
   const onFinish = (values) => {
     console.log("Received values of form: ", values);
+    axios({
+      method: "post",
+      url: "http://localhost:8080/signup",
+      headers: {
+        "Content-Type": `application/json`,
+      },
+      data: {
+        id: values.id,
+        password: values.password,
+        name: values.nickname,
+      },
+    })
+      .then((response) => {
+        console.log(response.data);
+        navigate("/login");
+      })
+      .catch(function (error) {
+        console.log(error);
+        alert(`에러 발생 관리자 문의하세요!`);
+      });
   };
-  const prefixSelector = (
-    <Form.Item name="prefix" noStyle>
-      <Select
-        style={{
-          width: 70,
-        }}
-      >
-        <Option value="86">+010</Option>
-        <Option value="87">+011</Option>
-      </Select>
-    </Form.Item>
-  );
-  const suffixSelector = (
-    <Form.Item name="suffix" noStyle>
-      <Select
-        style={{
-          width: 70,
-        }}
-      >
-        <Option value="USD">$</Option>
-        <Option value="CNY">¥</Option>
-      </Select>
-    </Form.Item>
-  );
-  const [autoCompleteResult, setAutoCompleteResult] = useState([]);
-  const onWebsiteChange = (value) => {
-    if (!value) {
-      setAutoCompleteResult([]);
-    } else {
-      setAutoCompleteResult(
-        [".com", ".org", ".net"].map((domain) => `${value}${domain}`)
-      );
-    }
-  };
-  const websiteOptions = autoCompleteResult.map((website) => ({
-    label: website,
-    value: website,
-  }));
+
   return (
     <Form
       {...formItemLayout}
@@ -101,16 +87,12 @@ const RegisterPage = () => {
       scrollToFirstError
     >
       <Form.Item
-        name="email"
-        label="메일"
+        name="id"
+        label="아이디"
         rules={[
           {
-            type: "email",
-            message: "The input is not valid E-mail!",
-          },
-          {
             required: true,
-            message: "Please input your E-mail!",
+            message: "Please input your id!",
           },
         ]}
       >
@@ -182,14 +164,13 @@ const RegisterPage = () => {
         ]}
       >
         <Input
-          addonBefore={prefixSelector}
+          // addonBefore={prefixSelector}
           style={{
             width: "100%",
           }}
         />
       </Form.Item>
 
-    
       <Form.Item
         name="intro"
         label="자기소개"
@@ -219,7 +200,6 @@ const RegisterPage = () => {
           <Option value="other">Other</Option>
         </Select>
       </Form.Item>
-
 
       <Form.Item
         name="agreement"
