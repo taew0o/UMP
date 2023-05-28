@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ppkjch.ump.entity.Friend;
 import ppkjch.ump.entity.User;
-import ppkjch.ump.entity.UserChattingRoom;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,22 +19,21 @@ public class JpaFriendRepository {
         return em.createQuery("select f from Friend f", Friend.class)
                 .getResultList();
     }
+    public List<User> findFriend(User user){
+        List<User> result = new ArrayList<>();
+        result.addAll(em.createQuery("select f.user2 from Friend f where f.user1 = :user", User.class)
+                .setParameter("user",user)
+                .getResultList());
+        result.addAll(em.createQuery("select f.user1 from Friend f where f.user2 = :user", User.class)
+                .setParameter("user",user)
+                .getResultList());
+        return result;
+    }
     public void save(Friend friend){
         em.persist(friend);
     }
-
-    public List<Friend> findByUser(User user){
-        List<Friend> findFriendByUser1 = em.createQuery("select f from Friend f where f.user1 = :user", Friend.class)
-                .setParameter("user", user)
-                .getResultList();
-        List<Friend> findFriendByUser2 = em.createQuery("select f from Friend f where f.user2 = :user", Friend.class)
-                .setParameter("user", user)
-                .getResultList();
-        List<Friend> joinedUser = new ArrayList<>();
-        joinedUser.addAll(findFriendByUser1);
-        joinedUser.addAll(findFriendByUser2);
-        return joinedUser;
+    public Friend findOne(Long id){
+        return em.find(Friend.class, id);
     }
-
 
 }

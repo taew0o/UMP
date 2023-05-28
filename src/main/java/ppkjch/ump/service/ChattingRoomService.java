@@ -3,6 +3,7 @@ package ppkjch.ump.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ppkjch.ump.controller.ChattingRoomController;
 import ppkjch.ump.entity.ChattingRoom;
 import ppkjch.ump.entity.Message;
 import ppkjch.ump.entity.User;
@@ -58,7 +59,25 @@ public class ChattingRoomService {
 
         return roomId;
     }
+    //회원 참여중인 채팅방 목록 조회
+    public List<ChattingRoom> findRoom(User user){
+        return jpaChattingRoomRepository.findChattingRoomByUser(user);
+    }
+    //회원 채팅방 탈퇴
+    public void goOutRoom(User u, ChattingRoom cr){
+        jpaChattingRoomRepository.goOutRoom(u,cr);
+    }
 
+    //이 함수는 여러명 한꺼번에 초대하는 것 같긴 한데 방 객체 생성 방식 몰라서 아직 냅둠
 //    public Long invite(List<String> userIds) {
+//        try{
+//            for(int i = 0 ; i < userIds.size() ; i++){
+//
+//            }
+//        }catch(RoomFullException e){
+//            System.out.println(e.toString());
+//        }finally {
+//
+//        }
 //    }
 }

@@ -42,8 +42,8 @@ public class ChattingRoomController {
     public ResponseEntity<List<ChattingRoom>> getChattingRooms(@CookieValue(name = "userId") String userId){
         //userId로 UserChattingRoom에 매핑된 모든 방정보를 찾아 반환
         User user = userService.findUser(userId);
-        //findRoom(User user): List<CattingRoom>
-        List<ChattingRoom> chattingRooms = new ArrayList<>();
+        //findRoom(User user): List<CattingRoom> : 태우 추가 완. 테스트 필요\
+        List<ChattingRoom> chattingRooms = chattingRoomService.findRoom(user);
         return ResponseEntity.status(HttpStatus.OK).body(chattingRooms);
     }
 
@@ -67,7 +67,8 @@ public class ChattingRoomController {
         //유저 ID정보와 RoomId정보로 UserChattingRoom에서 찾아 삭제
         User user = userService.findUser(userId);
         ChattingRoom room = chattingRoomService.findRoom(roomId);
-        //goOutRoom(User, ChattingRoom): void
+        //goOutRoom(User, ChattingRoom): void - 태우 추가 완. 테스트 필요
+        chattingRoomService.goOutRoom(user,room);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
