@@ -14,6 +14,7 @@ import ppkjch.ump.entity.Message;
 import ppkjch.ump.entity.User;
 import ppkjch.ump.repository.JpaFriendRepository;
 import ppkjch.ump.repository.JpaUserRepository;
+import ppkjch.ump.service.FriendService;
 import ppkjch.ump.service.MessageService;
 import ppkjch.ump.service.UserService;
 
@@ -22,6 +23,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Date;
+import java.util.List;
 
 @Transactional
 @SpringBootTest
@@ -34,32 +36,26 @@ public class FriendEntityTest {
     @Autowired
     public UserService userService;
 
+    @Autowired
+    public FriendService friendService;
+
     @Test
     @Rollback(value = false)
-    public void 친구_엔티티(){
-        User user1 = new User(); //유저 만들기
-        user1.setId("taewoo");
-        user1.setName("taewoo");
-        user1.setPassword("12345");
+    public void makeFriend(){
+        User user1 = userService.findUser("park");
+        User user2 = userService.findUser("choi");
+        //find 메소드 있어야할 듯
+        friendService.addFriend(user1,user2);
+    }
 
-        User user2 = new User(); //유저 만들기
-        user2.setId("wuseong");
-        user2.setName("wuseong");
-        user2.setPassword("12345");
-
-        userService.join(user1);// 유저 DB에 저장
-        userService.join(user2);
-
-        Friend f = new Friend();
-        f.setUser1(user1);
-        f.setUser2(user2);
-
-        Long id = userService.makeFriend(f);
-        //Long findId = jpaFriendRepository.findOne(id).getId();
-
-//        Assertions.assertEquals(id,findId);
-
-
+    @Test
+    @Rollback(value = false)
+    public void findFriend(){
+        User user1 = userService.findUser("park");
+        List<User> friend_list = friendService.findFriendList(user1);
+        for(int i = 0 ; i < friend_list.size() ; i++){
+            System.out.println(friend_list.get(i).getId() + " " + friend_list.get(i).getName());
+        }
 
     }
 }

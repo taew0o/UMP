@@ -24,8 +24,7 @@ public class FriendService {
     private final JpaFriendRequestRepository jpaFriendRequestRepository;
 
 
-    public List<User> findFriendList(String user_id){
-        User user = jpaUserRepository.findOne(user_id);
+    public List<User> findFriendList(User user){
         return jpaFriendRepository.findFriend(user);
     }
 
