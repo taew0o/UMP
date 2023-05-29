@@ -5,15 +5,23 @@ import ToolbarButton from "../ToolbarButton/ToolbarButton";
 import FriendSearch from "../FriendSearch/FriendSearch";
 import FriendList from "../FriendList/FriendList";
 import axios from "axios";
-import { Input, Button } from "antd";
+import { Input, Button, Modal } from "antd";
+import { UserAddOutlined } from '@ant-design/icons';
 
 const FriendPage = (props) => {
   const [conversations, setConversations] = useState([]);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showRequestsModal, setShowRequestsModal] = useState(false);
   const [friendId, setFriendId] = useState("");
+  const [friendRequests, setFriendRequests] = useState([]);
 
   useEffect(() => {
     getConversations();
+
+    setFriendRequests([
+      { id: "user1", name: "John Doe" },
+      { id: "user2", name: "Jane Smith" },
+    ]);
   }, []);
 
   const getConversations = () => {
@@ -37,9 +45,30 @@ const FriendPage = (props) => {
     setShowAddModal(false);
   };
 
-  const addFriend = (newFriendId) => {
-    // 친구 추가 기능을 여기에 구현하세요.
+  const openRequestsModal = () => {
+    setShowRequestsModal(true);
   };
+
+  const closeRequestsModal = () => {
+    setShowRequestsModal(false);
+  };
+
+  const addFriend = (newFriendId) => {
+    // 친구 추가 기능을 여기에 구현
+  };
+
+  const acceptRequest = (requestId) => {
+    // 요청 기능 구현해야됨
+    console.log(`Accepted request from ${requestId}`);
+    setFriendRequests(friendRequests.filter(request => request.id !== requestId));
+  };
+  
+  const declineRequest = (requestId) => {
+    // 거절 기능
+    console.log(`Declined request from ${requestId}`);
+    setFriendRequests(friendRequests.filter(request => request.id !== requestId));
+  };
+  
 
   const popoverContent = (
     <>
@@ -56,16 +85,47 @@ const FriendPage = (props) => {
     <div className="friend-list">
       <Toolbar
         title="Friend"
-        leftItems={[<ToolbarButton key="cog" icon="ion-ios-cog" />]}
+        leftItems={[
+          <span onClick={openRequestsModal}>
+            <UserAddOutlined style={{ fontSize: '24px', color: '#1C75D4' }} />
+          </span>,
+        ]}
         rightItems={[
-          <ToolbarButton
-            key="add"
-            icon="ion-ios-add-circle-outline"
-            onClick={openModal}
-          />,
+          <span onClick={openModal}>
+            <ToolbarButton key="add" icon="ion-ios-add-circle-outline" />
+          </span>,
         ]}
         popoverContent={popoverContent}
       />
+    
+        {/* Friend Requests Modal */}
+        <Modal
+          title="Friend Requests"
+          visible={showRequestsModal}
+          onCancel={closeRequestsModal}
+          footer={null}
+        >
+          {friendRequests.map((request) => (
+            <div key={request.id} style={{ marginBottom: 12, display: 'flex', justifyContent: 'space-between' }}>
+              <span>{request.name}</span>
+              <div>
+                <Button
+                  onClick={() => acceptRequest(request.id)}
+                  style={{ marginLeft: 8 }}
+                >
+                  수락
+                </Button>
+                <Button
+                  onClick={() => declineRequest(request.id)}
+                  style={{ marginLeft: 8 }}
+                >
+                  거절
+                </Button>
+              </div>
+            </div>
+          ))}
+        </Modal>
+
       <FriendSearch />
       {conversations.map((conversation) => (
         <FriendList key={conversation.name} data={conversation} />

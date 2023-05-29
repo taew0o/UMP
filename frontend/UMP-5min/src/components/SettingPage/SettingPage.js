@@ -81,6 +81,7 @@ const SettingPage = ({ props }) => {
       <Form.Item
         name="phone"
         label="전화번호"
+        initialValue={props.phone_num}
         rules={[
           {
             required: true,
@@ -94,6 +95,7 @@ const SettingPage = ({ props }) => {
       <Form.Item
         name="password"
         label="비밀번호"
+        initialValue={props.password}
         rules={[
           {
             required: true,

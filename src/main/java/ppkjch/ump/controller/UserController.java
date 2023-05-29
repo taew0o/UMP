@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ppkjch.ump.dto.LoginForm;
@@ -66,12 +67,38 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(friends);
     }
 
+<<<<<<< HEAD
     @CrossOrigin(origins = "http://127.0.0.1:3000")
     @GetMapping("/user")
     public ResponseEntity<User> getUserInfo(@CookieValue String userId){
         User findUser = userService.findUser(userId);
+=======
+    @GetMapping("user")
+    public ResponseEntity<?> getUserInfo(HttpServletRequest request){
+        // 세션에서 유저 ID 가져오기
+        HttpSession session = request.getSession(false);
+        String userId = (String)session.getAttribute("userId");
+>>>>>>> 1f7bfcca162d379e3d6e87c7fa7d064f97324602
 
-        return ResponseEntity.status(HttpStatus.OK).body(findUser);
+        // 유저 ID를 사용하여 유저 정보 조회
+        User user = userService.findUser(userId);
+
+        return ResponseEntity.ok(user);
     }
 
+    @PostMapping("friend-request")
+    public ResponseEntity<?> requestFriend(@CookieValue String userId, @RequestBody String friendId){
+        User user1 = userService.findUser(userId);
+        User user2 = userService.findUser(friendId);
+        //request(user1, user2)
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+//    @GetMapping("friend-request")
+//    public ResponseEntity<List<?>> getFriendRequest(@CookieValue String sessionId){ //Request로 제네릭 타입 추후 수정
+//
+//        userService.findUser(userId);
+//
+//        ResponseEntity.
+//    }
 }

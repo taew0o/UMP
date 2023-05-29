@@ -12,6 +12,8 @@ import MessageList from "../MessageList/MessageList";
 import Review from "../Review/Review";
 import cookie from "react-cookies";
 import axios from "axios";
+import useInternetConnection from "../useInternetConnection";
+import LoginPage from "../LoginPage/LoginPage";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -19,11 +21,18 @@ const Home = () => {
   const [selectedPage, setSelectedPage] = useState();
   const [myData, setMyData] = useState();
   const navigate = useNavigate();
+  const isOnline = useInternetConnection();
+  const [isLoading, setLoad] = useState(false);
+
+  useEffect(() => {
+    if (!isOnline) {
+      navigate("/login");
+    }
+  }, [isOnline, navigate]);
+
   function movePage(page) {
     navigate("/" + page);
   }
-
-  const isLogin = true; // 로그인 됐는지는 서버 연결하면 제대로 바꿈
 
   const renderContent = () => {
     switch (selectedPage) {
@@ -39,9 +48,7 @@ const Home = () => {
         return;
     }
   };
-
   useEffect(() => {
-    renderContent();
     const myId = cookie.load("userId");
     if (!myId) return movePage("login");
     console.log("내 아디 :", myId);
@@ -56,16 +63,20 @@ const Home = () => {
       .then((response) => {
         console.log("----------------", response.data);
         setMyData(response.data);
+        setLoad(true);
       })
       .catch(function (error) {
         console.log(error);
         alert(`에러 발생 관리자 문의하세요!`);
       });
+  }, []);
+  useEffect(() => {
+    renderContent();
   }, [selectedPage]);
 
   return (
     <>
-      {isLogin ? (
+      {isOnline ? (
         <Layout hasSider>
           <Sider style={{ height: "100vh", position: "fixed", left: 0 }}>
             <div
@@ -103,28 +114,31 @@ const Home = () => {
           >
             <Header />
             <Content>
-              <div
-                style={{
-                  margin: "24px 16px 0",
-                  overflow: "initial",
-                  padding: 24,
-                  textAlign: "center",
-                  minHeight: "280px",
-                }}
-              >
-                {/* 경로 지정 */}
-                <Routes>
-                  <Route path="/" exact element={<ChatPage />} />
-                  <Route path="/friend" element={<FriendPage />} />
-                  <Route path="/calendar" element={<CalendarPage />} />
-                  <Route
-                    path="/setting"
-                    element={<SettingPage props={myData} />}
-                  />
-                  <Route path="/room/:id" element={<MessageList />} />
-                  <Route path="/review/:id" element={<Review />} />
-                </Routes>
-              </div>
+              {isLoading ? (
+                <div
+                  style={{
+                    margin: "24px 16px 0",
+                    overflow: "initial",
+                    padding: 24,
+                    textAlign: "center",
+                    minHeight: "280px",
+                  }}
+                >
+                  <Routes>
+                    <Route path="/" exact element={<ChatPage />} />
+                    <Route path="/friend" element={<FriendPage />} />
+                    <Route path="/calendar" element={<CalendarPage />} />
+                    <Route
+                      path="/setting"
+                      element={<SettingPage props={myData} />}
+                    />
+                    <Route path="/room/:id" element={<MessageList />} />
+                    <Route path="/review/:id" element={<Review />} />
+                  </Routes>
+                </div>
+              ) : (
+                <h1 style={{ textAlign: "center" }}>Loading...</h1>
+              )}
             </Content>
             <Footer style={{ textAlign: "center" }}>
               Ant Design ©2023 Created by Ant UED
@@ -132,9 +146,10 @@ const Home = () => {
           </Layout>
         </Layout>
       ) : (
-        movePage("login")
+        <LoginPage />
       )}
     </>
   );
 };
+
 export default Home;
