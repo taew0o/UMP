@@ -22,6 +22,8 @@ public class User{
     private String name;
     @NotNull
     private String password;
+    @NotNull
+    private String phone_num;
 
     @Embedded
     private AppointmentScore appointmentScore;
