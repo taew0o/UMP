@@ -10,17 +10,25 @@ import ChatPage from "../ChatPage/ChatPage";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import MessageList from "../MessageList/MessageList";
 import Review from "../Review/Review";
+import useInternetConnection from "../useInternetConnection";
+import LoginPage from "../LoginPage/LoginPage";
 
 const { Header, Content, Footer, Sider } = Layout;
 
 const Home = () => {
   const [selectedPage, setSelectedPage] = useState();
   const navigate = useNavigate();
+  const isOnline = useInternetConnection();
+
+  useEffect(() => {
+    if (!isOnline) {
+      navigate("/login");
+    }
+  }, [isOnline, navigate]);
+
   function movePage(page) {
     navigate("/" + page);
   }
-
-  const isLogin = true; // 로그인 됐는지는 서버 연결하면 제대로 바꿈
 
   const renderContent = () => {
     switch (selectedPage) {
@@ -40,9 +48,10 @@ const Home = () => {
   useEffect(() => {
     renderContent();
   }, [selectedPage]);
+
   return (
     <>
-      {isLogin ? (
+      {isOnline ? (
         <Layout hasSider>
           <Sider style={{ height: "100vh", position: "fixed", left: 0 }}>
             <div
@@ -89,7 +98,6 @@ const Home = () => {
                   minHeight: "280px",
                 }}
               >
-                {/* 경로 지정 */}
                 <Routes>
                   <Route path="/" exact element={<ChatPage />} />
                   <Route path="/friend" element={<FriendPage />} />
@@ -106,9 +114,10 @@ const Home = () => {
           </Layout>
         </Layout>
       ) : (
-        movePage("login")
+        <LoginPage />
       )}
     </>
   );
 };
+
 export default Home;
