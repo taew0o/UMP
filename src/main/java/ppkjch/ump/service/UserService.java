@@ -60,19 +60,7 @@ public class UserService {
     }
 
     public List<User> findFriend(User user){
-        List<Friend> findFriend = jpaFriendRepository.findByUser(user);
-        List<User> friendUsers = new ArrayList<>();
-        for (Friend f: findFriend) {
-            User user1 = f.getUser1();
-            User user2 = f.getUser2();
-            if(user1.equals(user)){ //유저1이면 유저2추가
-                friendUsers.add(user1);
-            }
-            else{ //유저 2이면 유저 1추가
-                friendUsers.add(user2);
-            }
-        }
-        return friendUsers;
+        return jpaFriendRepository.findFriend(user);
     }
 
 }
