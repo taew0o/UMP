@@ -33,4 +33,11 @@ public class JpaFriendRequestRepository {
     public FriendRequest findOne(Long id){
         return em.find(FriendRequest.class, id);
     }
+
+    public void deleteRequest(User sender, User receiver){
+        em.createQuery("delete from FriendRequest fr where fr.sender =:sender and fr.receiver =:receiver")
+                .setParameter("sender",sender)
+                .setParameter("receiver",receiver)
+                .executeUpdate();
+    }
 }
