@@ -55,7 +55,7 @@ public class UserController {
             cookie.setMaxAge(60 * 60 * 24); // 쿠키의 유효 시간 설정 (초 단위)
 
             HttpHeaders headers = new HttpHeaders();
-            headers.add(HttpHeaders.SET_COOKIE, cookie.toString());
+            headers.add(HttpHeaders.SET_COOKIE, session.getId());
             String responseBody = "로그인 성공";
 
             return ResponseEntity.ok().headers(headers).body(responseBody);
