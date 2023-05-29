@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Setter
@@ -29,4 +30,11 @@ public class Message {
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime sendTime;
 
+    public static Message createMessage(String text, ChattingRoom chattingRoom) {
+        Message message = new Message();
+        message.setSendTime(LocalDateTime.now());
+        message.setTextMsg(text);
+        message.setChattingRoom(chattingRoom);
+        return message;
+    }
 }
