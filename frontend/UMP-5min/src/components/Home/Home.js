@@ -15,8 +15,13 @@ import LoginPage from "../LoginPage/LoginPage";
 
 const { Header, Content, Footer, Sider } = Layout;
 
+function getDefaultSelectedKey() {
+  const storedKey = localStorage.getItem("selectedKey");
+  return storedKey ? storedKey : "1";
+}
+
 const Home = () => {
-  const [selectedPage, setSelectedPage] = useState();
+  const [selectedPage, setSelectedPageKey] = useState(getDefaultSelectedKey());
   const navigate = useNavigate();
   const isOnline = useInternetConnection();
 
@@ -45,6 +50,11 @@ const Home = () => {
     }
   };
 
+  function setSelectedPage(key) {
+    setSelectedPageKey(key);
+    localStorage.setItem("selectedKey", key);
+  }
+
   useEffect(() => {
     renderContent();
   }, [selectedPage]);
@@ -64,7 +74,7 @@ const Home = () => {
             <Menu
               theme="dark"
               mode="inline"
-              defaultSelectedKeys={["1"]}
+              selectedKeys={[getDefaultSelectedKey()]}
               onSelect={({ key }) => setSelectedPage(key)}
             >
               <Menu.Item key="1" icon={<BsFillChatFill />}>
