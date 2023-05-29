@@ -24,16 +24,14 @@ public class User{
     private String password;
 
     @Embedded
-    AppointmentScore appointmentScore;
-    //객체 참조용(DB엔 안들감)
-    @OneToMany(mappedBy = "user1", fetch = FetchType.LAZY) //friend 테이블의 user1에 매핑된 리스트
-    private List<Friend> friends1 = new ArrayList<>();
+    private AppointmentScore appointmentScore;
 
-    @OneToMany(mappedBy = "user2", fetch = FetchType.LAZY) //friend 테이블의 user2에 매핑된 리스트
-    private List<Friend> friends2 = new ArrayList<>();
 }
 
+@Embeddable
 class AppointmentScore{
-
+    private int numAttend;
+    private int numNotAttend;
+    private int numLate;
 
 }

@@ -27,9 +27,22 @@ public class JpaChattingRoomRepository {
                 .getResultList();
     }
 
+    //채팅룸 - 유저 관계 List를 전체 조회할 필요가 있는지?
     public List<UserChattingRoom> findChatRoomByUser(User user){
         return em.createQuery( "select ucr from UserChattingRoom ucr where ucr.user = :user", UserChattingRoom.class)
                 .setParameter("user", user)
                 .getResultList();
+    }
+
+    public List<ChattingRoom> findChattingRoomByUser(User user){
+        return em.createQuery( "select ucr.chattingRoom from UserChattingRoom ucr where ucr.user = :user", ChattingRoom.class)
+                .setParameter("user", user)
+                .getResultList();
+    }
+    public void goOutRoom(User user, ChattingRoom cr){
+        em.createQuery("delete from UserChattingRoom ucr where ucr.chattingRoom =:user and ucr.chattingRoom =:cr")
+                .setParameter("user",user)
+                .setParameter("cr",cr)
+                .executeUpdate();
     }
 }

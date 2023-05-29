@@ -3,11 +3,14 @@ package ppkjch.ump.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ppkjch.ump.controller.ChattingRoomController;
 import ppkjch.ump.entity.ChattingRoom;
+import ppkjch.ump.entity.Message;
 import ppkjch.ump.entity.User;
 import ppkjch.ump.entity.UserChattingRoom;
 import ppkjch.ump.exception.RoomFullException;
 import ppkjch.ump.repository.JpaChattingRoomRepository;
+import ppkjch.ump.repository.JpaMessageRepository;
 import ppkjch.ump.repository.JpaUserRepository;
 
 import java.util.ArrayList;
@@ -19,15 +22,18 @@ public class ChattingRoomService {
     private final JpaChattingRoomRepository jpaChattingRoomRepository;
     private final JpaUserRepository jpaUserRepository;
 
+    public ChattingRoom findRoom(Long roomId){
+        return jpaChattingRoomRepository.findOne(roomId);
+    }
+
     @Transactional
-    public Long makeRoom(List<String> userIds){
+    public Long makeRoom(List<User> users){
         //유저 채팅방 생성
-        int numPerson = userIds.size();
+        int numPerson = users.size();
         List<UserChattingRoom> userChattingRooms = new ArrayList<>();
-        for (String userId: userIds) { //각 유저ID로 User 찾아 UserChattingroom객체 만들어 매핑
-            User findUser = jpaUserRepository.findOne(userId);
+        for (User user: users) { //각 유저ID로 User 찾아 UserChattingroom객체 만들어 매핑
             UserChattingRoom userChattingRoom = new UserChattingRoom();
-            userChattingRoom.setUser(findUser);
+            userChattingRoom.setUser(user);
             userChattingRooms.add(userChattingRoom);
         }
 
@@ -53,7 +59,25 @@ public class ChattingRoomService {
 
         return roomId;
     }
+    //회원 참여중인 채팅방 목록 조회
+    public List<ChattingRoom> findRoom(User user){
+        return jpaChattingRoomRepository.findChattingRoomByUser(user);
+    }
+    //회원 채팅방 탈퇴
+    public void goOutRoom(User u, ChattingRoom cr){
+        jpaChattingRoomRepository.goOutRoom(u,cr);
+    }
 
+    //이 함수는 여러명 한꺼번에 초대하는 것 같긴 한데 방 객체 생성 방식 몰라서 아직 냅둠
 //    public Long invite(List<String> userIds) {
+//        try{
+//            for(int i = 0 ; i < userIds.size() ; i++){
+//
+//            }
+//        }catch(RoomFullException e){
+//            System.out.println(e.toString());
+//        }finally {
+//
+//        }
 //    }
 }

@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "./Login.css";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input } from "antd";
+import axios from "axios";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -11,8 +12,26 @@ const LoginPage = () => {
   };
   const onFinish = (values) => {
     console.log("Received values of form: ", values);
+    console.log(values.id, values.password);
+    axios({
+      method: "post",
+      url: "http://localhost:8080/login",
+      headers: {
+        "Content-Type": `application/json`,
+      },
+      data: {
+        id: values.id,
+        password: values.password,
+      },
+      proxy: "http://localhost:8080/login",
+    })
+      .then((response) => {
+        console.log("--------------------", response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
-  console.log("this is login!!!!!!!!!!!");
   return (
     <Form
       name="normal_login"
@@ -23,7 +42,7 @@ const LoginPage = () => {
       onFinish={onFinish}
     >
       <Form.Item
-        name="username"
+        name="id"
         rules={[
           {
             required: true,

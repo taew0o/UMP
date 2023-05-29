@@ -6,6 +6,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ppkjch.ump.dto.LoginForm;
@@ -13,16 +15,19 @@ import ppkjch.ump.entity.User;
 import ppkjch.ump.dto.SignupForm;
 import ppkjch.ump.service.UserService;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
 
     private final UserService userService;
+
     //회원가입 처리 메서드
     @PostMapping("/signup")
     @ResponseBody
-    @CrossOrigin(origins = "http://localhost:3000")
-    public User signup(@RequestBody SignupForm signupForm){
+    public User signup(@RequestBody SignupForm signupForm) {
         System.out.printf(signupForm.toString());
 
         User user = new User(); //유저 새로 만들어 form정보 받아 저장
@@ -34,20 +39,38 @@ public class UserController {
 
         return user;
     }
+
     //로그인 처리 메서드
     @PostMapping("/login")
-    @CrossOrigin(origins = "http://localhost:3000")
-    public String login(HttpServletRequest request, HttpServletResponse response, @RequestBody LoginForm loginForm) {
+    @CrossOrigin(origins = "*")
+    public ResponseEntity<?> login(HttpServletRequest request, HttpServletResponse response, @RequestBody LoginForm loginForm) {
         HttpSession session = request.getSession();
         //로그인 검사
-        if (true) {
+        try {
             session.setAttribute("loginUser", loginForm.getId());
             Cookie cookie = new Cookie("sessionId", session.getId());
             cookie.setMaxAge(60 * 60 * 24); // 쿠키의 유효 시간 설정 (초 단위)
             response.addCookie(cookie);
-            return "redirect:/main";
-        } else {
-            return "redirect:/loginForm";
+
+            return new ResponseEntity<>("Success", HttpStatus.OK);
+        } catch (RuntimeException r) {
+            return new ResponseEntity<>(r.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @GetMapping("friends")
+    public ResponseEntity<List<User>> getFriends(@CookieValue String userId) {
+        User findUser = userService.findUser(userId);
+        List<User> friends = userService.findFriend(findUser);
+
+        return ResponseEntity.status(HttpStatus.OK).body(friends);
+    }
+
+    @GetMapping("user")
+    public ResponseEntity<User> getUserInfo(@CookieValue String userId){
+        User findUser = userService.findUser(userId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(findUser);
+    }
+
 }
