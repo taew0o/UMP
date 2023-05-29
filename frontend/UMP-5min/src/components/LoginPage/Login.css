@@ -1,12 +1,36 @@
-#components-form-demo-normal-login .login-form {
-    max-width: 300px;
-  }
-  #components-form-demo-normal-login .login-form-forgot {
-    float: right;
-  }
-  #components-form-demo-normal-login .ant-col-rtl .login-form-forgot {
-    float: left;
-  }
-  #components-form-demo-normal-login .login-form-button {
-    width: 100%;
-  }
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  max-width: 1080px;
+  margin: 0 auto;
+ 
+}
+
+.login-form {
+  max-width: 400px;
+}
+
+.login-form-forgot {
+  float: right;
+  font-size: 18px;
+}
+
+
+.login-form-button {
+  width: 100%;
+  font-size: 24px;
+  padding: 3px 0;
+  border-radius: 5px;
+  height: 60px;
+}
+
+.register-form-button {
+  width: 100%;
+  margin-top: 8px;
+  font-size: 20px;
+  padding: 3px 0;
+  border-radius: 5px;
+  height: 50px;
+}

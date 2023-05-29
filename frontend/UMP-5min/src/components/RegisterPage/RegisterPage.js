@@ -14,6 +14,7 @@ import axios from "axios";
 import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "./RegisterPage.css"
 const { Option } = Select;
 const formItemLayout = {
   labelCol: {
@@ -74,6 +75,7 @@ const RegisterPage = () => {
   };
 
   return (
+    <div className="register-container">
     <Form
       {...formItemLayout}
       form={form}
@@ -82,14 +84,13 @@ const RegisterPage = () => {
       initialValues={{
         prefix: "86",
       }}
-      style={{
-        maxWidth: 600,
-      }}
+    
       scrollToFirstError
     >
       <Form.Item
         name="id"
         label="아이디"
+        className="register-input"
         rules={[
           {
             required: true,
@@ -111,7 +112,7 @@ const RegisterPage = () => {
         ]}
         hasFeedback
       >
-        <Input.Password />
+        <Input.Password className="register-input" />
       </Form.Item>
 
       <Form.Item
@@ -136,7 +137,7 @@ const RegisterPage = () => {
           }),
         ]}
       >
-        <Input.Password />
+        <Input.Password className="register-input" />
       </Form.Item>
 
       <Form.Item
@@ -151,7 +152,7 @@ const RegisterPage = () => {
           },
         ]}
       >
-        <Input />
+        <Input className="register-input" />
       </Form.Item>
 
       <Form.Item
@@ -216,15 +217,16 @@ const RegisterPage = () => {
         {...tailFormItemLayout}
       >
         <Checkbox>
-          가입에 <a href="">동의</a>합니다
+          가입에 <a href="">동의</a>
         </Checkbox>
       </Form.Item>
       <Form.Item {...tailFormItemLayout}>
         <Button type="primary" htmlType="submit">
-          Register
+          가입
         </Button>
       </Form.Item>
     </Form>
+  </div>
   );
 };
 export default RegisterPage;
