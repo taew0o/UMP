@@ -14,6 +14,7 @@ import ppkjch.ump.repository.JpaMessageRepository;
 import ppkjch.ump.repository.JpaUserRepository;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -21,7 +22,7 @@ import java.util.List;
 public class ChattingRoomService {
     private final JpaChattingRoomRepository jpaChattingRoomRepository;
     private final JpaUserRepository jpaUserRepository;
-
+    private final JpaMessageRepository jpaMessageRepository;
     public ChattingRoom findRoom(Long roomId){
         return jpaChattingRoomRepository.findOne(roomId);
     }
@@ -80,4 +81,23 @@ public class ChattingRoomService {
 //
 //        }
 //    }
+    public List<Message> messageTimeArray(ChattingRoom CR){
+        List <Message> result = new ArrayList<>();
+        result = jpaMessageRepository.findMessageByRoom(CR);
+        //Comparator
+        class MessageTimeComparator implements Comparator<Message> {
+            @Override
+            public int compare(Message m1, Message m2) {
+                if (m1.getSendTime().compareTo(m2.getSendTime())>0) {
+                    return 1;
+                } else if (m1.getSendTime().compareTo(m2.getSendTime())<0) {
+                    return -1;
+                }
+                return 0;
+            }
+        }
+        MessageTimeComparator comparator = new MessageTimeComparator();
+        result.sort(comparator);
+        return result;
+    }
 }

@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Col, Form, Input, Row } from "antd";
+import axios from "axios";
+import cookie from "react-cookies";
 
 const formItemLayout = {
   labelCol: {
@@ -12,8 +14,42 @@ const formItemLayout = {
   },
 };
 
-const SettingPage = () => {
+const SettingPage = ({ props }) => {
   const [form] = Form.useForm();
+  // const [myData, setMyData] = useState({});
+  // useEffect(() => {
+  //   getData();
+  //   console.log(myData);
+  // }, []);
+
+  // function getData() {
+  //   const myId = cookie.load("userId");
+  //   console.log("내 아디 :", myId);
+  //   axios({
+  //     method: "get",
+  //     url: "http://localhost:8080/user",
+  //     headers: {
+  //       "Content-Type": `application/json`,
+  //     },
+  //     withCredentials: true,
+  //   })
+  //     .then((response) => {
+  //       console.log("----------------", response.data);
+  //       setMyData(response.data);
+  //       // form.setFieldValue({
+  //       //   nickname: response.data.name,
+  //       // });
+  //     })
+  //     .catch(function (error) {
+  //       console.log(error);
+  //       alert(`에러 발생 관리자 문의하세요!`);
+  //     });
+  // }
+  useEffect(() => {
+    console.log(props.name);
+    console.log(props.id);
+    console.log(props.phone_num);
+  }, []);
 
   const onFinish = (values) => {
     console.log("Received values of form: ", values);
@@ -31,6 +67,7 @@ const SettingPage = () => {
       <Form.Item
         name="nickname"
         label="닉네임"
+        initialValue={props.name}
         rules={[
           {
             required: true,
@@ -44,6 +81,7 @@ const SettingPage = () => {
       <Form.Item
         name="phone"
         label="전화번호"
+        initialValue={props.phone_num}
         rules={[
           {
             required: true,
@@ -52,22 +90,21 @@ const SettingPage = () => {
         ]}
       >
         <Input />
+        {/* <input defaultValue={myData.} /> */}
       </Form.Item>
       <Form.Item
-        name="email"
-        label="이메일"
+        name="password"
+        label="비밀번호"
+        initialValue={props.password}
         rules={[
           {
-            type: "email",
-            message: "The input is not valid E-mail!",
-          },
-          {
             required: true,
-            message: "Please input your E-mail!",
+            message: "Please input your password!",
           },
         ]}
+        hasFeedback
       >
-        <Input />
+        <Input.Password />
       </Form.Item>
       <Form.Item>
         <Button type="primary" htmlType="submit">

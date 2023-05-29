@@ -1,12 +1,12 @@
 package ppkjch.ump.controller;
 
 
+
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.Header;
@@ -36,9 +36,8 @@ public class UserController {
         user.setId(signupForm.getId());
         user.setName(signupForm.getName());
         user.setPassword(signupForm.getPassword());
-
+        user.setPhone_num(signupForm.getPhone_num());
         userService.join(user);
-
         return user;
     }
 
@@ -49,17 +48,12 @@ public class UserController {
         HttpSession session = request.getSession();
         //로그인 검사
         try {
-            session.setAttribute("userId", loginForm.getId());
-            Cookie cookie = new Cookie("JSESSIONID", session.getId());
+            session.setAttribute("loginUser", loginForm.getId());
+            Cookie cookie = new Cookie("sessionId", session.getId());
             cookie.setMaxAge(60 * 60 * 24); // 쿠키의 유효 시간 설정 (초 단위)
+            response.addCookie(cookie);
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.add(HttpHeaders.SET_COOKIE, cookie.toString());
-
-            // 응답 본문 데이터 설정
-            String responseBody = "로그인 성공";
-
-            return ResponseEntity.ok().headers(headers).body(responseBody);
+            return new ResponseEntity<>("Success", HttpStatus.OK);
         } catch (RuntimeException r) {
             return new ResponseEntity<>(r.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -73,11 +67,18 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(friends);
     }
 
+<<<<<<< HEAD
+    @CrossOrigin(origins = "http://127.0.0.1:3000")
     @GetMapping("/user")
+    public ResponseEntity<User> getUserInfo(@CookieValue String userId){
+        User findUser = userService.findUser(userId);
+=======
+    @GetMapping("user")
     public ResponseEntity<?> getUserInfo(HttpServletRequest request){
         // 세션에서 유저 ID 가져오기
         HttpSession session = request.getSession(false);
         String userId = (String)session.getAttribute("userId");
+>>>>>>> 1f7bfcca162d379e3d6e87c7fa7d064f97324602
 
         // 유저 ID를 사용하여 유저 정보 조회
         User user = userService.findUser(userId);
@@ -85,7 +86,7 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    @PostMapping("/friend-request")
+    @PostMapping("friend-request")
     public ResponseEntity<?> requestFriend(@CookieValue String userId, @RequestBody String friendId){
         User user1 = userService.findUser(userId);
         User user2 = userService.findUser(friendId);

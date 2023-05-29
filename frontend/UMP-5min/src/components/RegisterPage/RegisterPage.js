@@ -60,6 +60,7 @@ const RegisterPage = () => {
         id: values.id,
         password: values.password,
         name: values.nickname,
+        phone_num: values.phone,
       },
     })
       .then((response) => {
@@ -92,7 +93,7 @@ const RegisterPage = () => {
         rules={[
           {
             required: true,
-            message: "Please input your id!",
+            message: "아이디를 입력하세요",
           },
         ]}
       >
@@ -105,7 +106,7 @@ const RegisterPage = () => {
         rules={[
           {
             required: true,
-            message: "Please input your password!",
+            message: "비밀번호를 입력하세요",
           },
         ]}
         hasFeedback
@@ -121,7 +122,7 @@ const RegisterPage = () => {
         rules={[
           {
             required: true,
-            message: "Please confirm your password!",
+            message: "비밀번호 확인을 해주세요",
           },
           ({ getFieldValue }) => ({
             validator(_, value) {
@@ -129,7 +130,7 @@ const RegisterPage = () => {
                 return Promise.resolve();
               }
               return Promise.reject(
-                new Error("The two passwords that you entered do not match!")
+                new Error("입력된 두 비밀번호가 일치하지 않습니다")
               );
             },
           }),
@@ -141,11 +142,11 @@ const RegisterPage = () => {
       <Form.Item
         name="nickname"
         label="이름"
-        tooltip="What do you want others to call you?"
+        tooltip="불리고 싶은 이름을 입력해주세요"
         rules={[
           {
             required: true,
-            message: "Please input your nickname!",
+            message: "이름을 입력해주세요",
             whitespace: true,
           },
         ]}
@@ -159,7 +160,7 @@ const RegisterPage = () => {
         rules={[
           {
             required: true,
-            message: "Please input your phone number!",
+            message: "전화번호를 입력해주세요",
           },
         ]}
       >
@@ -177,7 +178,7 @@ const RegisterPage = () => {
         rules={[
           {
             required: true,
-            message: "Please input Intro",
+            message: "자기소개를 써주세요",
           },
         ]}
       >
@@ -190,14 +191,14 @@ const RegisterPage = () => {
         rules={[
           {
             required: true,
-            message: "Please select gender!",
+            message: "성별을 입력해주세요",
           },
         ]}
       >
         <Select placeholder="select your gender">
           <Option value="male">남성</Option>
           <Option value="female">여성</Option>
-          <Option value="other">Other</Option>
+          
         </Select>
       </Form.Item>
 
@@ -215,7 +216,7 @@ const RegisterPage = () => {
         {...tailFormItemLayout}
       >
         <Checkbox>
-          I have read the <a href="">agreement</a>
+          가입에 <a href="">동의</a>합니다
         </Checkbox>
       </Form.Item>
       <Form.Item {...tailFormItemLayout}>

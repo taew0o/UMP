@@ -4,6 +4,7 @@ import "./Login.css";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input } from "antd";
 import axios from "axios";
+import cookie from "react-cookies";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -31,6 +32,14 @@ const LoginPage = () => {
       .catch(function (error) {
         console.log(error);
       });
+    const expires = new Date();
+    expires.setMinutes(expires.getMinutes() + 60);
+    cookie.save("userId", values.id, {
+      path: "/",
+      expires,
+      // secure : true,
+      // httpOnly : true
+    });
   };
   return (
     <Form
@@ -46,7 +55,7 @@ const LoginPage = () => {
         rules={[
           {
             required: true,
-            message: "Please input your Username!",
+            message: "ID를 입력하세요",
           },
         ]}
       >
@@ -60,7 +69,7 @@ const LoginPage = () => {
         rules={[
           {
             required: true,
-            message: "Please input your Password!",
+            message: "비밀번호를 입력하세요",
           },
         ]}
       >
