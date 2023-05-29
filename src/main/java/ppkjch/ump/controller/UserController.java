@@ -58,7 +58,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("friends")
+    @GetMapping("/friends")
     public ResponseEntity<List<User>> getFriends(@CookieValue String userId) {
         User findUser = userService.findUser(userId);
         List<User> friends = userService.findFriend(findUser);
@@ -66,7 +66,8 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(friends);
     }
 
-    @GetMapping("user")
+    @CrossOrigin(origins = "http://127.0.0.1:3000")
+    @GetMapping("/user")
     public ResponseEntity<User> getUserInfo(@CookieValue String userId){
         User findUser = userService.findUser(userId);
 

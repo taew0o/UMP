@@ -10,6 +10,7 @@ import ChatPage from "../ChatPage/ChatPage";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import MessageList from "../MessageList/MessageList";
 import Review from "../Review/Review";
+import cookie from "react-cookies";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -39,6 +40,29 @@ const Home = () => {
 
   useEffect(() => {
     renderContent();
+    // const expires = new Date();
+    // axios({
+    //   method: "get",
+    //   url: "http://localhost:8080/user",
+    //   headers: {
+    //     "Content-Type": `application/json`,
+    //   },
+    // })
+    //   .then((response) => {
+    //     console.log("----------------", response.data);
+    //     setMyData(response.data);
+    //   })
+    //   .catch(function (error) {
+    //     console.log(error);
+    //     alert(`에러 발생 관리자 문의하세요!`);
+    //   });
+    // expires.setMinutes(expires.getMinutes() + 60);
+    // cookie.save("userId", "react200", {
+    //   path: "/",
+    //   expires,
+    //   // secure : true,
+    //   // httpOnly : true
+    // });
   }, [selectedPage]);
   return (
     <>
