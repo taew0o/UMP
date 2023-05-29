@@ -9,7 +9,7 @@ import cookie from "react-cookies";
 const LoginPage = () => {
   const navigate = useNavigate();
   const toHome = () => {
-    navigate("/");
+    window.location.replace("/");
   };
   const toRegister = () => {
     navigate("/register");
@@ -27,23 +27,24 @@ const LoginPage = () => {
         id: values.id,
         password: values.password,
       },
-      proxy: "http://localhost:8080/login",
+      withCredentials: true,
     })
       .then((response) => {
         console.log("--------------------", response);
+        console.log(document.cookie);
+        const expires = new Date();
+        expires.setMinutes(expires.getMinutes() + 60);
+        cookie.save("JSESSIONID", "document.cookie", {
+          path: "/",
+          expires,
+          // secure : true,
+          // httpOnly : true
+        });
         toHome();
       })
       .catch(function (error) {
         console.log(error);
       });
-    const expires = new Date();
-    expires.setMinutes(expires.getMinutes() + 60);
-    cookie.save("JSESSIONID", values.id, {
-      path: "/",
-      expires,
-      // secure : true,
-      // httpOnly : true
-    });
   };
   return (
     <Form
@@ -59,7 +60,7 @@ const LoginPage = () => {
         rules={[
           {
             required: true,
-            message: "Please input your Username!",
+            message: "ID를 입력하세요",
           },
         ]}
       >
@@ -73,7 +74,7 @@ const LoginPage = () => {
         rules={[
           {
             required: true,
-            message: "Please input your Password!",
+            message: "비밀번호를 입력하세요",
           },
         ]}
       >

@@ -8,7 +8,9 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 @Component
 public class UmpWebSocketHandler extends TextWebSocketHandler {
+    //private final
     // WebSocketHandler 구현
+
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -18,6 +20,7 @@ public class UmpWebSocketHandler extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         super.handleTextMessage(session, message);
+
         //받은 메세지 DB에 저장
         //세션을 통해 모든 소켓에 message 전달
     }

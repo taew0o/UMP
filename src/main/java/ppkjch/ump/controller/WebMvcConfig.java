@@ -13,7 +13,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     private SessionInterceptor sessionInterceptor;
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/user")
+        registry.addMapping("/*")
                 .allowedOrigins("http://localhost:3000") // 허용할 Origin을 설정합니다.
                 .allowCredentials(true); // CORS 요청에 대해 인증 정보를 포함하도록 설정합니다.
     }
@@ -22,7 +22,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(sessionInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/login") // 로그인 페이지는 예외 처리
-                .excludePathPatterns("/signup"); // 회원가입 페이지는 예외 처리
+                .excludePathPatterns("/login","/signup"); // 로그인 페이지는 예외 처리
+
     }
 }
