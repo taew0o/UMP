@@ -55,7 +55,7 @@ const LoginPage = () => {
         rules={[
           {
             required: true,
-            message: "Please input your Username!",
+            message: "ID를 입력하세요",
           },
         ]}
       >
@@ -69,7 +69,7 @@ const LoginPage = () => {
         rules={[
           {
             required: true,
-            message: "Please input your Password!",
+            message: "비밀번호를 입력하세요",
           },
         ]}
       >
