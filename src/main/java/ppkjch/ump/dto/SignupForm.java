@@ -12,12 +12,14 @@ public class SignupForm {
     private String name;
     private String password;
 
+    private String phone_num;
     @Override
     public String toString() {
         return "SignupForm{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", password='" + password + '\'' +
+                ", phone_num='" + phone_num + '\'' +
                 '}';
     }
 }
