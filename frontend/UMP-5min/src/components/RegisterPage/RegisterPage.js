@@ -60,6 +60,7 @@ const RegisterPage = () => {
         id: values.id,
         password: values.password,
         name: values.nickname,
+        phone_num: values.phone,
       },
     })
       .then((response) => {

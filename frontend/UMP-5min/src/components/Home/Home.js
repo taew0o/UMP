@@ -11,11 +11,13 @@ import { Route, Routes, useNavigate } from "react-router-dom";
 import MessageList from "../MessageList/MessageList";
 import Review from "../Review/Review";
 import cookie from "react-cookies";
+import axios from "axios";
 
 const { Header, Content, Footer, Sider } = Layout;
 
 const Home = () => {
   const [selectedPage, setSelectedPage] = useState();
+  const [myData, setMyData] = useState();
   const navigate = useNavigate();
   function movePage(page) {
     navigate("/" + page);
@@ -40,30 +42,27 @@ const Home = () => {
 
   useEffect(() => {
     renderContent();
-    // const expires = new Date();
-    // axios({
-    //   method: "get",
-    //   url: "http://localhost:8080/user",
-    //   headers: {
-    //     "Content-Type": `application/json`,
-    //   },
-    // })
-    //   .then((response) => {
-    //     console.log("----------------", response.data);
-    //     setMyData(response.data);
-    //   })
-    //   .catch(function (error) {
-    //     console.log(error);
-    //     alert(`에러 발생 관리자 문의하세요!`);
-    //   });
-    // expires.setMinutes(expires.getMinutes() + 60);
-    // cookie.save("userId", "react200", {
-    //   path: "/",
-    //   expires,
-    //   // secure : true,
-    //   // httpOnly : true
-    // });
+    const myId = cookie.load("userId");
+    if (!myId) return movePage("login");
+    console.log("내 아디 :", myId);
+    axios({
+      method: "get",
+      url: "http://localhost:8080/user",
+      headers: {
+        "Content-Type": `application/json`,
+      },
+      withCredentials: true,
+    })
+      .then((response) => {
+        console.log("----------------", response.data);
+        setMyData(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+        alert(`에러 발생 관리자 문의하세요!`);
+      });
   }, [selectedPage]);
+
   return (
     <>
       {isLogin ? (
@@ -118,7 +117,10 @@ const Home = () => {
                   <Route path="/" exact element={<ChatPage />} />
                   <Route path="/friend" element={<FriendPage />} />
                   <Route path="/calendar" element={<CalendarPage />} />
-                  <Route path="/setting" element={<SettingPage />} />
+                  <Route
+                    path="/setting"
+                    element={<SettingPage props={myData} />}
+                  />
                   <Route path="/room/:id" element={<MessageList />} />
                   <Route path="/review/:id" element={<Review />} />
                 </Routes>

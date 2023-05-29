@@ -14,37 +14,42 @@ const formItemLayout = {
   },
 };
 
-const SettingPage = () => {
+const SettingPage = ({ props }) => {
   const [form] = Form.useForm();
-  const [myData, setMyData] = useState({});
-  useEffect(() => {
-    getData();
-    console.log(myData);
-  }, []);
+  // const [myData, setMyData] = useState({});
+  // useEffect(() => {
+  //   getData();
+  //   console.log(myData);
+  // }, []);
 
-  function getData() {
-    const myId = cookie.load("userId");
-    console.log("내 아디 :", myId);
-    axios({
-      method: "get",
-      url: "http://localhost:8080/user",
-      headers: {
-        "Content-Type": `application/json`,
-      },
-      withCredentials: true,
-    })
-      .then((response) => {
-        console.log("----------------", response.data);
-        setMyData(response.data);
-        // form.setFieldValue({
-        //   nickname: response.data.name,
-        // });
-      })
-      .catch(function (error) {
-        console.log(error);
-        alert(`에러 발생 관리자 문의하세요!`);
-      });
-  }
+  // function getData() {
+  //   const myId = cookie.load("userId");
+  //   console.log("내 아디 :", myId);
+  //   axios({
+  //     method: "get",
+  //     url: "http://localhost:8080/user",
+  //     headers: {
+  //       "Content-Type": `application/json`,
+  //     },
+  //     withCredentials: true,
+  //   })
+  //     .then((response) => {
+  //       console.log("----------------", response.data);
+  //       setMyData(response.data);
+  //       // form.setFieldValue({
+  //       //   nickname: response.data.name,
+  //       // });
+  //     })
+  //     .catch(function (error) {
+  //       console.log(error);
+  //       alert(`에러 발생 관리자 문의하세요!`);
+  //     });
+  // }
+  useEffect(() => {
+    console.log(props.name);
+    console.log(props.id);
+    console.log(props.phone_num);
+  }, []);
 
   const onFinish = (values) => {
     console.log("Received values of form: ", values);
@@ -62,7 +67,7 @@ const SettingPage = () => {
       <Form.Item
         name="nickname"
         label="닉네임"
-        // initialValue={myData.name}
+        initialValue={props.name}
         rules={[
           {
             required: true,
@@ -71,7 +76,7 @@ const SettingPage = () => {
           },
         ]}
       >
-        <input defaultValue={myData.id} />
+        <Input />
       </Form.Item>
       <Form.Item
         name="phone"
@@ -98,7 +103,6 @@ const SettingPage = () => {
         hasFeedback
       >
         <Input.Password />
-        <input defaultValue={myData.password} />
       </Form.Item>
       <Form.Item>
         <Button type="primary" htmlType="submit">

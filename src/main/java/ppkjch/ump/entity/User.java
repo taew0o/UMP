@@ -6,10 +6,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
-
-
 @Entity
 @Getter
 @Setter
@@ -26,12 +22,18 @@ public class User{
     private String phone_num;
 
     @Embedded
-    private AppointmentScore appointmentScore;
+    private AppointmentScore appointmentScore = new AppointmentScore();
 
 }
 
 @Embeddable
+@Getter
+@Setter
 class AppointmentScore{
+
+    public AppointmentScore() {
+    }
+
     private int numAttend;
     private int numNotAttend;
     private int numLate;

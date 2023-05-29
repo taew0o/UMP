@@ -1,6 +1,7 @@
 package ppkjch.ump.controller;
 
 
+
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -34,9 +35,8 @@ public class UserController {
         user.setId(signupForm.getId());
         user.setName(signupForm.getName());
         user.setPassword(signupForm.getPassword());
-
+        user.setPhone_num(signupForm.getPhone_num());
         userService.join(user);
-
         return user;
     }
 
