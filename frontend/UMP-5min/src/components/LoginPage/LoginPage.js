@@ -8,6 +8,9 @@ import cookie from "react-cookies";
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const toHome = () => {
+    navigate("/");
+  };
   const toRegister = () => {
     navigate("/register");
   };
@@ -27,14 +30,15 @@ const LoginPage = () => {
       proxy: "http://localhost:8080/login",
     })
       .then((response) => {
-        console.log("--------------------", response.data);
+        console.log("--------------------", response);
+        toHome();
       })
       .catch(function (error) {
         console.log(error);
       });
     const expires = new Date();
     expires.setMinutes(expires.getMinutes() + 60);
-    cookie.save("userId", values.id, {
+    cookie.save("JSESSIONID", values.id, {
       path: "/",
       expires,
       // secure : true,

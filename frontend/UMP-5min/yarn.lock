@@ -8123,7 +8123,14 @@
   optionalDependencies:
     "fsevents" "^2.3.2"
 
-"react@*", "react@^0.14.0 || ^15.0.0 || ^16 || ^17 || ^18", "react@^16.0.0", "react@^16.10.1", "react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@>= 16", "react@>=16.0.0", "react@>=16.11.0", "react@>=16.8", "react@>=16.9.0":
+"react-session-api@^1.1.0":
+  "integrity" "sha512-IB0jVPlX+HCgiGeYGn4m9l/7WvHuQbyXF7hqXA81mmeT6n891kCZYtA+wax1EHinYz/QWpflHLzdTqzbVfUc/Q=="
+  "resolved" "https://registry.npmjs.org/react-session-api/-/react-session-api-1.1.0.tgz"
+  "version" "1.1.0"
+  dependencies:
+    "react" "^16.9.0"
+
+"react@*", "react@^0.14.0 || ^15.0.0 || ^16 || ^17 || ^18", "react@^16.0.0", "react@^16.10.1", "react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^16.9.0", "react@>= 16", "react@>=16.0.0", "react@>=16.11.0", "react@>=16.8", "react@>=16.9.0":
   "integrity" "sha512-2bisHwMhxQ3XQz4LiJJwG3360pY965pTl/MRrZYxIBKVj4fOHoDs5aZAkYXGxDRO1Li+SyjTAilQEbOmtQJHzA=="
   "resolved" "https://registry.npmjs.org/react/-/react-16.10.1.tgz"
   "version" "16.10.1"

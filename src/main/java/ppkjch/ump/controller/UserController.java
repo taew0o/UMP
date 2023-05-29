@@ -49,7 +49,7 @@ public class UserController {
         //로그인 검사
         try {
             session.setAttribute("loginUser", loginForm.getId());
-            Cookie cookie = new Cookie("sessionId", session.getId());
+            Cookie cookie = new Cookie("JSESSIONID", session.getId());
             cookie.setMaxAge(60 * 60 * 24); // 쿠키의 유효 시간 설정 (초 단위)
             response.addCookie(cookie);
 
@@ -67,18 +67,12 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(friends);
     }
 
-<<<<<<< HEAD
     @CrossOrigin(origins = "http://127.0.0.1:3000")
     @GetMapping("/user")
-    public ResponseEntity<User> getUserInfo(@CookieValue String userId){
-        User findUser = userService.findUser(userId);
-=======
-    @GetMapping("user")
     public ResponseEntity<?> getUserInfo(HttpServletRequest request){
         // 세션에서 유저 ID 가져오기
         HttpSession session = request.getSession(false);
         String userId = (String)session.getAttribute("userId");
->>>>>>> 1f7bfcca162d379e3d6e87c7fa7d064f97324602
 
         // 유저 ID를 사용하여 유저 정보 조회
         User user = userService.findUser(userId);
