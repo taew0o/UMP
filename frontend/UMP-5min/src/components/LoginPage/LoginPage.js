@@ -9,14 +9,13 @@ import cookie from "react-cookies";
 const LoginPage = () => {
   const navigate = useNavigate();
   const toHome = () => {
-    window.location.replace("/");
+    navigate("/");
   };
   const toRegister = () => {
     navigate("/register");
   };
   const onFinish = (values) => {
     console.log("Received values of form: ", values);
-    console.log(values.id, values.password);
     axios({
       method: "post",
       url: "http://localhost:8080/login",
@@ -32,14 +31,15 @@ const LoginPage = () => {
       .then((response) => {
         console.log("--------------------", response);
         console.log(document.cookie);
-        const expires = new Date();
-        expires.setMinutes(expires.getMinutes() + 60);
-        cookie.save("JSESSIONID", "document.cookie", {
-          path: "/",
-          expires,
-          // secure : true,
-          // httpOnly : true
-        });
+        // const expires = new Date();
+        // expires.setMinutes(expires.getMinutes() + 60);
+        // cookie.save("cookie", document.cookie, {
+        //   path: "/",
+        //   expires,
+        //   // secure : true,
+        //   // httpOnly : true
+        // });
+        // console.log(cookie.load("cookie"));
         toHome();
       })
       .catch(function (error) {

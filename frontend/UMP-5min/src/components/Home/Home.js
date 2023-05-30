@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Layout, Menu } from "antd";
+import { Button, Layout, Menu } from "antd";
 import { AiFillSetting } from "react-icons/ai";
 import { BsFillChatFill, BsFillCalendarCheckFill } from "react-icons/bs";
 import { FaUserFriends } from "react-icons/fa";
@@ -55,10 +55,10 @@ const Home = () => {
   };
   useEffect(() => {
     console.log(document.cookie);
-    const myId = cookie.load("JSESSIONID");
-    console.log(myId);
-    // if (!myId) return movePage("login");
-    console.log("내 아디 :", myId);
+    // const myId = cookie.load("cookie");
+    // console.log(myId);
+    // // if (!myId) return movePage("login");
+    // console.log("내 아디 :", myId);
     axios({
       method: "get",
       url: "http://localhost:8080/user",
@@ -125,7 +125,17 @@ const Home = () => {
               marginLeft: 200,
             }}
           >
-            <Header />
+            <Header style={{ display: "flex", justifyContent: "flex-end" }}>
+              <Button
+                style={{ marginTop: "15px" }}
+                onClick={() => {
+                  cookie.remove("cookie");
+                  movePage("login");
+                }}
+              >
+                로그아웃
+              </Button>
+            </Header>
             <Content>
               {isLoading ? (
                 <div

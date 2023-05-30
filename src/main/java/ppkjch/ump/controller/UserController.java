@@ -71,16 +71,15 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.OK).body(friends);
     }
-
-    @CrossOrigin(origins = "http://127.0.0.1:3000")
     @GetMapping("/user")
-    public ResponseEntity<?> getUserInfo(HttpServletRequest request){
-        // 세션에서 유저 ID 가져오기
+    public ResponseEntity<?> getUserInfo(HttpServletRequest request) {
+        // 세션에서 "loginUser" 가져오기
         HttpSession session = request.getSession(false);
-        String userId = (String)session.getAttribute("userId");
-        System.out.println("user : " + userId);
-        // 유저 ID를 사용하여 유저 정보 조회
-        User user = userService.findUser(userId);
+        String loginUser = (String) session.getAttribute("loginUser");
+        System.out.println("user: " + loginUser);
+
+        // "loginUser"를 사용하여 유저 정보 조회
+        User user = userService.findUser(loginUser);
 
         return ResponseEntity.ok(user);
     }
