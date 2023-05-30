@@ -74,7 +74,8 @@ const Home = () => {
       })
       .catch(function (error) {
         console.log(error);
-        alert(`에러 발생 관리자 문의하세요!`);
+        // alert(`에러 발생 관리자 문의하세요!`);
+        movePage("login");
       });
   }, []);
 
@@ -170,7 +171,7 @@ const Home = () => {
           </Layout>
         </Layout>
       ) : (
-        <LoginPage />
+        movePage("login")
       )}
     </>
   );
