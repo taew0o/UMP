@@ -54,9 +54,9 @@ const Home = () => {
     }
   };
   useEffect(() => {
-    const myId = cookie.load("userId");
-    if (!myId) return movePage("login");
-    console.log("내 아디 :", myId);
+    // const myId = cookie.load("userId");
+    // if (!myId) return movePage("login");
+    // console.log("내 아디 :", myId);
     axios({
       method: "get",
       url: "http://localhost:8080/user",

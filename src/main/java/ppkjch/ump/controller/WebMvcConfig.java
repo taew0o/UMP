@@ -21,7 +21,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(sessionInterceptor)
-                .addPathPatterns("/**")
+                //.addPathPatterns("/**")
                 .excludePathPatterns("/login", "/signup"); // 로그인 페이지는 예외 처리// 회원가입 페이지는 예외 처리
     }
 }

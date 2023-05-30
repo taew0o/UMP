@@ -34,12 +34,12 @@ const LoginPage = () => {
       });
     const expires = new Date();
     expires.setMinutes(expires.getMinutes() + 60);
-    cookie.save("userId", values.id, {
-      path: "/",
-      expires,
-      // secure : true,
-      // httpOnly : true
-    });
+    // cookie.save("userId", values.id, {
+    //   path: "/",
+    //   expires,
+    //   // secure : true,
+    //   // httpOnly : true
+    // });
   };
   return (
     <Form
