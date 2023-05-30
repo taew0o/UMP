@@ -33,7 +33,7 @@ const SettingPage = ({ props }) => {
       },
       data: {
         id: values.id,
-        phone_num: values.phone_num,
+        phone_num: values.phone,
         password: values.password,
       },
       withCredentials: true,

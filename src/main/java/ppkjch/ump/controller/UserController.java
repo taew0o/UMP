@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import ppkjch.ump.dto.ChangeUserDTO;
 import ppkjch.ump.dto.LoginForm;
 import ppkjch.ump.entity.User;
 import ppkjch.ump.dto.SignupForm;
@@ -46,9 +47,10 @@ public class UserController {
     @PostMapping("/login")
     @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> login(HttpServletRequest request, HttpServletResponse response, @RequestBody LoginForm loginForm) {
-        HttpSession session = request.getSession();
-        //로그인 검사
+
         try {
+            User validUser = userService.checkLoginException(loginForm.getId(), loginForm.getPassword());
+            HttpSession session = request.getSession();
             session.setAttribute("userId", loginForm.getId());
             Cookie cookie = new Cookie("sessionId", session.getId());
             cookie.setPath("/");
@@ -57,6 +59,7 @@ public class UserController {
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.SET_COOKIE, session.getId());
             String responseBody = "로그인 성공";
+
 
             return ResponseEntity.ok().headers(headers).body(responseBody);
         } catch (RuntimeException r) {
@@ -72,15 +75,26 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(friends);
     }
 
-    @CrossOrigin(origins = "http://127.0.0.1:3000")
     @GetMapping("/user")
-    public ResponseEntity<?> getUserInfo(HttpServletRequest request){
+    public ResponseEntity<User> getUserInfo(HttpServletRequest request){
         // 세션에서 유저 ID 가져오기
         HttpSession session = request.getSession(false);
         String userId = (String)session.getAttribute("userId");
-        System.out.println("user : " + userId);
         // 유저 ID를 사용하여 유저 정보 조회
         User user = userService.findUser(userId);
+
+        return ResponseEntity.ok(user);
+    }
+
+    @PutMapping("/user")
+    public ResponseEntity<User> getUserInfo(HttpServletRequest request, @RequestBody ChangeUserDTO changeUserDTO){
+        // 세션에서 유저 ID 가져오기
+        HttpSession session = request.getSession(false);
+        String userId = (String)session.getAttribute("userId");
+        // 유저 ID를 사용하여 유저 정보 조회
+        User user = userService.findUser(userId);
+        // DTO 정보 이용하여 정보 수정
+        userService.updateUser(user, changeUserDTO.getName(), changeUserDTO.getPhone_num(), changeUserDTO.getPassword());
 
         return ResponseEntity.ok(user);
     }
@@ -92,6 +106,9 @@ public class UserController {
         //request(user1, user2)
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+
+
 
 //    @GetMapping("friend-request")
 //    public ResponseEntity<List<?>> getFriendRequest(@CookieValue String sessionId){ //Request로 제네릭 타입 추후 수정

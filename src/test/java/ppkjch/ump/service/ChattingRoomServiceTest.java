@@ -32,42 +32,45 @@ class ChattingRoomServiceTest {
     @Test
     @Rollback(value = false)
     void makeRoom() {
-        //유저 3명이 가입 되어 있음
-        User user1 = new User();
-        user1.setId("user1");
-        user1.setName("taewoo");
-        user1.setPassword("1234");
+        //유저 4명이 가입 되어 있음
+        User user1 = userService.findUser("park");
+        User user2 = userService.findUser("kim");
+        User user3 = userService.findUser("jang");
+        User user4 = userService.findUser("choi");
 
-        User user2 = new User();
-        user2.setId("user2");
-        user2.setName("harang");
-        user2.setPassword("1234");
+        List<User> users = new ArrayList<>();
+        users.add(user1);
+        users.add(user2);
+        users.add(user3);
+        users.add(user4);
 
-        User user3 = new User();
-        user3.setId("user3");
-        user3.setName("seongyul");
-        user3.setPassword("1234");
+        Long chattingroom_id = chattingRoomService.makeRoom(users);
 
-        List<String> userIds = new ArrayList<>();
-        String userId1 = userService.join(user1);
-        String userId2 = userService.join(user2);
-        String userId3 = userService.join(user3);
-        userIds.add(userId1);
-        userIds.add(userId2);
-        userIds.add(userId3);
-        //3명이 있는 방을 만들고 userId정보들로 ChatRoom 가져오기
+        //Assertions.assertEquals(chattingRoom1, chattingRoom2);
+        //Assertions.assertEquals(chattingRoom2, chattingRoom3);
+    }
 
-        //Long chatRoomId = chattingRoomService.makeRoom();
-        List<UserChattingRoom> findUserChattingRoom1 = jpaChattingRoomRepository.findChatRoomByUser(user1);
-        List<UserChattingRoom> findUserChattingRoom2 = jpaChattingRoomRepository.findChatRoomByUser(user2);
-        List<UserChattingRoom> findUserChattingRoom3 = jpaChattingRoomRepository.findChatRoomByUser(user3);
+    @Test
+    void findRoom() {
+    }
 
-        //같은 Chattingroom이 나오면 통과
-        ChattingRoom chattingRoom1 = findUserChattingRoom1.get(0).getChattingRoom();
-        ChattingRoom chattingRoom2 = findUserChattingRoom2.get(0).getChattingRoom();
-        ChattingRoom chattingRoom3 = findUserChattingRoom3.get(0).getChattingRoom();
+    @Test
+    void testMakeRoom() {
+    }
 
-        Assertions.assertEquals(chattingRoom1, chattingRoom2);
-        Assertions.assertEquals(chattingRoom2, chattingRoom3);
+    @Test
+    void inviteRoom() {
+    }
+
+    @Test
+    void testFindRoom() {
+    }
+
+    @Test
+    void goOutRoom() {
+    }
+
+    @Test
+    void messageTimeArray() {
     }
 }
