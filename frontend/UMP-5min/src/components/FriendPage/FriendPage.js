@@ -6,7 +6,7 @@ import FriendSearch from "../FriendSearch/FriendSearch";
 import FriendList from "../FriendList/FriendList";
 import axios from "axios";
 import { Input, Button, Modal } from "antd";
-import { UserAddOutlined } from '@ant-design/icons';
+import { UserAddOutlined } from "@ant-design/icons";
 
 const FriendPage = (props) => {
   const [conversations, setConversations] = useState([]);
@@ -60,15 +60,18 @@ const FriendPage = (props) => {
   const acceptRequest = (requestId) => {
     // 요청 기능 구현해야됨
     console.log(`Accepted request from ${requestId}`);
-    setFriendRequests(friendRequests.filter(request => request.id !== requestId));
+    setFriendRequests(
+      friendRequests.filter((request) => request.id !== requestId)
+    );
   };
-  
+
   const declineRequest = (requestId) => {
     // 거절 기능
     console.log(`Declined request from ${requestId}`);
-    setFriendRequests(friendRequests.filter(request => request.id !== requestId));
+    setFriendRequests(
+      friendRequests.filter((request) => request.id !== requestId)
+    );
   };
-  
 
   const popoverContent = (
     <>
@@ -86,45 +89,55 @@ const FriendPage = (props) => {
       <Toolbar
         title="Friend"
         leftItems={[
-          <span onClick={openRequestsModal}>
-            <UserAddOutlined style={{ fontSize: '24px', color: '#1C75D4' }} />
-          </span>,
+          <UserAddOutlined
+            style={{ fontSize: "24px", color: "#1C75D4" }}
+            onClick={openRequestsModal}
+          />,
         ]}
         rightItems={[
-          <span onClick={openModal}>
-            <ToolbarButton key="add" icon="ion-ios-add-circle-outline" />
-          </span>,
+          <ToolbarButton
+            key="add"
+            icon="ion-ios-add-circle-outline"
+            onClick={openModal}
+          />,
         ]}
         popoverContent={popoverContent}
       />
-    
-        {/* Friend Requests Modal */}
-        <Modal
-          title="Friend Requests"
-          visible={showRequestsModal}
-          onCancel={closeRequestsModal}
-          footer={null}
-        >
-          {friendRequests.map((request) => (
-            <div key={request.id} style={{ marginBottom: 12, display: 'flex', justifyContent: 'space-between' }}>
-              <span>{request.name}</span>
-              <div>
-                <Button
-                  onClick={() => acceptRequest(request.id)}
-                  style={{ marginLeft: 8 }}
-                >
-                  수락
-                </Button>
-                <Button
-                  onClick={() => declineRequest(request.id)}
-                  style={{ marginLeft: 8 }}
-                >
-                  거절
-                </Button>
-              </div>
+
+      {/* Friend Requests Modal */}
+      <Modal
+        title="Friend Requests"
+        visible={showRequestsModal}
+        onCancel={closeRequestsModal}
+        footer={null}
+      >
+        {friendRequests.map((request) => (
+          <div
+            key={request.id}
+            style={{
+              marginBottom: 12,
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            <span>{request.name}</span>
+            <div>
+              <Button
+                onClick={() => acceptRequest(request.id)}
+                style={{ marginLeft: 8 }}
+              >
+                수락
+              </Button>
+              <Button
+                onClick={() => declineRequest(request.id)}
+                style={{ marginLeft: 8 }}
+              >
+                거절
+              </Button>
             </div>
-          ))}
-        </Modal>
+          </div>
+        ))}
+      </Modal>
 
       <FriendSearch />
       {conversations.map((conversation) => (
