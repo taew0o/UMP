@@ -7,18 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import ppkjch.ump.entity.ChattingRoom;
-import ppkjch.ump.entity.Message;
+import ppkjch.ump.entity.Friend;
 import ppkjch.ump.entity.User;
+import ppkjch.ump.repository.JpaFriendRepository;
 import ppkjch.ump.repository.JpaUserRepository;
-import ppkjch.ump.service.MessageService;
+import ppkjch.ump.service.FriendService;
 import ppkjch.ump.service.UserService;
-
-import java.sql.Time;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.Date;
 
 @Transactional
 @SpringBootTest
@@ -27,36 +21,42 @@ import java.util.Date;
 public class UserEntityTest {
 
     @Autowired
-    public JpaUserRepository jpaMessageRepository;
+    public JpaUserRepository jpaUserRepository;
     @Autowired
-    public MessageService messageService;
+    public UserService userService;
+
+    @Autowired
+    public JpaFriendRepository jpaFriendRepository;
+    @Autowired
+    public FriendService friendService;
 
     @Test
-    @Rollback(value = true)
-    public void 메세지_엔티티(){
-        Message message = new Message();
+    @Rollback(value = false)
+    public void Join() {
         User user = new User(); //유저 만들기
-        user.setId("park");
-        user.setName("taewoo");
+        user.setId("choi");
+        user.setName("siwon");
         user.setPassword("12345");
+        user.setPhone_num("01012345678");
 
-        ChattingRoom chattingRoom = new ChattingRoom();
-
-        message.setUser(user); //채팅방 만들기
-        message.setChattingRoom(chattingRoom);
-        LocalDate date = LocalDate.of(2022, 1, 1);
-        LocalTime time = LocalTime.of(0, 0,1,1);
-        LocalDateTime dateTime = LocalDateTime.of(date, time);
-        
-        message.setSendTime(dateTime);
-        message.setTextMsg("박태우는 를 존나 좋아한다");
-        message.setChattingRoom(chattingRoom);
-        message.setUser(user);
-        
-        messageService.send(message);
-        Long messageId = message.getId();
-        //Message findMessage = messageService.findMessage(messageId);
-        //System.out.println("findMessage.getTextMsg() = " + findMessage.getTextMsg());
-        
+        userService.join(user);
     }
+
+    @Test
+    @Rollback(value = false)
+    public void findUser(){
+        User user= userService.findUser("park");
+        System.out.println(user.getName());
+        System.out.println(user.getId());
+    }
+
+    public User makeUser(String id, String name, String password, String phone_num){
+        User user = new User(); //유저 만들기
+        user.setId(id);
+        user.setName(name);
+        user.setPassword(password);
+        user.setPhone_num(phone_num);
+        return user;
+    }
+
 }

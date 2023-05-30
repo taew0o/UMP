@@ -1,0 +1,43 @@
+.register-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    font-size: 18px; /* 폰트 크기를 변경하세요 */
+  
+  
+  .register-form {
+    width: 600px; /* 변경 1: 폼 고정 너비 설정 */
+    max-width: 100%; /* 변경 1: 폼 최대 너비 설정 */
+    padding: 0 20px; /* 변경 1: 폼 내부 패딩 추가 */
+  }
+  
+  .register-btn-primary {
+    padding: 0 16px;
+    font-size: 18px;
+  }
+  
+  .register-select-selection {
+    height: 40px;
+  }
+  
+  .register-input {
+    height: 40px;
+  }
+  
+  .register-checkbox-inner {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .register-form-button {
+    width: 100%;
+    margin-top: 8px;
+    font-size: 20px;
+    padding: 3px 0;
+    border-radius: 5px;
+    height: 50px;
+  }
+  
+}

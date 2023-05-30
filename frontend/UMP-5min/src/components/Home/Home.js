@@ -54,8 +54,10 @@ const Home = () => {
     }
   };
   useEffect(() => {
-    // const myId = cookie.load("userId");
-    // if (!myId) return movePage("login");
+    console.log(document.cookie);
+    // const myId = cookie.load("cookie");
+    // console.log(myId);
+    // // if (!myId) return movePage("login");
     // console.log("내 아디 :", myId);
     axios({
       method: "get",
