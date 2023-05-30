@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import ppkjch.ump.dto.ChangeUserDTO;
 import ppkjch.ump.dto.LoginForm;
 import ppkjch.ump.entity.User;
 import ppkjch.ump.dto.SignupForm;
@@ -74,15 +75,26 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(friends);
     }
 
-    @CrossOrigin(origins = "http://127.0.0.1:3000")
     @GetMapping("/user")
-    public ResponseEntity<?> getUserInfo(HttpServletRequest request){
+    public ResponseEntity<User> getUserInfo(HttpServletRequest request){
         // 세션에서 유저 ID 가져오기
         HttpSession session = request.getSession(false);
         String userId = (String)session.getAttribute("userId");
-        System.out.println("user : " + userId);
         // 유저 ID를 사용하여 유저 정보 조회
         User user = userService.findUser(userId);
+
+        return ResponseEntity.ok(user);
+    }
+
+    @PutMapping("/user")
+    public ResponseEntity<User> getUserInfo(HttpServletRequest request, @RequestBody ChangeUserDTO changeUserDTO){
+        // 세션에서 유저 ID 가져오기
+        HttpSession session = request.getSession(false);
+        String userId = (String)session.getAttribute("userId");
+        // 유저 ID를 사용하여 유저 정보 조회
+        User user = userService.findUser(userId);
+        // DTO 정보 이용하여 정보 수정
+        userService.updateUser(user, changeUserDTO.getName(), changeUserDTO.getPhone_num(), changeUserDTO.getPassword());
 
         return ResponseEntity.ok(user);
     }
@@ -94,6 +106,7 @@ public class UserController {
         //request(user1, user2)
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
 
 
 
