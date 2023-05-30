@@ -72,6 +72,7 @@ public class UserController {
         User findUser = userService.findUser(userId);
         List<User> friends = userService.findFriend(findUser);
 
+
         return ResponseEntity.status(HttpStatus.OK).body(friends);
     }
 
