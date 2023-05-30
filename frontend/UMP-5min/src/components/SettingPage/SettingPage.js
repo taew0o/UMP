@@ -16,35 +16,7 @@ const formItemLayout = {
 
 const SettingPage = ({ props }) => {
   const [form] = Form.useForm();
-  // const [myData, setMyData] = useState({});
-  // useEffect(() => {
-  //   getData();
-  //   console.log(myData);
-  // }, []);
 
-  // function getData() {
-  //   const myId = cookie.load("userId");
-  //   console.log("내 아디 :", myId);
-  //   axios({
-  //     method: "get",
-  //     url: "http://localhost:8080/user",
-  //     headers: {
-  //       "Content-Type": `application/json`,
-  //     },
-  //     withCredentials: true,
-  //   })
-  //     .then((response) => {
-  //       console.log("----------------", response.data);
-  //       setMyData(response.data);
-  //       // form.setFieldValue({
-  //       //   nickname: response.data.name,
-  //       // });
-  //     })
-  //     .catch(function (error) {
-  //       console.log(error);
-  //       alert(`에러 발생 관리자 문의하세요!`);
-  //     });
-  // }
   useEffect(() => {
     console.log(props.name);
     console.log(props.id);
@@ -53,6 +25,26 @@ const SettingPage = ({ props }) => {
 
   const onFinish = (values) => {
     console.log("Received values of form: ", values);
+    axios({
+      method: "put",
+      url: "http://localhost:8080/user",
+      headers: {
+        "Content-Type": `application/json`,
+      },
+      data: {
+        name: values.nickname,
+        phone_num: values.phone,
+        password: values.password,
+      },
+      withCredentials: true,
+    })
+      .then((response) => {
+        console.log("--------------------", response);
+        alert(`변경했습니다!`);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
 
   return (
@@ -113,7 +105,6 @@ const SettingPage = ({ props }) => {
       </Form.Item>
       <Row>
         <Col offset={8}>
-          <Button>로그아웃</Button>
           <Button style={{ marginLeft: "10px" }}>회원 탈퇴</Button>
         </Col>
       </Row>
