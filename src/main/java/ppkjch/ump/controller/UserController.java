@@ -53,8 +53,9 @@ public class UserController {
             HttpSession session = request.getSession();
             session.setAttribute("userId", loginForm.getId());
             Cookie cookie = new Cookie("sessionId", session.getId());
-            cookie.setPath("/");
+            cookie.setPath("/**");
             cookie.setMaxAge(60 * 60 * 24); // 쿠키의 유효 시간 설정 (초 단위)
+
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.SET_COOKIE, session.getId());
             String responseBody = "로그인 성공";
@@ -70,6 +71,7 @@ public class UserController {
     public ResponseEntity<List<User>> getFriends(@CookieValue String userId) {
         User findUser = userService.findUser(userId);
         List<User> friends = userService.findFriend(findUser);
+
         return ResponseEntity.status(HttpStatus.OK).body(friends);
     }
 
@@ -84,9 +86,11 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+
+
     @PutMapping("/user")
-    public ResponseEntity<User> getUserInfo(HttpServletResponse response, HttpServletRequest request, @RequestBody ChangeUserDTO changeUserDTO){
+    @CrossOrigin(origins = "http://localhost:3000", methods = RequestMethod.PUT)
+    public ResponseEntity<User> getUserInfo(HttpServletRequest request, @RequestBody ChangeUserDTO changeUserDTO){
         // 세션에서 유저 ID 가져오기
         HttpSession session = request.getSession(false);
         String userId = (String)session.getAttribute("userId");
@@ -94,6 +98,7 @@ public class UserController {
         User user = userService.findUser(userId);
         // DTO 정보 이용하여 정보 수정
         userService.updateUser(user, changeUserDTO.getName(), changeUserDTO.getPhone_num(), changeUserDTO.getPassword());
+
         return ResponseEntity.ok(user);
     }
 

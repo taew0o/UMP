@@ -61,7 +61,7 @@ const Home = () => {
     }
     axios({
       method: "get",
-      url: "http://localhost:8080/user",
+      url: "/user",
       headers: {
         "Content-Type": `application/json`,
       },
@@ -74,7 +74,8 @@ const Home = () => {
       })
       .catch(function (error) {
         console.log(error);
-        alert(`에러 발생 관리자 문의하세요!`);
+        // alert(`에러 발생 관리자 문의하세요!`);
+        movePage("login");
       });
   }, []);
 

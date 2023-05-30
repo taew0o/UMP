@@ -25,9 +25,10 @@ const SettingPage = ({ props }) => {
 
   const onFinish = (values) => {
     console.log("Received values of form: ", values);
+    console.log(document.cookie);
     axios({
       method: "put",
-      url: "http://localhost:8080/user",
+      url: "/user",
       headers: {
         "Content-Type": `application/json`,
       },
