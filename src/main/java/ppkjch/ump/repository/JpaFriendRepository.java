@@ -32,8 +32,12 @@ public class JpaFriendRepository {
 
     public Friend findFriend(User u1, User u2){
         Friend friend1 = em.createQuery("select f from Friend f where f.user1 = :u1 and f.user2 = :u2", Friend.class)
+                .setParameter("u1", u1)
+                .setParameter("u2", u2)
                 .getSingleResult();
         Friend friend2 = em.createQuery("select f from Friend f where f.user1 = :u2 and f.user2 = :u1", Friend.class)
+                .setParameter("u1", u1)
+                .setParameter("u2", u2)
                 .getSingleResult();
         if(friend1 != null){
             return friend1;

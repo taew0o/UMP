@@ -25,16 +25,16 @@ const FriendPage = (props) => {
   }, []);
 
   const getConversations = () => {
-    axios.get("https://randomuser.me/api/?results=20").then((response) => {
-      let newConversations = response.data.results.map((result) => {
-        return {
-          photo: `${result.name.last}`,
-          name: `${result.name.first} ${result.name.last}`,
-          text: "친구 정보",
-        };
-      });
-      setConversations(newConversations);
-    });
+    // axios.get("https://randomuser.me/api/?results=20").then((response) => {
+    //   let newConversations = response.data.results.map((result) => {
+    //     return {
+    //       photo: `${result.name.last}`,
+    //       name: `${result.name.first} ${result.name.last}`,
+    //       text: "친구 정보",
+    //     };
+    //   });
+    //   setConversations(newConversations);
+    // });
   };
 
   const openModal = () => {
@@ -53,8 +53,27 @@ const FriendPage = (props) => {
     setShowRequestsModal(false);
   };
 
-  const addFriend = (newFriendId) => {
+  const addFriend = () => {
     // 친구 추가 기능을 여기에 구현
+
+    axios({
+      method: "post",
+      url: "/friend-request",
+      headers: {
+        "Content-Type": `application/json`,
+      },
+      data: {
+        friendId: friendId,
+      },
+      withCredentials: true,
+    })
+      .then((response) => {
+        console.log("----------------", response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+        // alert(`에러 발생 관리자 문의하세요!`);
+      });
   };
 
   const acceptRequest = (requestId) => {
@@ -79,6 +98,11 @@ const FriendPage = (props) => {
         placeholder="ID를 입력하세요"
         value={friendId}
         onChange={(e) => setFriendId(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            addFriend();
+          }
+        }}
       />
       <Button onClick={addFriend}>친구 추가</Button>
     </>
