@@ -53,7 +53,7 @@ public class UserController {
             HttpSession session = request.getSession();
             session.setAttribute("userId", loginForm.getId());
             Cookie cookie = new Cookie("sessionId", session.getId());
-            cookie.setPath("/");
+            cookie.setPath("/**");
             cookie.setMaxAge(60 * 60 * 24); // 쿠키의 유효 시간 설정 (초 단위)
 
             HttpHeaders headers = new HttpHeaders();
@@ -87,7 +87,9 @@ public class UserController {
     }
 
 
+
     @PutMapping("/user")
+    @CrossOrigin(origins = "http://localhost:3000", methods = RequestMethod.PUT)
     public ResponseEntity<User> getUserInfo(HttpServletRequest request, @RequestBody ChangeUserDTO changeUserDTO){
         // 세션에서 유저 ID 가져오기
         HttpSession session = request.getSession(false);

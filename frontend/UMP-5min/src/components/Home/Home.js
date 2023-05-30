@@ -61,7 +61,7 @@ const Home = () => {
     }
     axios({
       method: "get",
-      url: "http://localhost:8080/user",
+      url: "/user",
       headers: {
         "Content-Type": `application/json`,
       },
