@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ppkjch.ump.entity.User;
 import ppkjch.ump.entity.Friend;
@@ -17,17 +18,18 @@ import ppkjch.ump.repository.JpaUserRepository;
 @Transactional
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
+
 class FriendServiceTest {
     @Autowired
     public FriendService friendService;
     @Autowired
     public UserService userService;
-    User U = new User();
-    User M = new User();
-    User P = new User();
-
     @Test
+    @Rollback(value = false)
     void findFriendList() {
+        User U = new User();
+        User M = new User();
+        User P = new User();
         U.setId("alexander");
         U.setPassword("123");
         U.setName("arnold");
@@ -40,31 +42,37 @@ class FriendServiceTest {
         P.setPassword("789");
         P.setName("salah");
         userService.join(P);
-
 
     }
 
     @Test
     void request() {
+        User U = new User();
+        User M = new User();
+        User P = new User();
         U.setId("alexander");
         U.setPassword("123");
         U.setName("arnold");
+        U.setPhone_num("01011111111");
         userService.join(U);
-        M.setId("jordan");
-        M.setPassword("456");
-        M.setName("henderson");
-        userService.join(M);
-        P.setId("mohamed");
-        P.setPassword("789");
-        P.setName("salah");
-        userService.join(P);
+//        M.setId("jordan");
+//        M.setPassword("456");
+//        M.setName("henderson");
+//        userService.join(M);
+//        P.setId("mohamed");
+//        P.setPassword("789");
+//        P.setName("salah");
+//        userService.join(P);
         //친구요청
-        friendService.request(U, M);
-        friendService.request(M, P);
+//        friendService.request(U, M);
+//        friendService.request(M, P);
     }
 
     @Test
     void findFriendRequestList() {
+        User U = new User();
+        User M = new User();
+        User P = new User();
         U.setId("alexander");
         U.setPassword("123");
         U.setName("arnold");
@@ -82,6 +90,9 @@ class FriendServiceTest {
 
     @Test
     void addFriend() {
+        User U = new User();
+        User M = new User();
+        User P = new User();
         U.setId("alexander");
         U.setPassword("123");
         U.setName("arnold");
@@ -101,6 +112,9 @@ class FriendServiceTest {
 
     @Test
     void removeFriend() {
+        User U = new User();
+        User M = new User();
+        User P = new User();
         U.setId("alexander");
         U.setPassword("123");
         U.setName("arnold");

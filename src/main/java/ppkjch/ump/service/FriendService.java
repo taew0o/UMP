@@ -1,5 +1,6 @@
 package ppkjch.ump.service;
 
+import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,16 +29,17 @@ public class FriendService {
 
     @Transactional
     public void request(User sender, User receiver){
-        if(jpaFriendRequestRepository.findSender(receiver).contains(sender)){
+        if (jpaFriendRequestRepository.findSender(receiver).contains(sender)) {
             throw new FriendRequestExistException("이미 해당 유저에게 친구 요청을 하였습니다.");
-        }
-        else if(jpaFriendRepository.findFriend(sender,receiver) != null){
+        } else if (jpaFriendRepository.findFriend(sender, receiver) != null) {
             throw new FriendExistException("이미 친구로 등록이 되어 있는 유저입니다.");
         }
         FriendRequest friendRequest = new FriendRequest();
         friendRequest.setSender(sender);
         friendRequest.setReceiver(receiver);
         jpaFriendRequestRepository.save(friendRequest);
+
+
     }
 
     public List<User> findFriendRequestList(User receiver){
