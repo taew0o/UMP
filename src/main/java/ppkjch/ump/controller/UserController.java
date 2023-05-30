@@ -105,7 +105,7 @@ public class UserController {
 
 
     @PostMapping("/friend-request")
-    public ResponseEntity<?> requestFriend(HttpServletRequest request, @RequestBody String friendId){
+    public ResponseEntity<User> requestFriend(HttpServletRequest request, @RequestBody String friendId){
         // 세션에서 유저 ID 가져오기
         HttpSession session = request.getSession(false);
         String userId = (String)session.getAttribute("userId");
@@ -113,7 +113,7 @@ public class UserController {
         User user1 = userService.findUser(userId);
         User user2 = userService.findUser(friendId);
         friendService.request(user1, user2);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.ok(user2);
     }
 
 //    @GetMapping("friend-request")
