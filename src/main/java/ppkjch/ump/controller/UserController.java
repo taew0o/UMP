@@ -46,15 +46,13 @@ public class UserController {
     @PostMapping("/login")
     @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> login(HttpServletRequest request, HttpServletResponse response, @RequestBody LoginForm loginForm) {
-
         HttpSession session = request.getSession();
         //로그인 검사
         try {
-            session.setAttribute("loginUser", loginForm.getId());
+            session.setAttribute("userId", loginForm.getId());
             Cookie cookie = new Cookie("sessionId", session.getId());
             cookie.setPath("/");
             cookie.setMaxAge(60 * 60 * 24); // 쿠키의 유효 시간 설정 (초 단위)
-
 
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.SET_COOKIE, session.getId());
@@ -73,14 +71,15 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.OK).body(friends);
     }
-    @GetMapping("/user")
-    public ResponseEntity<?> getUserInfo(HttpServletRequest request) {
-        // 세션에서 "loginUser" 가져오기
-        HttpSession session = request.getSession(false);
-        String userId = (String) session.getAttribute("userId");
-        System.out.println("user: " + userId);
 
-        // "loginUser"를 사용하여 유저 정보 조회
+    @CrossOrigin(origins = "http://127.0.0.1:3000")
+    @GetMapping("/user")
+    public ResponseEntity<?> getUserInfo(HttpServletRequest request){
+        // 세션에서 유저 ID 가져오기
+        HttpSession session = request.getSession(false);
+        String userId = (String)session.getAttribute("userId");
+        System.out.println("user : " + userId);
+        // 유저 ID를 사용하여 유저 정보 조회
         User user = userService.findUser(userId);
 
         return ResponseEntity.ok(user);
