@@ -59,6 +59,7 @@ public class UserService {
         }
     }
 
+    @Transactional
     public void updateUser(User user, String name, String phone_num, String password){
         user.setName(name);
         user.setPhone_num(phone_num);
