@@ -46,9 +46,10 @@ public class UserController {
     @PostMapping("/login")
     @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> login(HttpServletRequest request, HttpServletResponse response, @RequestBody LoginForm loginForm) {
-        HttpSession session = request.getSession();
-        //로그인 검사
+
         try {
+            User validUser = userService.checkLoginException(loginForm.getId(), loginForm.getPassword());
+            HttpSession session = request.getSession();
             session.setAttribute("userId", loginForm.getId());
             Cookie cookie = new Cookie("sessionId", session.getId());
             cookie.setPath("/");
@@ -57,6 +58,7 @@ public class UserController {
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.SET_COOKIE, session.getId());
             String responseBody = "로그인 성공";
+
 
             return ResponseEntity.ok().headers(headers).body(responseBody);
         } catch (RuntimeException r) {
@@ -92,6 +94,8 @@ public class UserController {
         //request(user1, user2)
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+
 
 //    @GetMapping("friend-request")
 //    public ResponseEntity<List<?>> getFriendRequest(@CookieValue String sessionId){ //Request로 제네릭 타입 추후 수정

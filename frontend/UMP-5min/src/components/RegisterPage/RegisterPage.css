@@ -1,11 +1,11 @@
 .register-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100vw;
-    height: 100vh;
-    font-size: 18px; /* 폰트 크기를 변경하세요 */
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  font-size: 18px; /* 폰트 크기를 변경하세요 */
+}
   
   .register-form {
     width: 600px; /* 변경 1: 폼 고정 너비 설정 */
@@ -39,5 +39,3 @@
     border-radius: 5px;
     height: 50px;
   }
-  
-}
