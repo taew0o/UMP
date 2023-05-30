@@ -31,15 +31,6 @@ const LoginPage = () => {
       .then((response) => {
         console.log("--------------------", response);
         console.log(document.cookie);
-        // const expires = new Date();
-        // expires.setMinutes(expires.getMinutes() + 60);
-        // cookie.save("cookie", document.cookie, {
-        //   path: "/",
-        //   expires,
-        //   // secure : true,
-        //   // httpOnly : true
-        // });
-        // console.log(cookie.load("cookie"));
         toHome();
       })
       .catch(function (error) {

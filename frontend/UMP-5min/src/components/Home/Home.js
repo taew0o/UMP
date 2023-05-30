@@ -28,6 +28,7 @@ const Home = () => {
   const navigate = useNavigate();
   const isOnline = useInternetConnection();
   const [isLoading, setLoad] = useState(false);
+  const [isLogin, setLogin] = useState(false);
 
   useEffect(() => {
     if (!isOnline) {
@@ -55,10 +56,9 @@ const Home = () => {
   };
   useEffect(() => {
     console.log(document.cookie);
-    // const myId = cookie.load("cookie");
-    // console.log(myId);
-    // // if (!myId) return movePage("login");
-    // console.log("내 아디 :", myId);
+    if (document.cookie) {
+      setLogin(true);
+    }
     axios({
       method: "get",
       url: "http://localhost:8080/user",
@@ -74,7 +74,8 @@ const Home = () => {
       })
       .catch(function (error) {
         console.log(error);
-        alert(`에러 발생 관리자 문의하세요!`);
+        // alert(`에러 발생 관리자 문의하세요!`);
+        movePage("login");
       });
   }, []);
 
@@ -89,7 +90,7 @@ const Home = () => {
 
   return (
     <>
-      {isOnline ? (
+      {isLogin && isOnline ? (
         <Layout hasSider>
           <Sider style={{ height: "100vh", position: "fixed", left: 0 }}>
             <div
@@ -130,6 +131,7 @@ const Home = () => {
                 style={{ marginTop: "15px" }}
                 onClick={() => {
                   // cookie.remove("cookie");
+                  setLogin(false);
                   movePage("login");
                 }}
               >
@@ -169,7 +171,7 @@ const Home = () => {
           </Layout>
         </Layout>
       ) : (
-        <LoginPage />
+        movePage("login")
       )}
     </>
   );

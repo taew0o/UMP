@@ -50,7 +50,7 @@ public class UserService {
         }
     }
 
-    public User login(String user_id, String user_pw){
+    public User checkLoginException(String user_id, String user_pw){
         if(findUser(user_id) == null || !findUser(user_id).getPassword().equals(user_pw)){
             throw new loginFailException("로그인에 실패하였습니다. 아이디와 비밀번호를 다시 한번 확인해주세요.");
         }
