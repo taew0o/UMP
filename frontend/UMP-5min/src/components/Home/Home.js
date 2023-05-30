@@ -129,7 +129,7 @@ const Home = () => {
               <Button
                 style={{ marginTop: "15px" }}
                 onClick={() => {
-                  cookie.remove("cookie");
+                  // cookie.remove("cookie");
                   movePage("login");
                 }}
               >
