@@ -45,7 +45,7 @@ public class UserEntityTest {
     @Test
     @Rollback(value = false)
     public void findUser(){
-        User user= userService.findUser("park");
+        User user= userService.findUser("choi");
         System.out.println(user.getName());
         System.out.println(user.getId());
     }
