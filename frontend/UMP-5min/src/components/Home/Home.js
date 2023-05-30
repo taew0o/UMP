@@ -90,7 +90,7 @@ const Home = () => {
 
   return (
     <>
-      {isLogin && isOnline ? (
+      {isOnline ? (
         <Layout hasSider>
           <Sider style={{ height: "100vh", position: "fixed", left: 0 }}>
             <div
