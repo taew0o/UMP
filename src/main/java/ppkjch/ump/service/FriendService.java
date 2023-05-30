@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import ppkjch.ump.entity.Friend;
 import ppkjch.ump.entity.FriendRequest;
 import ppkjch.ump.entity.User;
+import ppkjch.ump.exception.FriendExistException;
+import ppkjch.ump.exception.FriendNotExistException;
 import ppkjch.ump.exception.FriendRequestExistException;
 import ppkjch.ump.repository.JpaFriendRepository;
 import ppkjch.ump.repository.JpaFriendRequestRepository;
@@ -25,12 +27,15 @@ public class FriendService {
 
 
     public List<User> findFriendList(User user){
-        return jpaFriendRepository.findFriend(user);
+        return jpaFriendRepository.findFriendList(user);
     }
 
     public void request(User sender, User receiver){
         if(jpaFriendRequestRepository.findSender(receiver).contains(sender)){
             throw new FriendRequestExistException("이미 해당 유저에게 친구 요청을 하였습니다.");
+        }
+        else if(jpaFriendRepository.findFriend(sender,receiver) != null){
+            throw new FriendExistException("이미 친구로 등록이 되어 있는 유저입니다.");
         }
         FriendRequest friendRequest = new FriendRequest();
         friendRequest.setSender(sender);
@@ -49,7 +54,12 @@ public class FriendService {
     }
 
     public void removeFriend(User u1, User u2){
+        if(jpaFriendRepository.findFriend(u1,u2) == null){
+            throw new FriendNotExistException("삭제하려는 친구가 존재하지 않습니다");
+        }
+        else{
 
+        }
     }
 
 }
