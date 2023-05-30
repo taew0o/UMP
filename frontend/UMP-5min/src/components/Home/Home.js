@@ -61,7 +61,7 @@ const Home = () => {
     }
     axios({
       method: "get",
-      url: "http://localhost:8080/user",
+      url: "/user",
       headers: {
         "Content-Type": `application/json`,
       },
@@ -90,7 +90,7 @@ const Home = () => {
 
   return (
     <>
-      {isLogin && isOnline ? (
+      {isOnline ? (
         <Layout hasSider>
           <Sider style={{ height: "100vh", position: "fixed", left: 0 }}>
             <div

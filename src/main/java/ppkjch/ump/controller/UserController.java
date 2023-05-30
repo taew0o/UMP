@@ -17,6 +17,7 @@ import ppkjch.ump.dto.ChangeUserDTO;
 import ppkjch.ump.dto.LoginForm;
 import ppkjch.ump.entity.User;
 import ppkjch.ump.dto.SignupForm;
+import ppkjch.ump.service.FriendService;
 import ppkjch.ump.service.UserService;
 
 import java.util.List;
@@ -27,6 +28,7 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final FriendService friendService;
 
     //회원가입 처리 메서드
     @PostMapping("/signup")
@@ -53,7 +55,7 @@ public class UserController {
             HttpSession session = request.getSession();
             session.setAttribute("userId", loginForm.getId());
             Cookie cookie = new Cookie("sessionId", session.getId());
-            cookie.setPath("/");
+            cookie.setPath("/**");
             cookie.setMaxAge(60 * 60 * 24); // 쿠키의 유효 시간 설정 (초 단위)
 
             HttpHeaders headers = new HttpHeaders();
@@ -66,15 +68,6 @@ public class UserController {
             return new ResponseEntity<>(r.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
-
-    @GetMapping("/friends")
-    public ResponseEntity<List<User>> getFriends(@CookieValue String userId) {
-        User findUser = userService.findUser(userId);
-        List<User> friends = userService.findFriend(findUser);
-
-        return ResponseEntity.status(HttpStatus.OK).body(friends);
-    }
-
     @GetMapping("/user")
     public ResponseEntity<User> getUserInfo(HttpServletRequest request){
         // 세션에서 유저 ID 가져오기
@@ -85,7 +78,6 @@ public class UserController {
 
         return ResponseEntity.ok(user);
     }
-
 
     @PutMapping("/user")
     public ResponseEntity<User> getUserInfo(HttpServletRequest request, @RequestBody ChangeUserDTO changeUserDTO){
@@ -99,17 +91,30 @@ public class UserController {
 
         return ResponseEntity.ok(user);
     }
+    @GetMapping("/friends")
+    public ResponseEntity<List<User>> getFriends(HttpServletRequest request) {
+        // 세션에서 유저 ID 가져오기
+        HttpSession session = request.getSession(false);
+        String userId = (String)session.getAttribute("userId");
+        // 유저 ID를 사용하여 유저 정보 조회
+        User user = userService.findUser(userId);
+        List<User> friends = userService.findFriend(user);
 
-    @PostMapping("/friend-request")
-    public ResponseEntity<?> requestFriend(@CookieValue String userId, @RequestBody String friendId){
-        User user1 = userService.findUser(userId);
-        User user2 = userService.findUser(friendId);
-        //request(user1, user2)
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.OK).body(friends);
     }
 
 
-
+    @PostMapping("/friend-request")
+    public ResponseEntity<?> requestFriend(HttpServletRequest request, @RequestBody String friendId){
+        // 세션에서 유저 ID 가져오기
+        HttpSession session = request.getSession(false);
+        String userId = (String)session.getAttribute("userId");
+        // 유저 ID를 사용하여 유저 정보 조회
+        User user1 = userService.findUser(userId);
+        User user2 = userService.findUser(friendId);
+        friendService.request(user1, user2);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
 
 //    @GetMapping("friend-request")
 //    public ResponseEntity<List<?>> getFriendRequest(@CookieValue String sessionId){ //Request로 제네릭 타입 추후 수정

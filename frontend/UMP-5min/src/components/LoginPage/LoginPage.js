@@ -18,7 +18,7 @@ const LoginPage = () => {
     console.log("Received values of form: ", values);
     axios({
       method: "post",
-      url: "http://localhost:8080/login",
+      url: "/login",
       headers: {
         "Content-Type": `application/json`,
       },

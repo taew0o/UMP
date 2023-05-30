@@ -58,7 +58,7 @@ public class UserService {
             return findUser(user_id);
         }
     }
-
+    @Transactional
     public void updateUser(User user, String name, String phone_num, String password){
         user.setName(name);
         user.setPhone_num(phone_num);
@@ -66,7 +66,7 @@ public class UserService {
     }
 
     public List<User> findFriend(User user){
-        return jpaFriendRepository.findFriend(user);
+        return jpaFriendRepository.findFriendList(user);
     }
 
 }
