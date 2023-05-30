@@ -66,7 +66,7 @@ public class UserService {
     }
 
     public List<User> findFriend(User user){
-        return jpaFriendRepository.findFriend(user);
+        return jpaFriendRepository.findFriendList(user);
     }
 
 }
