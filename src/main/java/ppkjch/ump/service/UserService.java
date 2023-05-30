@@ -59,6 +59,12 @@ public class UserService {
         }
     }
 
+    public void updateUser(User user, String name, String phone_num, String password){
+        user.setName(name);
+        user.setPhone_num(phone_num);
+        user.setPassword(password);
+    }
+
     public List<User> findFriend(User user){
         return jpaFriendRepository.findFriend(user);
     }

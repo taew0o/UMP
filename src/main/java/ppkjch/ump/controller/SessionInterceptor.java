@@ -15,7 +15,7 @@ public class SessionInterceptor implements HandlerInterceptor {
 
         HttpSession session = request.getSession(false);
         System.out.println("ssadas"+ request.getCookies().toString());
-        System.out.println(session.isNew());
+        //System.out.println(session.isNew());
         // 세션 정보가 없으면 로그인 페이지로 리다이렉트
         if (session == null || session.getAttribute("userId") == null) {
             throw new Exception("세션 정보가 없음");
