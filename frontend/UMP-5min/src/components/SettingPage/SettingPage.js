@@ -27,12 +27,12 @@ const SettingPage = ({ props }) => {
     console.log("Received values of form: ", values);
     axios({
       method: "put",
-      url: "http://localhost:8080/setting",
+      url: "http://localhost:8080/user",
       headers: {
         "Content-Type": `application/json`,
       },
       data: {
-        id: values.id,
+        name: values.nickname,
         phone_num: values.phone,
         password: values.password,
       },

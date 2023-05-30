@@ -86,6 +86,7 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @PutMapping("/user")
     public ResponseEntity<User> getUserInfo(HttpServletRequest request, @RequestBody ChangeUserDTO changeUserDTO){
         // 세션에서 유저 ID 가져오기
