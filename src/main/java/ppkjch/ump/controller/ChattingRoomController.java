@@ -27,7 +27,7 @@ public class ChattingRoomController {
     private final MessageService messageService;
 
     @PostMapping("/chattingroom")
-    public Long makeChattingRoom(@RequestBody List<String> userIds){
+    public ResponseEntity<ChattingRoom> makeChattingRoom(@RequestBody List<String> userIds){
         // 유저 IDs 정보로 유저 조회
         ArrayList<User> users = new ArrayList<>();
         for (String userId: userIds) {
@@ -35,7 +35,7 @@ public class ChattingRoomController {
             users.add(findUser);
         }
         //유저 정보로 채팅방 만들기
-        return chattingRoomService.makeRoom(users);
+        return new ResponseEntity<>(new ChattingRoom(), HttpStatus.OK);
     }
 
     @GetMapping("/chattingrooms")

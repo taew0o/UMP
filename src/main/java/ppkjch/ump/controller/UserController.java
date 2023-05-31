@@ -2,7 +2,6 @@ package ppkjch.ump.controller;
 
 
 
-import com.fasterxml.jackson.core.*;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -11,19 +10,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ppkjch.ump.dto.*;
 import ppkjch.ump.entity.User;
 import ppkjch.ump.exception.FriendExistException;
+import ppkjch.ump.exception.FriendNotExistException;
 import ppkjch.ump.exception.FriendRequestExistException;
 import ppkjch.ump.exception.NotValidUserId;
 import ppkjch.ump.service.FriendService;
 import ppkjch.ump.service.UserService;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.BigInteger;
+
 import java.util.List;
 
 @Controller
@@ -109,7 +106,7 @@ public class UserController {
 
 
     @PostMapping("/friend-request")
-    public ResponseEntity<?> requestFriend(HttpServletRequest request, @RequestBody FriendRequestDTO friendRequestDTO){
+    public ResponseEntity<?> requestFriend(HttpServletRequest request, @RequestBody FriendIdDTO friendRequestDTO){
         // 세션에서 유저 ID 가져오기
         HttpSession session = request.getSession(false);
         String userId = (String)session.getAttribute("userId");
@@ -153,6 +150,22 @@ public class UserController {
         catch (NotValidUserId e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-
     }
+    @DeleteMapping("friend")
+    public ResponseEntity<?> removeFriend(HttpServletRequest request, @RequestBody FriendIdDTO friendId){
+        // 세션에서 유저 ID 가져오기
+        HttpSession session = request.getSession(false);
+        String userId = (String)session.getAttribute("userId");
+        // 유저 ID를 사용하여 유저 정보 조회
+        User user = userService.findUser(userId);
+        User friend = userService.findUser(friendId.getFriendId());
+        try {
+            friendService.removeFriend(user, friend);
+            return ResponseEntity.noContent().build();
+        }
+        catch (FriendNotExistException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }
