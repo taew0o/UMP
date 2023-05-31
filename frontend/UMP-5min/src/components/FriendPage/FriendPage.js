@@ -12,7 +12,7 @@ const FriendPage = (props) => {
   const [conversations, setConversations] = useState([]);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showRequestsModal, setShowRequestsModal] = useState(false);
-  const [friendId, setFriendId] = useState("");
+  const [friendId, setFriendId] = useState();
   const [friendRequests, setFriendRequests] = useState([]);
 
   useEffect(() => {
@@ -69,6 +69,7 @@ const FriendPage = (props) => {
     })
       .then((response) => {
         console.log("----------------", response.data);
+        console.log(response);
       })
       .catch(function (error) {
         console.log(error);
