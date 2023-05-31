@@ -115,9 +115,28 @@ const FriendPage = (props) => {
   const acceptRequest = (requestId) => {
     // 요청 기능 구현해야됨
     console.log(`Accepted request from ${requestId}`);
-    setFriendRequests(
-      friendRequests.filter((request) => request.id !== requestId)
-    );
+    // setFriendRequests(
+    //   friendRequests.filter((request) => request.id !== requestId)
+    // );
+    axios({
+      method: "post",
+      url: "/friend-response",
+      headers: {
+        "Content-Type": `application/json`,
+      },
+      data: {
+        isAccept: true,
+        senderId: requestId,
+      },
+      withCredentials: true,
+    })
+      .then((response) => {
+        console.log("----------------", response);
+      })
+      .catch((error) => {
+        console.log(error);
+        // alert(`에러 발생 관리자 문의하세요!`);
+      });
   };
 
   const declineRequest = (requestId) => {
