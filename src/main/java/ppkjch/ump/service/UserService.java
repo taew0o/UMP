@@ -5,9 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ppkjch.ump.entity.Friend;
 import ppkjch.ump.entity.User;
-import ppkjch.ump.exception.IdDuplicateException;
-import ppkjch.ump.exception.loginFailException;
-import ppkjch.ump.exception.passwordNotEqualException;
+import ppkjch.ump.exception.*;
 import ppkjch.ump.repository.JpaFriendRepository;
 import ppkjch.ump.repository.JpaUserRepository;
 
@@ -34,7 +32,12 @@ public class UserService {
     }
 
     public User findUser(String userId){
-        return jpaUserRepository.findOne(userId);
+
+        User user = jpaUserRepository.findOne(userId);
+        if(user == null){
+            throw new NotValidUserId("해당 유저가 존재하지 않습니다.");
+        }
+        return user;
     }
 
     public void signUp(String id, String name, String pw, String pw_re){
@@ -67,6 +70,15 @@ public class UserService {
 
     public List<User> findFriend(User user){
         return jpaFriendRepository.findFriendList(user);
+    }
+
+
+
+    public void checkMyself(String sender, String receiver){
+        if (sender.equals(receiver)){
+            throw new FriendMyselfException("자신에게는 친구추가를 할 수 없습니다.");
+        }
+        return;
     }
 
 }

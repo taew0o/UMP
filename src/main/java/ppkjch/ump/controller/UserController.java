@@ -10,13 +10,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import ppkjch.ump.dto.ChangeUserDTO;
-import ppkjch.ump.dto.LoginForm;
+import ppkjch.ump.dto.*;
 import ppkjch.ump.entity.User;
-import ppkjch.ump.dto.SignupForm;
+import ppkjch.ump.exception.FriendExistException;
+import ppkjch.ump.exception.FriendNotExistException;
+import ppkjch.ump.exception.FriendRequestExistException;
+import ppkjch.ump.exception.NotValidUserId;
 import ppkjch.ump.service.FriendService;
 import ppkjch.ump.service.UserService;
 
@@ -105,22 +106,66 @@ public class UserController {
 
 
     @PostMapping("/friend-request")
-    public ResponseEntity<User> requestFriend(HttpServletRequest request, @RequestBody String friendId){
+    public ResponseEntity<?> requestFriend(HttpServletRequest request, @RequestBody FriendIdDTO friendRequestDTO){
         // 세션에서 유저 ID 가져오기
         HttpSession session = request.getSession(false);
         String userId = (String)session.getAttribute("userId");
         // 유저 ID를 사용하여 유저 정보 조회
-        User user1 = userService.findUser(userId);
-        User user2 = userService.findUser(friendId);
-        friendService.request(user1, user2);
-        return ResponseEntity.ok(user2);
+        String friendId = friendRequestDTO.getFriendId();
+        try {
+            userService.checkMyself(userId, friendId);
+            User user1 = userService.findUser(userId);
+            User user2 = userService.findUser(friendId);
+            friendService.request(user1, user2);
+            return ResponseEntity.ok(user2);
+        }
+        catch (FriendExistException | FriendRequestExistException | NotValidUserId e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
-//    @GetMapping("friend-request")
-//    public ResponseEntity<List<?>> getFriendRequest(@CookieValue String sessionId){ //Request로 제네릭 타입 추후 수정
-//
-//        userService.findUser(userId);
-//
-//        ResponseEntity.
-//    }
+    @GetMapping("/friend-requests")
+    public ResponseEntity<List<?>> getFriendRequest(HttpServletRequest request){ //Request로 제네릭 타입 추후 수정
+        // 세션에서 유저 ID 가져오기
+        HttpSession session = request.getSession(false);
+        String userId = (String)session.getAttribute("userId");
+        // 유저 ID를 사용하여 유저 정보 조회
+        User user = userService.findUser(userId);
+        List<User> friendRequestList = friendService.findFriendRequestList(user);
+        return ResponseEntity.ok(friendRequestList);
+    }
+
+    @PostMapping("/friend-response")
+    public ResponseEntity<?> applyFriendResponse(HttpServletRequest request, @RequestBody FriendResponseDTO friendResponse){ //
+        // 세션에서 유저 ID 가져오기
+        HttpSession session = request.getSession(false);
+        String userId = (String)session.getAttribute("userId");
+        // 유저 ID를 사용하여 유저 정보 조회
+        try {
+            User receiver = userService.findUser(userId);
+            User sender = userService.findUser(friendResponse.getSenderId());
+            friendService.takeRequest(sender, receiver, friendResponse.getIsAccept());
+            return ResponseEntity.ok(sender);
+        }
+        catch (NotValidUserId e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+    @DeleteMapping("friend")
+    public ResponseEntity<?> removeFriend(HttpServletRequest request, @RequestBody FriendIdDTO friendId){
+        // 세션에서 유저 ID 가져오기
+        HttpSession session = request.getSession(false);
+        String userId = (String)session.getAttribute("userId");
+        // 유저 ID를 사용하여 유저 정보 조회
+        User user = userService.findUser(userId);
+        User friend = userService.findUser(friendId.getFriendId());
+        try {
+            friendService.removeFriend(user, friend);
+            return ResponseEntity.noContent().build();
+        }
+        catch (FriendNotExistException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }

@@ -18,92 +18,98 @@ import ppkjch.ump.repository.JpaUserRepository;
 @Transactional
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
-
 class FriendServiceTest {
     @Autowired
     public FriendService friendService;
     @Autowired
     public UserService userService;
+    User U = new User();
+    User M = new User();
+    User P = new User();
+
     @Test
     @Rollback(value = false)
     void findFriendList() {
-        User U = new User();
-        User M = new User();
-        User P = new User();
         U.setId("alexander");
         U.setPassword("123");
         U.setName("arnold");
+        U.setPhone_num("01012345678");
         userService.join(U);
         M.setId("jordan");
         M.setPassword("456");
         M.setName("henderson");
+        M.setPhone_num("01012345678");
         userService.join(M);
         P.setId("mohamed");
         P.setPassword("789");
         P.setName("salah");
+        P.setPhone_num("01012345678");
         userService.join(P);
+
 
     }
 
     @Test
+    @Rollback(value = false)
     void request() {
-        User U = new User();
-        User M = new User();
-        User P = new User();
         U.setId("alexander");
         U.setPassword("123");
         U.setName("arnold");
-        U.setPhone_num("01011111111");
-        userService.join(U);
-//        M.setId("jordan");
-//        M.setPassword("456");
-//        M.setName("henderson");
-//        userService.join(M);
-//        P.setId("mohamed");
-//        P.setPassword("789");
-//        P.setName("salah");
-//        userService.join(P);
-        //친구요청
-//        friendService.request(U, M);
-//        friendService.request(M, P);
-    }
-
-    @Test
-    void findFriendRequestList() {
-        User U = new User();
-        User M = new User();
-        User P = new User();
-        U.setId("alexander");
-        U.setPassword("123");
-        U.setName("arnold");
+        U.setPhone_num("01012345678");
         userService.join(U);
         M.setId("jordan");
         M.setPassword("456");
         M.setName("henderson");
+        M.setPhone_num("01012345678");
         userService.join(M);
         P.setId("mohamed");
         P.setPassword("789");
         P.setName("salah");
+        P.setPhone_num("01012345678");
+        userService.join(P);
+        //친구요청
+        friendService.request(U, M);
+        friendService.request(P, U);
+    }
+
+    @Test
+    @Rollback(value = false)
+    void findFriendRequestList() {
+        U.setId("alexander");
+        U.setPassword("123");
+        U.setName("arnold");
+        U.setPhone_num("01012345678");
+        userService.join(U);
+        M.setId("jordan");
+        M.setPassword("456");
+        M.setName("henderson");
+        M.setPhone_num("01012345678");
+        userService.join(M);
+        P.setId("mohamed");
+        P.setPassword("789");
+        P.setName("salah");
+        P.setPhone_num("01012345678");
         userService.join(P);
 
     }
 
     @Test
+    @Rollback(value = false)
     void addFriend() {
-        User U = new User();
-        User M = new User();
-        User P = new User();
         U.setId("alexander");
         U.setPassword("123");
         U.setName("arnold");
+        U.setPhone_num("01012345678");
         userService.join(U);
         M.setId("jordan");
         M.setPassword("456");
         M.setName("henderson");
+        M.setPhone_num("01012345678");
         userService.join(M);
         P.setId("mohamed");
         P.setPassword("789");
         P.setName("salah");
+        P.setPhone_num("01012345678");
         userService.join(P);
         //친구 추가
         friendService.addFriend(U, M);
@@ -111,21 +117,22 @@ class FriendServiceTest {
     }
 
     @Test
+    @Rollback(value = false)
     void removeFriend() {
-        User U = new User();
-        User M = new User();
-        User P = new User();
         U.setId("alexander");
         U.setPassword("123");
         U.setName("arnold");
+        U.setPhone_num("01012345678");
         userService.join(U);
         M.setId("jordan");
         M.setPassword("456");
         M.setName("henderson");
+        M.setPhone_num("01012345678");
         userService.join(M);
         P.setId("mohamed");
         P.setPassword("789");
         P.setName("salah");
+        P.setPhone_num("01012345678");
         userService.join(P);
         //M과 P중 M만 삭제
         friendService.addFriend(U,M);
