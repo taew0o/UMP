@@ -5,6 +5,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class FriendRequestDTO {
+public class FriendIdDTO {
     private String friendId;
 }
