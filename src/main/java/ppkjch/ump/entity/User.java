@@ -1,6 +1,7 @@
 package ppkjch.ump.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -17,6 +18,7 @@ public class User{
     @NotNull
     private String name;
     @NotNull
+    @JsonIgnore
     private String password;
     @NotNull
     private String phone_num;
