@@ -1,6 +1,5 @@
 package ppkjch.ump.service;
 
-import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
