@@ -3,7 +3,7 @@ import "./FriendList.css";
 import { Button, Modal } from "antd";
 
 export default function FriendList(props) {
-  const { photo, name, text } = props.data;
+  const { id, name, text, appointmentScore } = props.data;
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [confirmModalIsOpen, setConfirmModalIsOpen] = useState(false);
   const [confirmModalTitle, setConfirmModalTitle] = useState("");
@@ -32,7 +32,7 @@ export default function FriendList(props) {
     const randomIndex = Math.floor(Math.random() * colors.length);
     return colors[randomIndex];
   };
-
+  console.log("asdasd", appointmentScore);
   const photoStyle = {
     display: "flex",
     alignItems: "center",
@@ -48,7 +48,7 @@ export default function FriendList(props) {
     <>
       <div className="friend-list-item" onClick={() => setModalIsOpen(true)}>
         <div className="friend-photo" style={photoStyle}>
-          {photo}
+          {id}
         </div>
         <div className="friend-info">
           <h1 className="friend-title">{name}</h1>
@@ -62,7 +62,7 @@ export default function FriendList(props) {
       >
         <div className="friend-modal-content">
           <div className="friend-list-item">
-            <img className="friend-photo" src={photo} alt="friend" />
+            {/* <div className="friend-photo" src={id} alt="friend" /> */}
             <div className="friend-info">
               <h1 className="friend-title">{name}</h1>
             </div>
@@ -75,6 +75,13 @@ export default function FriendList(props) {
             <h2>약속 참여율:</h2>
             <div className="attendance-rate-box">
               {/* 약속 참여율 정보를 출력하는 코드가 들어갈 위치입니다. */}
+              {/* {appointmentScore.map((value) => {
+                <div key={appointmentScore.length}>
+                  {"참석: " + value.numAttend + "\n"}
+                  {"불참: " + value.numNotAttend + "\n"}
+                  {"불참: " + value.numLate + "\n"}
+                </div>;
+              })} */}
             </div>
           </div>
         </div>
