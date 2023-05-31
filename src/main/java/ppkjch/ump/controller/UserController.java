@@ -127,7 +127,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("friend-request")
+    @GetMapping("friend-requests")
     public ResponseEntity<List<?>> getFriendRequest(HttpServletRequest request){ //Request로 제네릭 타입 추후 수정
         // 세션에서 유저 ID 가져오기
         HttpSession session = request.getSession(false);
