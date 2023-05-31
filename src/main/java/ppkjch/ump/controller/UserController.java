@@ -14,11 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import ppkjch.ump.dto.ChangeUserDTO;
-import ppkjch.ump.dto.FriendRequestDTO;
-import ppkjch.ump.dto.LoginForm;
+import ppkjch.ump.dto.*;
 import ppkjch.ump.entity.User;
-import ppkjch.ump.dto.SignupForm;
 import ppkjch.ump.exception.FriendExistException;
 import ppkjch.ump.exception.FriendRequestExistException;
 import ppkjch.ump.exception.NotValidUserId;
@@ -130,7 +127,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("friend-requests")
+    @GetMapping("/friend-requests")
     public ResponseEntity<List<?>> getFriendRequest(HttpServletRequest request){ //Request로 제네릭 타입 추후 수정
         // 세션에서 유저 ID 가져오기
         HttpSession session = request.getSession(false);
@@ -139,5 +136,23 @@ public class UserController {
         User user = userService.findUser(userId);
         List<User> friendRequestList = friendService.findFriendRequestList(user);
         return ResponseEntity.ok(friendRequestList);
+    }
+
+    @PostMapping("/friend-response")
+    public ResponseEntity<?> applyFriendResponse(HttpServletRequest request, @RequestBody FriendResponseDTO friendResponse){ //
+        // 세션에서 유저 ID 가져오기
+        HttpSession session = request.getSession(false);
+        String userId = (String)session.getAttribute("userId");
+        // 유저 ID를 사용하여 유저 정보 조회
+        try {
+            User receiver = userService.findUser(userId);
+            User sender = userService.findUser(friendResponse.getSenderId());
+            friendService.takeRequest(sender, receiver, friendResponse.getIsAccept());
+            return ResponseEntity.ok(sender);
+        }
+        catch (NotValidUserId e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
     }
 }
