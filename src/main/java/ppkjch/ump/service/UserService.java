@@ -72,6 +72,8 @@ public class UserService {
         return jpaFriendRepository.findFriendList(user);
     }
 
+
+
     public void checkMyself(String sender, String receiver){
         if (sender.equals(receiver)){
             throw new FriendMyselfException("자신에게는 친구추가를 할 수 없습니다.");
