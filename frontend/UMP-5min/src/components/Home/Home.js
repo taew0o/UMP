@@ -7,7 +7,7 @@ import SettingPage from "../SettingPage/SettingPage";
 import FriendPage from "../FriendPage/FriendPage";
 import CalendarPage from "../CalendarPage/CalendarPage";
 import ChatPage from "../ChatPage/ChatPage";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes, Link } from "react-router-dom";
 import MessageList from "../MessageList/MessageList";
 import Review from "../Review/Review";
 import cookie from "react-cookies";
@@ -25,7 +25,6 @@ function getDefaultSelectedKey() {
 const Home = () => {
   const [myData, setMyData] = useState();
   const [selectedPage, setSelectedPageKey] = useState(getDefaultSelectedKey());
-  const navigate = useNavigate();
   const isOnline = useInternetConnection();
   const [isLoading, setLoad] = useState(false);
   const [isLogin, setLogin] = useState(false);
@@ -34,26 +33,8 @@ const Home = () => {
     if (!isOnline) {
       navigate("/login");
     }
-  }, [isOnline, navigate]);
+  }, [isOnline]);
 
-  function movePage(page) {
-    navigate("/" + page);
-  }
-
-  const renderContent = () => {
-    switch (selectedPage) {
-      case "1":
-        return movePage("");
-      case "2":
-        return movePage("friend");
-      case "3":
-        return movePage("calendar");
-      case "4":
-        return movePage("setting");
-      default:
-        return;
-    }
-  };
   useEffect(() => {
     console.log(document.cookie);
     if (document.cookie) {
@@ -84,10 +65,6 @@ const Home = () => {
     localStorage.setItem("selectedKey", key);
   }
 
-  useEffect(() => {
-    renderContent();
-  }, [selectedPage]);
-
   return (
     <>
       {isOnline ? (
@@ -106,18 +83,18 @@ const Home = () => {
               selectedKeys={[getDefaultSelectedKey()]}
               onSelect={({ key }) => setSelectedPage(key)}
             >
-              <Menu.Item key="1" icon={<BsFillChatFill />}>
-                채팅
-              </Menu.Item>
-              <Menu.Item key="2" icon={<FaUserFriends />}>
-                친구
-              </Menu.Item>
-              <Menu.Item key="3" icon={<BsFillCalendarCheckFill />}>
-                캘린더
-              </Menu.Item>
-              <Menu.Item key="4" icon={<AiFillSetting />}>
-                설정
-              </Menu.Item>
+            <Menu.Item key="1" icon={<BsFillChatFill />}>
+              <Link to="/">채팅</Link>
+            </Menu.Item>
+            <Menu.Item key="2" icon={<FaUserFriends />}>
+              <Link to="friend">친구</Link>
+            </Menu.Item>
+            <Menu.Item key="3" icon={<BsFillCalendarCheckFill />}>
+              <Link to="calendar">캘린더</Link>
+            </Menu.Item>
+            <Menu.Item key="4" icon={<AiFillSetting />}>
+              <Link to="setting">설정</Link>
+            </Menu.Item>
             </Menu>
           </Sider>
           <Layout
@@ -171,7 +148,7 @@ const Home = () => {
           </Layout>
         </Layout>
       ) : (
-        movePage("login")
+        <LoginPage />
       )}
     </>
   );
