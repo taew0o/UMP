@@ -45,6 +45,12 @@ public class FriendService {
         return jpaFriendRequestRepository.findSender(receiver);
     }
 
+    public void takeRequest(User sender, User receiver, Boolean is_accept){
+        if(is_accept){
+            addFriend(sender,receiver);
+        }
+        deleteRequest(sender,receiver);
+    }
     @Transactional
     public void addFriend(User u1, User u2){
         Friend friend = new Friend();
