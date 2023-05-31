@@ -119,6 +119,7 @@ public class UserController {
         // 유저 ID를 사용하여 유저 정보 조회
         String friendId = friendRequestDTO.getFriendId();
         try {
+            userService.checkMyself(userId, friendId);
             User user1 = userService.findUser(userId);
             User user2 = userService.findUser(friendId);
             friendService.request(user1, user2);
@@ -129,11 +130,14 @@ public class UserController {
         }
     }
 
-//    @GetMapping("friend-request")
-//    public ResponseEntity<List<?>> getFriendRequest(@CookieValue String sessionId){ //Request로 제네릭 타입 추후 수정
-//
-//        userService.findUser(userId);
-//
-//        ResponseEntity.
-//    }
+    @GetMapping("friend-requests")
+    public ResponseEntity<List<?>> getFriendRequest(HttpServletRequest request){ //Request로 제네릭 타입 추후 수정
+        // 세션에서 유저 ID 가져오기
+        HttpSession session = request.getSession(false);
+        String userId = (String)session.getAttribute("userId");
+        // 유저 ID를 사용하여 유저 정보 조회
+        User user = userService.findUser(userId);
+        List<User> friendRequestList = friendService.findFriendRequestList(user);
+        return ResponseEntity.ok(friendRequestList);
+    }
 }
