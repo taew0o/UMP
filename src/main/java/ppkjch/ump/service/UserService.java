@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import ppkjch.ump.entity.Friend;
 import ppkjch.ump.entity.User;
 import ppkjch.ump.exception.IdDuplicateException;
+import ppkjch.ump.exception.NotValidUserId;
 import ppkjch.ump.exception.loginFailException;
 import ppkjch.ump.exception.passwordNotEqualException;
 import ppkjch.ump.repository.JpaFriendRepository;
@@ -34,7 +35,12 @@ public class UserService {
     }
 
     public User findUser(String userId){
-        return jpaUserRepository.findOne(userId);
+
+        User user = jpaUserRepository.findOne(userId);
+        if(user == null){
+            throw new NotValidUserId("해당 유저가 존재하지 않습니다.");
+        }
+        return user;
     }
 
     public void signUp(String id, String name, String pw, String pw_re){
