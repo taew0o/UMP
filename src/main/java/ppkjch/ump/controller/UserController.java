@@ -127,7 +127,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("friend-requests")
+    @GetMapping("/friend-requests")
     public ResponseEntity<List<?>> getFriendRequest(HttpServletRequest request){ //Request로 제네릭 타입 추후 수정
         // 세션에서 유저 ID 가져오기
         HttpSession session = request.getSession(false);
@@ -137,4 +137,15 @@ public class UserController {
         List<User> friendRequestList = friendService.findFriendRequestList(user);
         return ResponseEntity.ok(friendRequestList);
     }
+
+//    @PostMapping("friend-reponse")
+//    public ResponseEntity<List<?>> getFriendRequest(HttpServletRequest request){ //Request로 제네릭 타입 추후 수정
+//        // 세션에서 유저 ID 가져오기
+//        HttpSession session = request.getSession(false);
+//        String userId = (String)session.getAttribute("userId");
+//        // 유저 ID를 사용하여 유저 정보 조회
+//        User user = userService.findUser(userId);
+//        List<User> friendRequestList = friendService.findFriendRequestList(user);
+//        return ResponseEntity.ok(friendRequestList);
+//    }
 }
