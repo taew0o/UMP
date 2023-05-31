@@ -17,15 +17,16 @@ const FriendPage = (props) => {
 
   useEffect(() => {
     getConversations();
-
-    setFriendRequests([
-      { id: "user1", name: "John Doe" },
-      { id: "user2", name: "Jane Smith" },
-    ]);
+    getFriendList();
+    // console.log(getFriendList());
+    // setFriendRequests([
+    //   { id: "user1", name: "John Doe" },
+    //   { id: "user2", name: "Jane Smith" },
+    // ]);
   }, []);
 
   const getConversations = () => {
-    // axios.get("https://randomuser.me/api/?results=20").then((response) => {
+    // axios.get("https://randomuser.me/apix/?results=20").then((response) => {
     //   let newConversations = response.data.results.map((result) => {
     //     return {
     //       photo: `${result.name.last}`,
@@ -51,6 +52,28 @@ const FriendPage = (props) => {
 
   const closeRequestsModal = () => {
     setShowRequestsModal(false);
+  };
+
+  const getFriendList = () => {
+    axios({
+      method: "get",
+      url: "/friend-requests",
+      headers: {
+        "Content-Type": `application/json`,
+      },
+      withCredentials: true,
+    })
+      .then((response) => {
+        console.log("----------------", response);
+        const newFriendRequests = response.data.map((value) => {
+          return { id: value.id, name: value.name };
+        });
+        setFriendRequests([...friendRequests, ...newFriendRequests]);
+      })
+      .catch((error) => {
+        console.log(error);
+        // alert(`에러 발생 관리자 문의하세요!`);
+      });
   };
 
   const addFriend = () => {
@@ -157,7 +180,7 @@ const FriendPage = (props) => {
               justifyContent: "space-between",
             }}
           >
-            <span>{request.name}</span>
+            <span>{request.name + "(" + request.id + ")"}</span>
             <div>
               <Button
                 onClick={() => acceptRequest(request.id)}
