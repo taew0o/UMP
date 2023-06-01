@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ppkjch.ump.dto.MakeRoomDTO;
+import ppkjch.ump.dto.RoomIdDTO;
 import ppkjch.ump.dto.UserAndRoomDTO;
 import ppkjch.ump.entity.ChattingRoom;
 import ppkjch.ump.entity.Message;
@@ -91,7 +92,8 @@ public class ChattingRoomController {
     }
 
     @GetMapping("/chattingroom/messages")
-    public ResponseEntity<List<Message>> getMessages(@RequestBody Long roomId){ //보안 때문에 userId 넣어야 할 수도?
+    public ResponseEntity<List<Message>> getMessages(@RequestBody RoomIdDTO roomIdDTO){ //보안 때문에 userId 넣어야 할 수도?
+        Long roomId = roomIdDTO.getRoomId();
         List<Message> messages = messageService.findMessages(roomId);
         return ResponseEntity.status(HttpStatus.OK).body(messages);
     }

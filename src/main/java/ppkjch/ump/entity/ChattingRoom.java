@@ -21,7 +21,7 @@ public class ChattingRoom {
 
     public int numPerson = 0;
 
-    public String ChattingRoomName;
+    public String chattingRoomName;
 
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createTime;

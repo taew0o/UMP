@@ -6,5 +6,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RoomIdDTO {
-    String roomId;
+    Long roomId;
 }
