@@ -28,9 +28,12 @@ public class ChattingRoomService {
     }
 
     @Transactional
-    public Long makeRoom(List<User> users){
+    public Long makeRoom(String chatroom_name, List<User> users){
         //유저 채팅방 생성
         int numPerson = users.size();
+        if(numPerson > 10){
+            throw new RoomFullException("10명 이하의 유저를 선택해주십시오.");
+        }
         List<UserChattingRoom> userChattingRooms = new ArrayList<>();
         for (User user: users) { //각 유저ID로 User 찾아 UserChattingroom객체 만들어 매핑
             UserChattingRoom userChattingRoom = new UserChattingRoom();
@@ -39,7 +42,7 @@ public class ChattingRoomService {
         }
 
         //채팅방 생성
-        ChattingRoom chattingRoom = ChattingRoom.createChattingroom(numPerson,userChattingRooms);
+        ChattingRoom chattingRoom = ChattingRoom.createChattingroom(numPerson,chatroom_name,userChattingRooms);
         jpaChattingRoomRepository.save(chattingRoom);
         return chattingRoom.getId();
     }

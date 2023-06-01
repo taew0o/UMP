@@ -39,9 +39,10 @@ public class ChattingRoom {
     //==생성 메서드==//
 
     //채팅방 생성 정보 받아서 채팅방 생성 및 연관관계 설정
-    public static ChattingRoom createChattingroom(int numPerson, List<UserChattingRoom> userChattingRooms) {
+    public static ChattingRoom createChattingroom(int numPerson,String chatroom_name, List<UserChattingRoom> userChattingRooms) {
         //ChattingRoom 객체만들어 속성 set하고 받은 userChattingRooms와 양방향으로 연관관계 설정(서로를 멤버로 설정)
         ChattingRoom chattingRoom = new ChattingRoom();
+        chattingRoom.setChattingRoomName(chatroom_name);
         chattingRoom.setCreateTime(LocalDateTime.now());
         chattingRoom.setNumPerson(numPerson);
         System.out.println("userChattingRooms.isEmpty() = " + userChattingRooms.isEmpty());
