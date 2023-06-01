@@ -14,6 +14,7 @@ const FriendPage = (props) => {
   const [showRequestsModal, setShowRequestsModal] = useState(false);
   const [friendId, setFriendId] = useState();
   const [friendRequests, setFriendRequests] = useState([]);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     getFriend();
@@ -40,6 +41,18 @@ const FriendPage = (props) => {
   const closeRequestsModal = () => {
     setShowRequestsModal(false);
   };
+
+  const filterFriends = () => {
+    // 검색어에 해당하는 친구들만 필터링
+    return friends.filter((friend) =>
+      friend.name.toLowerCase().includes(search.toLowerCase())
+    );
+  };
+
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
+  };
+
 
   const getFriend = () => {
     axios({
@@ -271,8 +284,8 @@ const FriendPage = (props) => {
         )}
       </Modal>
 
-      <FriendSearch />
-      {friends.map((friend) => (
+     <FriendSearch handleSearch={handleSearch} />
+      {filterFriends().map((friend) => (
         <FriendList key={friend.name} data={friend} />
       ))}
     </div>
