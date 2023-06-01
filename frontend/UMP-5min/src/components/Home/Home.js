@@ -158,7 +158,10 @@ const Home = () => {
                       path="/setting"
                       element={<SettingPage props={myData} />}
                     />
-                    <Route path="/room/:id" element={<MessageList />} />
+                    <Route
+                      path="/room/:id"
+                      element={<MessageList props={myData} />}
+                    />
                     <Route path="/review/:id" element={<Review />} />
                   </Routes>
                 </div>
