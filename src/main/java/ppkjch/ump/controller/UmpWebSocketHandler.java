@@ -60,7 +60,7 @@ public class UmpWebSocketHandler extends TextWebSocketHandler {
             //방 가져오기
             ChattingRoom room = chattingRoomService.findRoom(Long.parseLong(textMessageDTO.getRoomId()));
             //날짜 가져오기
-            LocalDateTime sendTime = textMessageDTO.getSendTime();
+            LocalDateTime sendTime = LocalDateTime.parse(textMessageDTO.getSendTime());
             //텍스트 가져오기
             String text = textMessageDTO.getTextMsg();
             //메세지 저장
