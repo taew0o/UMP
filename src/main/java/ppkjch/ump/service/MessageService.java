@@ -26,6 +26,12 @@ public class MessageService {
         jpaMessageRepository.save(message);
         return message.getId();
     }
+    @Transactional
+    public Long sendMessage(Message message){
+        jpaMessageRepository.save(message);
+        return message.getId();
+    }
+
     public List<Message> findMessages(Long roomId){
         ChattingRoom room = jpaChattingRoomRepository.findOne(roomId);
         return jpaMessageRepository.findMessageByRoom(room);
