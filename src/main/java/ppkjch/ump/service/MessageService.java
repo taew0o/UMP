@@ -11,6 +11,7 @@ import ppkjch.ump.entity.UserChattingRoom;
 import ppkjch.ump.repository.JpaChattingRoomRepository;
 import ppkjch.ump.repository.JpaMessageRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -21,8 +22,8 @@ public class MessageService {
     final private JpaChattingRoomRepository jpaChattingRoomRepository;
 
     @Transactional
-    public Long createMessage(String text, User user, ChattingRoom chattingRoom){
-        Message message = Message.createMessage(text,user,chattingRoom);
+    public Long createMessage(String text, User user, ChattingRoom chattingRoom, LocalDateTime sendTime){
+        Message message = Message.createMessage(text,user,chattingRoom, sendTime);
         jpaMessageRepository.save(message);
         return message.getId();
     }

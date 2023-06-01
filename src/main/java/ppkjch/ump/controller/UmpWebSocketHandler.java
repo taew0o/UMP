@@ -10,12 +10,19 @@ import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
+import ppkjch.ump.dto.TextMessageDTO;
+import ppkjch.ump.entity.ChattingRoom;
 import ppkjch.ump.entity.Message;
+import ppkjch.ump.entity.User;
+import ppkjch.ump.service.ChattingRoomService;
 import ppkjch.ump.service.MessageService;
+import ppkjch.ump.service.UserService;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 
@@ -26,6 +33,8 @@ public class UmpWebSocketHandler extends TextWebSocketHandler {
     //private final
     // WebSocketHandler 구현
     private final MessageService messageService;
+    private final UserService userService;
+    private final ChattingRoomService chattingRoomService;
     private static Set<Session> clients = Collections.synchronizedSet(new HashSet<Session>());
     private static Logger logger = LoggerFactory.getLogger(UmpWebSocketHandler.class);
     @Override
@@ -37,13 +46,26 @@ public class UmpWebSocketHandler extends TextWebSocketHandler {
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         super.handleTextMessage(session, message);
         System.out.println(message.getPayload());
+
+        //유저 가져오기
+        Map<String, Object> attributes = session.getAttributes();
+        String userId = (String)attributes.get("userId");
+        User sender = userService.findUser(userId);
+
         String jsonString = message.getPayload();
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             // JSON 문자열을 Java 객체로 파싱
-            Message parsedMessage = objectMapper.readValue(jsonString, Message.class);
-            messageService.sendMessage(parsedMessage);
-            System.out.println("parsedMessage.getTextMsg() = " + parsedMessage.getTextMsg());;
+            TextMessageDTO textMessageDTO = objectMapper.readValue(jsonString, TextMessageDTO.class);
+            //방 가져오기
+            ChattingRoom room = chattingRoomService.findRoom(textMessageDTO.getRoomId());
+            //날짜 가져오기
+            LocalDateTime sendTime = textMessageDTO.getSendTime();
+            //텍스트 가져오기
+            String text = textMessageDTO.getTextMsg();
+            //메세지 저장
+            messageService.createMessage(text, sender, room, sendTime);
+
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,13 +1,25 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import shave from "shave";
 import "./ConversationListItem.css";
 
 const ConversationListItem = (props) => {
   const navigate = useNavigate();
+  const [backgroundColor, setBackgroundColor] = useState("");
+
   useEffect(() => {
     shave(".conversation-snippet", 20);
   });
+
+  useEffect(() => {
+    let storedColor = localStorage.getItem(name);
+    if (!storedColor) {
+      storedColor = getRandomColor();
+      localStorage.setItem(name, storedColor);
+    }
+    setBackgroundColor(storedColor);
+  }, []);
+
   const clickHandler = () => {
     console.log(name);
     navigate(`/room/${id}`, { state: { id, name, member, createTime } });
@@ -38,7 +50,7 @@ const ConversationListItem = (props) => {
     borderRadius: "50%",
     color: "black",
     marginRight: "20px",
-    backgroundColor: getRandomColor(),
+    backgroundColor: backgroundColor,
   };
 
   return (
