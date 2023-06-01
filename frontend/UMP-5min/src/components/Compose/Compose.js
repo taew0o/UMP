@@ -5,14 +5,11 @@ export default function Compose(props) {
   const [msg, setMsg] = useState();
 
   const sendMessage = (e) => {
-    props.getText([
-      {
-        id: props.messages.length,
-        author: "apple",
-        message: msg,
-        timestamp: new Date().getTime(),
-      },
-    ]);
+    props.getText({
+      author: props.MY_USER_ID,
+      message: msg,
+      timestamp: new Date().getTime(),
+    });
   };
 
   return (

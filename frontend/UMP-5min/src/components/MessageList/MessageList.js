@@ -11,9 +11,9 @@ import ReactModal from "react-modal";
 import Review from "../Review/Review";
 import { Button } from "antd";
 
-const MY_USER_ID = "apple";
+export default function MessageList({ props }) {
+  const MY_USER_ID = props.id;
 
-export default function MessageList(props) {
   const [messages, setMessages] = useState([]);
   const location = useLocation();
   const { id } = useParams();
@@ -34,6 +34,7 @@ export default function MessageList(props) {
   const ws = useRef(null);
 
   useEffect(() => {
+    console.log("My id???????????????", MY_USER_ID);
     console.log(text);
     makeMsg();
     renderMessages();
@@ -47,7 +48,7 @@ export default function MessageList(props) {
 
   const makeMsg = () => {
     if (text) {
-      setMessages([...messages, ...text]);
+      setMessages([...messages, text]);
       send();
     }
   };
@@ -85,13 +86,13 @@ export default function MessageList(props) {
     }
 
     if (text) {
-      // const data = {
-      //   name,
-      //   msg,
-      //   date: new Date().toLocaleString(),
-      // }; //전송 데이터(JSON)
+      const data = {
+        roomId: id,
+        textMsg: text.message,
+        date: new Date().toLocaleString(),
+      }; //전송 데이터(JSON)
 
-      const temp = JSON.stringify(text);
+      const temp = JSON.stringify(data);
 
       if (ws.current.readyState === 0) {
         //readyState는 웹 소켓 연결 상태를 나타냄
@@ -192,6 +193,7 @@ export default function MessageList(props) {
         messages={messages}
         getText={getText}
         setMessages={setMessages}
+        MY_USER_ID={MY_USER_ID}
       />
 
       <ReactModal
