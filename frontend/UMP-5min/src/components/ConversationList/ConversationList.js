@@ -6,15 +6,17 @@ import axios from "axios";
 import { Button, Popover, Input } from "antd";
 import "./ConversationList.css";
 import ConversationSearch from "../ConversationSearch/ConversationSearch";
+import { Checkbox } from "antd";
 
 export default function ConversationList(props) {
   const [conversations, setConversations] = useState([]);
   const [inputValue, setInputValue] = useState("");
-
-  const friends = ["admin1"];
+  const [friends, setFriends] = useState([]);
+  const [selectedFriends, setSelectedFriends] = useState([]);
 
   useEffect(() => {
     getConversations();
+    getFriends();
   }, []);
 
   const getConversations = () => {
@@ -48,9 +50,36 @@ export default function ConversationList(props) {
       });
   };
 
+  // 친구 목록을 가져오는 함수
+  const getFriends = () => {
+    axios({
+      method: "get",
+      url: "/friends",
+      headers: {
+        "Content-Type": `application/json`,
+      },
+      withCredentials: true,
+    })
+      .then((response) => {
+        let newFriends = response.data.map((result) => {
+          return {
+            id: `${result.id}`,
+            name: `${result.name}`,
+            text: "친구 목록",
+            appointmentScore: result.appointmentScore,
+          };
+        });
+        setFriends(newFriends);
+      })
+      .catch((error) => {
+        console.log(error);
+        alert(`에러 발생 관리자 문의하세요!`);
+      });
+  };
+
   const handleAddChatRoom = () => {
     if (inputValue === "") {
-      alert(`채팅방 이름을 입력해주세요`);
+      alert("채팅방 이름을 입력해주세요");
       return;
     }
     axios({
@@ -88,6 +117,38 @@ export default function ConversationList(props) {
       });
   };
 
+  const handleShowFriends = () => {
+    setVisible(!visible);
+  };
+
+  const renderFriendsList = () => {
+    return (
+      <div>
+        {friends.map((friend) => (
+          <div key={friend.id}>
+            <Checkbox
+              onChange={(e) => handleSelectFriend(e, friend)}
+              checked={selectedFriends.includes(friend.name)}
+            >
+              {friend.name}
+            </Checkbox>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  const handleSelectFriend = (e, selectedFriend) => {
+    if (e.target.checked) {
+      setSelectedFriends([...selectedFriends, selectedFriend.name]);
+    } else {
+      setSelectedFriends(
+        selectedFriends.filter(
+          (friendName) => friendName !== selectedFriend.name
+        )
+      );
+    }
+  };
   const popoverContent = (
     <>
       <Input
@@ -96,6 +157,8 @@ export default function ConversationList(props) {
         onChange={(e) => setInputValue(e.target.value)}
       />
       <Button onClick={handleAddChatRoom}>채팅방 추가</Button>
+      <Button onClick={handleShowFriends}>친구 목록</Button>
+      {visible && renderFriendsList()}
     </>
   );
 
@@ -108,7 +171,7 @@ export default function ConversationList(props) {
           <ToolbarButton
             key="add"
             icon="ion-ios-add-circle-outline"
-            onClick={handleAddChatRoom}
+            onClick={handleShowFriends}
           />,
         ]}
         popoverContent={popoverContent}
