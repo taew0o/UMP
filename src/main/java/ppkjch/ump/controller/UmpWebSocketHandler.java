@@ -46,17 +46,17 @@ public class UmpWebSocketHandler extends TextWebSocketHandler {
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         super.handleTextMessage(session, message);
         System.out.println(message.getPayload());
-
+        System.out.println("session = " + session);
         //유저 가져오기
         Map<String, Object> attributes = session.getAttributes();
-        String userId = (String)attributes.get("userId");
-        User sender = userService.findUser(userId);
 
         String jsonString = message.getPayload();
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             // JSON 문자열을 Java 객체로 파싱
             TextMessageDTO textMessageDTO = objectMapper.readValue(jsonString, TextMessageDTO.class);
+            //유저 가져오기
+            User sender = userService.findUser(textMessageDTO.getSenderId());
             //방 가져오기
             ChattingRoom room = chattingRoomService.findRoom(Long.parseLong(textMessageDTO.getRoomId()));
             //날짜 가져오기
