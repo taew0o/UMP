@@ -33,6 +33,7 @@ const FriendPage = (props) => {
   };
 
   const openRequestsModal = () => {
+    getFriendRequestList();
     setShowRequestsModal(true);
   };
 
@@ -112,6 +113,7 @@ const FriendPage = (props) => {
       .then((response) => {
         alert(`${response.data.name}님에게 친구요청을 보냈습니다.`);
         console.log("----------------", response);
+        setFriendId("");
       })
       .catch((error) => {
         if (error.response.status === 400) {
