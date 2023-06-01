@@ -11,5 +11,5 @@ public class TextMessageDTO {
     private String senderId;
     private String roomId;
     private String textMsg;
-    private LocalDateTime sendTime;
+    private String sendTime;
 }
