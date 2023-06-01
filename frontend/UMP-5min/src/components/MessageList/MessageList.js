@@ -38,8 +38,6 @@ export default function MessageList({ props }) {
     console.log(text);
     makeMsg();
     renderMessages();
-
-    console.log(messages);
   }, [text]);
 
   const getText = (prop) => {

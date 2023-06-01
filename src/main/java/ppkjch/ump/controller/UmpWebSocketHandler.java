@@ -58,7 +58,7 @@ public class UmpWebSocketHandler extends TextWebSocketHandler {
             // JSON 문자열을 Java 객체로 파싱
             TextMessageDTO textMessageDTO = objectMapper.readValue(jsonString, TextMessageDTO.class);
             //방 가져오기
-            ChattingRoom room = chattingRoomService.findRoom(textMessageDTO.getRoomId());
+            ChattingRoom room = chattingRoomService.findRoom(Long.parseLong(textMessageDTO.getRoomId()));
             //날짜 가져오기
             LocalDateTime sendTime = textMessageDTO.getSendTime();
             //텍스트 가져오기
