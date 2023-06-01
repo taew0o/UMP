@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ppkjch.ump.entity.ChattingRoom;
 import ppkjch.ump.entity.Message;
+import ppkjch.ump.entity.User;
 import ppkjch.ump.entity.UserChattingRoom;
 import ppkjch.ump.repository.JpaChattingRoomRepository;
 import ppkjch.ump.repository.JpaMessageRepository;
@@ -18,8 +19,15 @@ public class MessageService {
 
     final private JpaMessageRepository jpaMessageRepository;
     final private JpaChattingRoomRepository jpaChattingRoomRepository;
+
     @Transactional
-    public Long send(Message message){ //DB로 보내고 MessageID반환
+    public Long createMessage(String text, User user, ChattingRoom chattingRoom){
+        Message message = Message.createMessage(text,user,chattingRoom);
+        jpaMessageRepository.save(message);
+        return message.getId();
+    }
+    @Transactional
+    public Long sendMessage(Message message){
         jpaMessageRepository.save(message);
         return message.getId();
     }
