@@ -33,7 +33,7 @@ const FriendPage = (props) => {
   };
 
   const openRequestsModal = () => {
-    getFriendRequestList()
+    getFriendRequestList();
     setShowRequestsModal(true);
   };
 

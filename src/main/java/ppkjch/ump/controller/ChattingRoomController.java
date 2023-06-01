@@ -35,6 +35,7 @@ public class ChattingRoomController {
             users.add(findUser);
         }
         //유저 정보로 채팅방 만들기
+        chattingRoomService.makeRoom(users);
         return new ResponseEntity<>(new ChattingRoom(), HttpStatus.OK);
     }
 
