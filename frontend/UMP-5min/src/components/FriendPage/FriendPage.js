@@ -55,7 +55,7 @@ const FriendPage = (props) => {
             id: `${result.id}`,
             name: `${result.name}`,
             text: "친구 정보",
-            appointmentScore: `${result.appointmentScore}`,
+            appointmentScore: result.appointmentScore,
           };
         });
         setFriends(newFriend);
