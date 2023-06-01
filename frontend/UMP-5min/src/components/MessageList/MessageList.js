@@ -174,7 +174,7 @@ export default function MessageList(props) {
   return (
     <div className="message-list">
       <Toolbar
-        title={"test"}
+        title={state.name}
         rightItems={[
           <div
             onClick={() => {

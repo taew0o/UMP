@@ -25,7 +25,7 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-@CrossOrigin(origins = {"http://localhost:3000","http://localhost:3001"})
+//@CrossOrigin(origins = {"http://localhost:3000","http://localhost:3001"})
 public class UserController {
 
     private final UserService userService;
@@ -48,7 +48,6 @@ public class UserController {
 
     //로그인 처리 메서드
     @PostMapping("/login")
-    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> login(HttpServletRequest request, HttpServletResponse response, @RequestBody LoginForm loginForm) {
 
         try {
