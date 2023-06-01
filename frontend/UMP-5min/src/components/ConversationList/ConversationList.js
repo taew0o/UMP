@@ -12,10 +12,8 @@ export default function ConversationList(props) {
   const [conversations, setConversations] = useState([]);
   const [visible, setVisible] = useState(false);
   const [inputValue, setInputValue] = useState("");
-  // 친구 목록 state
   const [friends, setFriends] = useState([]);
-
-
+  const [selectedFriends, setSelectedFriends] = useState([]);
 
   useEffect(() => {
     getConversations();
@@ -65,7 +63,7 @@ export default function ConversationList(props) {
 
   const handleAddChatRoom = () => {
     if (inputValue === "") {
-      alert(`채팅방 이름을 입력해주세요`);
+      alert("채팅방 이름을 입력해주세요");
       return;
     }
     // axios({
@@ -102,9 +100,11 @@ export default function ConversationList(props) {
     //   });
     const newChatRoom = {
       name: inputValue,
+      friends: [...selectedFriends],
     };
     setConversations([...conversations, newChatRoom]);
     setInputValue("");
+    setSelectedFriends([]);
     setVisible(false);
   };
 
@@ -114,12 +114,12 @@ export default function ConversationList(props) {
 
   const renderFriendsList = () => {
     return (
-   <div>
+      <div>
         {friends.map((friend) => (
           <div key={friend.id}>
             <Checkbox
               onChange={(e) => handleSelectFriend(e, friend)}
-              checked={inputValue.includes(friend.name)}
+              checked={selectedFriends.includes(friend.name)}
             >
               {friend.name}
             </Checkbox>
@@ -130,19 +130,18 @@ export default function ConversationList(props) {
   };
   
 
+  
   const handleSelectFriend = (e, selectedFriend) => {
     if (e.target.checked) {
-      setInputValue([...inputValue, selectedFriend.name].join(", "));
+      setSelectedFriends([...selectedFriends, selectedFriend.name]);
     } else {
-      setInputValue(
-        inputValue
-          .split(", ")
-          .filter((friendName) => friendName !== selectedFriend.name)
-          .join(", ")
+      setSelectedFriends(
+        selectedFriends.filter(
+          (friendName) => friendName !== selectedFriend.name
+        )
       );
     }
   };
-
   const popoverContent = (
     <>
       <Input
@@ -156,6 +155,7 @@ export default function ConversationList(props) {
     </>
   );
 
+
   return (
     <div className="conversation-list">
       <Toolbar
@@ -165,7 +165,7 @@ export default function ConversationList(props) {
           <ToolbarButton
             key="add"
             icon="ion-ios-add-circle-outline"
-            onClick={handleAddChatRoom}
+            onClick={handleShowFriends}
           />,
         ]}
         popoverContent={popoverContent}
