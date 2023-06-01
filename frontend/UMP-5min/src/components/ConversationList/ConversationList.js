@@ -13,10 +13,12 @@ export default function ConversationList(props) {
   const [inputValue, setInputValue] = useState("");
   const [friends, setFriends] = useState([]);
   const [selectedFriends, setSelectedFriends] = useState([]);
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     getConversations();
     getFriends();
+    console.log(friends);
   }, []);
 
   const getConversations = () => {
@@ -62,12 +64,7 @@ export default function ConversationList(props) {
     })
       .then((response) => {
         let newFriends = response.data.map((result) => {
-          return {
-            id: `${result.id}`,
-            name: `${result.name}`,
-            text: "친구 목록",
-            appointmentScore: result.appointmentScore,
-          };
+          return result.name;
         });
         setFriends(newFriends);
       })
@@ -78,6 +75,7 @@ export default function ConversationList(props) {
   };
 
   const handleAddChatRoom = () => {
+    getFriends();
     if (inputValue === "") {
       alert("채팅방 이름을 입력해주세요");
       return;
@@ -97,6 +95,8 @@ export default function ConversationList(props) {
       .then((response) => {
         console.log("----------------", response);
         setInputValue("");
+        setVisible(false);
+        setSelectedFriends([]);
         getConversations();
       })
       .catch((error) => {
@@ -124,13 +124,13 @@ export default function ConversationList(props) {
   const renderFriendsList = () => {
     return (
       <div>
-        {friends.map((friend) => (
-          <div key={friend.id}>
+        {friends.map((friend, index) => (
+          <div key={index}>
             <Checkbox
               onChange={(e) => handleSelectFriend(e, friend)}
-              checked={selectedFriends.includes(friend.name)}
+              checked={selectedFriends.includes(friend)}
             >
-              {friend.name}
+              {friend}
             </Checkbox>
           </div>
         ))}
@@ -140,12 +140,10 @@ export default function ConversationList(props) {
 
   const handleSelectFriend = (e, selectedFriend) => {
     if (e.target.checked) {
-      setSelectedFriends([...selectedFriends, selectedFriend.name]);
+      setSelectedFriends([...selectedFriends, selectedFriend]);
     } else {
       setSelectedFriends(
-        selectedFriends.filter(
-          (friendName) => friendName !== selectedFriend.name
-        )
+        selectedFriends.filter((friendName) => friendName !== selectedFriend)
       );
     }
   };
