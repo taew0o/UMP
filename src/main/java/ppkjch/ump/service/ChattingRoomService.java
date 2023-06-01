@@ -31,6 +31,9 @@ public class ChattingRoomService {
     public Long makeRoom(List<User> users, String roomName){
         //유저 채팅방 생성
         int numPerson = users.size();
+        if(numPerson > 10){
+            throw new RoomFullException("10명 이하의 유저를 선택해주십시오.");
+        }
         List<UserChattingRoom> userChattingRooms = new ArrayList<>();
         for (User user: users) { //각 유저ID로 User 찾아 UserChattingroom객체 만들어 매핑
             UserChattingRoom userChattingRoom = new UserChattingRoom();

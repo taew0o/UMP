@@ -39,7 +39,6 @@ const Home = () => {
   function movePage(page) {
     navigate("/" + page);
   }
-  
 
   const renderContent = () => {
     switch (selectedPage) {
@@ -107,23 +106,18 @@ const Home = () => {
               selectedKeys={[getDefaultSelectedKey()]}
               onSelect={({ key }) => setSelectedPage(key)}
             >
-          <Menu.Item key="1" icon={<BsFillChatFill />} onClick={() => movePage("")}>
-            채팅
-          </Menu.Item>
-          <Menu.Item key="2" icon={<FaUserFriends />} onClick={() => movePage("friend")}>
-            친구
-          </Menu.Item>
-          <Menu.Item
-            key="3"
-            icon={<BsFillCalendarCheckFill />}
-            onClick={() => movePage("calendar")}
-          >
-            캘린더
-          </Menu.Item>
-          <Menu.Item key="4" icon={<AiFillSetting />} onClick={() => movePage("setting")}>
-            설정
-          </Menu.Item>
-
+              <Menu.Item key="1" icon={<BsFillChatFill />}>
+                채팅
+              </Menu.Item>
+              <Menu.Item key="2" icon={<FaUserFriends />}>
+                친구
+              </Menu.Item>
+              <Menu.Item key="3" icon={<BsFillCalendarCheckFill />}>
+                캘린더
+              </Menu.Item>
+              <Menu.Item key="4" icon={<AiFillSetting />}>
+                설정
+              </Menu.Item>
             </Menu>
           </Sider>
           <Layout

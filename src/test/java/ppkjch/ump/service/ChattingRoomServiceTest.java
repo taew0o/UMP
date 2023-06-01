@@ -33,18 +33,15 @@ class ChattingRoomServiceTest {
     @Rollback(value = false)
     void makeRoom() {
         //유저 4명이 가입 되어 있음
-        User user1 = userService.findUser("park");
-        User user2 = userService.findUser("kim");
-        User user3 = userService.findUser("jang");
-        User user4 = userService.findUser("choi");
+        User user1 = userService.findUser("admin");
+        User user2 = userService.findUser("admin2");
 
         List<User> users = new ArrayList<>();
         users.add(user1);
         users.add(user2);
-        users.add(user3);
-        users.add(user4);
 
-        Long chattingroom_id = chattingRoomService.makeRoom(users);
+        String chatroom_name = "관리자 채팅방";
+        Long chattingroom_id = chattingRoomService.makeRoom(chatroom_name,users);
 
         //Assertions.assertEquals(chattingRoom1, chattingRoom2);
         //Assertions.assertEquals(chattingRoom2, chattingRoom3);
@@ -52,14 +49,23 @@ class ChattingRoomServiceTest {
 
     @Test
     void findRoom() {
-    }
+        int i = 2;
+        long room_id = i;
+        ChattingRoom chattingRoom = chattingRoomService.findRoom(room_id);
+        List<UserChattingRoom> userChattingRoomList = chattingRoom.getUserChattingRooms();
+        for(int j = 0 ; j < userChattingRoomList.size() ; j++){
+            System.out.println(userChattingRoomList.get(j).getChattingRoom().getChattingRoomName());
+            System.out.println(userChattingRoomList.get(j).getUser().getName());
 
-    @Test
-    void testMakeRoom() {
-    }
+        }
 
+    }
     @Test
     void inviteRoom() {
+        int i = 2;
+        long j = i;
+        User user3 = userService.findUser("taewoo9240");
+        ChattingRoom chattingRoom = chattingRoomService.findRoom(j);
     }
 
     @Test
@@ -72,5 +78,29 @@ class ChattingRoomServiceTest {
 
     @Test
     void messageTimeArray() {
+    }
+
+    @Test
+    void testFindRoom1() {
+    }
+
+    @Test
+    void testMakeRoom1() {
+    }
+
+    @Test
+    void testInviteRoom() {
+    }
+
+    @Test
+    void testFindRoom2() {
+    }
+
+    @Test
+    void testGoOutRoom() {
+    }
+
+    @Test
+    void testMessageTimeArray() {
     }
 }

@@ -33,6 +33,7 @@ export default function FriendList(props) {
     return colors[randomIndex];
   };
   console.log("asdasd", appointmentScore);
+  console.log(props.data);
   const photoStyle = {
     display: "flex",
     alignItems: "center",
@@ -51,7 +52,7 @@ export default function FriendList(props) {
           {id}
         </div>
         <div className="friend-info">
-          <h1 className="friend-title">{name}</h1>
+          <div className="friend-title">{name}</div>
           <p className="friend-snippet">{text}</p>
         </div>
       </div>
@@ -75,13 +76,12 @@ export default function FriendList(props) {
             <h2>약속 참여율:</h2>
             <div className="attendance-rate-box">
               {/* 약속 참여율 정보를 출력하는 코드가 들어갈 위치입니다. */}
-              {/* {appointmentScore.map((value) => {
-                <div key={appointmentScore.length}>
-                  {"참석: " + value.numAttend + "\n"}
-                  {"불참: " + value.numNotAttend + "\n"}
-                  {"불참: " + value.numLate + "\n"}
-                </div>;
-              })} */}
+              <div key={appointmentScore.length}>
+                {"참석: " + appointmentScore.numAttend}
+                <br />
+                {"불참: " + appointmentScore.numNotAttend} <br />
+                {"지각: " + appointmentScore.numLate}
+              </div>
             </div>
           </div>
         </div>
