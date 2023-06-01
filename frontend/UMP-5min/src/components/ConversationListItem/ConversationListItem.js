@@ -10,9 +10,9 @@ const ConversationListItem = (props) => {
   });
   const clickHandler = () => {
     console.log(name);
-    navigate(`/room/${id}`, { state: { id, name, photo, text } });
+    navigate(`/room/${id}`, { state: { id, name, member, createTime } });
   };
-  const { id, photo, name, text } = props.data;
+  const { id, member, name, createTime } = props.data;
 
   const getRandomColor = () => {
     const colors = [
@@ -29,7 +29,7 @@ const ConversationListItem = (props) => {
     return colors[randomIndex];
   };
 
-  const photoStyle = {
+  const Style = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -43,12 +43,12 @@ const ConversationListItem = (props) => {
 
   return (
     <div className="conversation-list-item" onClick={clickHandler}>
-      <div className="conversation-photo" style={photoStyle}>
-        {photo}
+      <div className="conversation-photo" style={Style}>
+        {name}
       </div>
       <div className="conversation-info">
         <h1 className="conversation-title">{name}</h1>
-        <p className="conversation-snippet">{text}</p>
+        {/* <p className="conversation-snippet">{text}</p> */}
       </div>
     </div>
   );

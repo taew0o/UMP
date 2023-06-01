@@ -54,8 +54,11 @@ public class ChattingRoomController {
     }
 
     @GetMapping("/chattingrooms")
-    public ResponseEntity<List<ChattingRoom>> getChattingRooms(@CookieValue(name = "userId") String userId){
-        //userId로 UserChattingRoom에 매핑된 모든 방정보를 찾아 반환
+    public ResponseEntity<List<ChattingRoom>> getChattingRooms(HttpServletRequest request){
+        // 세션에서 유저 ID 가져오기
+        HttpSession session = request.getSession(false);
+        String userId = (String)session.getAttribute("userId");
+        // 유저 ID를 사용하여 유저 정보 조회
         User user = userService.findUser(userId);
         //findRoom(User user): List<CattingRoom> : 태우 추가 완. 테스트 필요\
         List<ChattingRoom> chattingRooms = chattingRoomService.findRoom(user);
