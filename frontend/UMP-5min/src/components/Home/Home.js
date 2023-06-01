@@ -44,17 +44,18 @@ const Home = () => {
   const renderContent = () => {
     switch (selectedPage) {
       case "1":
-        return movePage("");
+        return <ChatPage />;
       case "2":
-        return movePage("friend");
+        return <FriendPage />;
       case "3":
-        return movePage("calendar");
+        return <CalendarPage />;
       case "4":
-        return movePage("setting");
+        return <SettingPage props={myData} />;
       default:
-        return;
+        return <ChatPage />;
     }
   };
+  
   useEffect(() => {
     console.log(document.cookie);
     if (document.cookie) {
