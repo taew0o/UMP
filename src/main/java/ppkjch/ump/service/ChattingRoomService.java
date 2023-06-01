@@ -28,7 +28,7 @@ public class ChattingRoomService {
     }
 
     @Transactional
-    public Long makeRoom(List<User> users){
+    public Long makeRoom(List<User> users, String roomName){
         //유저 채팅방 생성
         int numPerson = users.size();
         List<UserChattingRoom> userChattingRooms = new ArrayList<>();
@@ -39,7 +39,7 @@ public class ChattingRoomService {
         }
 
         //채팅방 생성
-        ChattingRoom chattingRoom = ChattingRoom.createChattingroom(numPerson,userChattingRooms);
+        ChattingRoom chattingRoom = ChattingRoom.createChattingroom(numPerson,userChattingRooms,roomName);
         jpaChattingRoomRepository.save(chattingRoom);
         return chattingRoom.getId();
     }

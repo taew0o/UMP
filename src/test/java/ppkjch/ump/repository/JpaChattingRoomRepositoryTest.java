@@ -37,7 +37,7 @@ class JpaChattingRoomRepositoryTest {
             userChattingRooms.add(userChattingRoom1);
             userChattingRooms.add(userChattingRoom2);
 
-            ChattingRoom chattingRoom = ChattingRoom.createChattingroom(2, userChattingRooms);
+            ChattingRoom chattingRoom = ChattingRoom.createChattingroom(2, userChattingRooms, "박박김장최");
 
             jpaChattingRoomRepository.save(chattingRoom);
         }catch(NullPointerException e) {

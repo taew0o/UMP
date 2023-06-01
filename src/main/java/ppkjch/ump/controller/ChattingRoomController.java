@@ -1,15 +1,19 @@
 package ppkjch.ump.controller;
 
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import ppkjch.ump.dto.MakeRoomDTO;
 import ppkjch.ump.dto.UserAndRoomDTO;
 import ppkjch.ump.entity.ChattingRoom;
 import ppkjch.ump.entity.Message;
 import ppkjch.ump.entity.User;
+import ppkjch.ump.exception.RoomFullException;
 import ppkjch.ump.service.ChattingRoomService;
 import ppkjch.ump.service.MessageService;
 import ppkjch.ump.service.UserService;
@@ -19,24 +23,34 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
 public class ChattingRoomController {
     private final ChattingRoomService chattingRoomService;
     private final UserService userService;
-
     private final MessageService messageService;
 
     @PostMapping("/chattingroom")
-    public ResponseEntity<ChattingRoom> makeChattingRoom(@RequestBody List<String> userIds){
-        // 유저 IDs 정보로 유저 조회
+    public ResponseEntity<?> makeChattingRoom(HttpServletRequest request, @RequestBody MakeRoomDTO roomInfo){
+        // 세션에서 유저 ID 가져오기
+        HttpSession session = request.getSession(false);
+        String userId = (String)session.getAttribute("userId");
+        // 유저 ID를 사용하여 유저 정보 조회
+        User user = userService.findUser(userId);
         ArrayList<User> users = new ArrayList<>();
-        for (String userId: userIds) {
-            User findUser = userService.findUser(userId);
+        users.add(user);
+
+        for (String memberId: roomInfo.getUserIds()) {
+            User findUser = userService.findUser(memberId);
             users.add(findUser);
         }
         //유저 정보로 채팅방 만들기
-        chattingRoomService.makeRoom(users);
-        return new ResponseEntity<>(new ChattingRoom(), HttpStatus.OK);
+        try{
+            Long chattingRoomId = chattingRoomService.makeRoom(users, roomInfo.getRoomName());
+            return new ResponseEntity<Long>(chattingRoomId, HttpStatus.OK);
+        }
+        catch (RoomFullException e){
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/chattingrooms")
