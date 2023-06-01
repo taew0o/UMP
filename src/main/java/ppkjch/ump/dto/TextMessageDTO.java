@@ -8,7 +8,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class TextMessageDTO {
-    private Long roomId;
+    private String senderId;
+    private String roomId;
     private String textMsg;
     private LocalDateTime sendTime;
 }
