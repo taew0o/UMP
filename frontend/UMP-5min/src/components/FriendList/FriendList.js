@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./FriendList.css";
 import { Button, Modal } from "antd";
 
@@ -7,6 +7,16 @@ export default function FriendList(props) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [confirmModalIsOpen, setConfirmModalIsOpen] = useState(false);
   const [confirmModalTitle, setConfirmModalTitle] = useState("");
+  const [backgroundColor, setBackgroundColor] = useState("");
+
+  useEffect(() => {
+    let storedColor = localStorage.getItem(name);
+    if (!storedColor) {
+      storedColor = getRandomColor();
+      localStorage.setItem(name, storedColor);
+    }
+    setBackgroundColor(storedColor);
+  }, []);
 
   const handleDeleteClick = () => {
     setConfirmModalTitle("친구 삭제");
@@ -21,7 +31,7 @@ export default function FriendList(props) {
   const getRandomColor = () => {
     const colors = [
       "#FF5B5B",
-      "#FFB36B",
+      "#FFBB",
       "#FFE66D",
       "#9ED763",
       "#3EBDFF",
@@ -32,8 +42,7 @@ export default function FriendList(props) {
     const randomIndex = Math.floor(Math.random() * colors.length);
     return colors[randomIndex];
   };
-  console.log("asdasd", appointmentScore);
-  console.log(props.data);
+
   const photoStyle = {
     display: "flex",
     alignItems: "center",
@@ -43,8 +52,9 @@ export default function FriendList(props) {
     borderRadius: "50%",
     color: "black",
     marginRight: "20px",
-    backgroundColor: getRandomColor(),
+    backgroundColor: backgroundColor,
   };
+
   return (
     <>
       <div className="friend-list-item" onClick={() => setModalIsOpen(true)}>
@@ -63,7 +73,9 @@ export default function FriendList(props) {
       >
         <div className="friend-modal-content">
           <div className="friend-list-item">
-            {/* <div className="friend-photo" src={id} alt="friend" /> */}
+            <div className="friend-photo" style={photoStyle}>
+              {id}
+            </div>
             <div className="friend-info">
               <h1 className="friend-title">{name}</h1>
             </div>
@@ -75,7 +87,6 @@ export default function FriendList(props) {
           <div className="attendance-rate-container">
             <h2>약속 참여율:</h2>
             <div className="attendance-rate-box">
-              {/* 약속 참여율 정보를 출력하는 코드가 들어갈 위치입니다. */}
               <div key={appointmentScore.length}>
                 {"참석: " + appointmentScore.numAttend}
                 <br />

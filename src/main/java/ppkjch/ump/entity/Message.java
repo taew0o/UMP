@@ -30,9 +30,9 @@ public class Message {
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime sendTime;
 
-    public static Message createMessage(String text, User user,ChattingRoom chattingRoom) {
+    public static Message createMessage(String text, User user,ChattingRoom chattingRoom, LocalDateTime sendTime) {
         Message message = new Message();
-        message.setSendTime(LocalDateTime.now());
+        message.setSendTime(sendTime);
         message.setTextMsg(text);
         message.setUser(user);
         message.setChattingRoom(chattingRoom);
