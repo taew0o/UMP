@@ -6,7 +6,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ppkjch.ump.entity.AppointmentChattingRoom;
 import ppkjch.ump.entity.ChattingRoom;
+import ppkjch.ump.entity.User;
+import ppkjch.ump.entity.UserChattingRoom;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -24,6 +28,12 @@ public class JpaAppointmentChattingRoomRepository {
 
     public List<AppointmentChattingRoom> findAll() {
         return em.createQuery("select apcr from AppointmentChattingRoom  apcr", AppointmentChattingRoom.class)
+                .getResultList();
+    }
+
+    public List<AppointmentChattingRoom> findAppointment(User user){
+        return em.createQuery("select apcr from AppointmentChattingRoom apcr join UserChattingRoom ucr where apcr.id = ucr.chattingRoom.id and ucr.user = :user", AppointmentChattingRoom.class)
+                .setParameter("user", user)
                 .getResultList();
     }
 }

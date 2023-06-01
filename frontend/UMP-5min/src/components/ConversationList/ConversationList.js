@@ -64,7 +64,7 @@ export default function ConversationList(props) {
     })
       .then((response) => {
         let newFriends = response.data.map((result) => {
-          return result.name;
+          return result.id;
         });
         setFriends(newFriends);
       })
