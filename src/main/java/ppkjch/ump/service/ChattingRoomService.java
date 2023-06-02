@@ -47,6 +47,7 @@ public class ChattingRoomService {
         return chattingRoom.getId();
     }
 
+    @Transactional
     public ChattingRoom inviteRoom(ChattingRoom chattingRoom, List<User> invitees) {
         //방이 full인지 확인
 
