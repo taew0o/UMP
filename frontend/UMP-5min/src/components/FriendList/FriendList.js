@@ -3,13 +3,14 @@ import "./FriendList.css";
 import { Button, Modal } from "antd";
 import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
 
-
 export default function FriendList(props) {
   const { id, name, text, appointmentScore } = props.data;
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [confirmModalIsOpen, setConfirmModalIsOpen] = useState(false);
   const [confirmModalTitle, setConfirmModalTitle] = useState("");
   const [backgroundColor, setBackgroundColor] = useState("");
+
+  const COLORS = ["#4caf50", "#f44336", "#ff9800"];
 
   useEffect(() => {
     let storedColor = localStorage.getItem(name);
@@ -19,7 +20,7 @@ export default function FriendList(props) {
     }
     setBackgroundColor(storedColor);
   }, []);
-  
+
   const handleDeleteClick = () => {
     setConfirmModalTitle("친구 삭제");
     setConfirmModalIsOpen(true);
@@ -41,7 +42,7 @@ export default function FriendList(props) {
       "#FF7EB1",
       "#ADADAD",
     ];
-    const randomIndex = Math(Math.random() * colors.length);
+    const randomIndex = Math.floor(Math.random() * colors.length);
     return colors[randomIndex];
   };
 
@@ -62,8 +63,46 @@ export default function FriendList(props) {
     { name: "불참", value: 4 },
     { name: "지각", value: 2 },
   ];
+  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
+    const radius = outerRadius + 20;
+    const radiusOffset = radius + 30;
+    const x = cx + radiusOffset * Math.cos(-midAngle * (Math.PI / 180));
+    const y = cy + radiusOffset * Math.sin(-midAngle * (Math.PI / 180));
+  
+    // 각 막대 끝에 표시할 레이블
+    const labelText = index === 0 ? "참석" : index === 1 ? "지각" : index === 2 ? "불참" : "";
+  
+    return (
+      <text
+        x={x}
+        y={y}
+        fill="black"
+        textAnchor="middle"
+        dominantBaseline="central"
+      >
+        {`${(percent * 100).toFixed(0)}%`}
+        <tspan x={x} dy={15}>{labelText}</tspan> {/* 막대 끝에 레이블 표시 */}
+      </text>
+    );
+  };
+  
+  
+  
 
-  const COLORS = ["#4caf50", "#f44336", "#ff9800"];
+  const renderLegend = (props) => {
+    const { payload } = props;
+
+    return (
+      <ul className="pie-chart-legend">
+        {payload.map((entry, index) => (
+          <li key={`legend-${index}`}>
+            <span className="legend-icon" style={{ backgroundColor: COLORS[index % COLORS.length] }}></span>
+            <span className="legend-label">{attendanceData[index].name}: {attendanceData[index].value}</span>
+          </li>
+        ))}
+      </ul>
+    );
+  };
 
   return (
     <>
@@ -91,24 +130,40 @@ export default function FriendList(props) {
             </div>
           </div>
           <div className="attendance-rate-container">
-              <h2>약속 참여율:</h2>
-              <PieChart width={200} height={200}>
-                <Pie
-                  data={attendanceData}
-                  cx={100}
-                  cy={100}
-                  outerRadius={80}
-                  dataKey="value"
-                  label
-                >
-                  {attendanceData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip />
-                <Legend verticalAlign="middle" height="36" align="right" />
-              </PieChart>
-            </div>
+            <h2>약속 참여율:</h2>
+            <PieChart width={400} height={400}>
+              <Pie
+                data={attendanceData}
+                cx={200}
+                cy={200}
+                outerRadius={80}
+                dataKey="value"
+                label={renderCustomizedLabel}
+              >
+                {attendanceData.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={COLORS[index % COLORS.length]}
+                  />
+                ))}
+              </Pie>
+              <Tooltip />
+              <Legend
+                verticalAlign="middle"
+                height={36}
+                align="right"
+                content={renderLegend}
+              />
+            </PieChart>
+          </div>
+        </div>
+        <div className="friend-modal-buttons" style={{ marginTop: "10px", display: "flex", justifyContent: "flex-end" }}>
+          <Button type="primary" onClick={handleDeleteClick} style={{ marginRight: "10px" }}>
+            삭제
+          </Button>
+          <Button type="primary" onClick={handleBlockClick}>
+            차단
+          </Button>
         </div>
       </Modal>
       <Modal
@@ -128,4 +183,7 @@ export default function FriendList(props) {
       </Modal>
     </>
   );
-}
+  
+  
+  
+}  
