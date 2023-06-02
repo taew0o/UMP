@@ -58,7 +58,7 @@ export default function MessageList({ props }) {
   useEffect(() => {
     if (socketData !== undefined) {
       const tempData = chatt.concat(socketData);
-      console.log(tempData);
+      console.log("tempData", tempData);
       setChatt(tempData);
     }
   }, [socketData]);
@@ -70,6 +70,7 @@ export default function MessageList({ props }) {
       const dataSet = JSON.parse(message.data);
       setSocketData(dataSet);
       console.log("데이터 도착");
+      console.log("데이터::::::::::", dataSet);
     };
   });
 
