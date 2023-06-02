@@ -47,6 +47,7 @@ public class ChattingRoomService {
         return chattingRoom.getId();
     }
 
+    @Transactional
     public Long inviteRoom(Long roomId, String inviteeId) {
         //ID 정보로 엔티티 조회
         ChattingRoom findRoom = jpaChattingRoomRepository.findOne(roomId);
@@ -68,6 +69,7 @@ public class ChattingRoomService {
         return jpaChattingRoomRepository.findChattingRoomByUser(user);
     }
     //회원 채팅방 탈퇴
+    @Transactional
     public void goOutRoom(User u, ChattingRoom cr){
         jpaChattingRoomRepository.goOutRoom(u,cr);
     }

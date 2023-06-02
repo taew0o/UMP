@@ -11,6 +11,7 @@ import ppkjch.ump.entity.ChattingRoom;
 import ppkjch.ump.entity.Message;
 import ppkjch.ump.entity.User;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,7 +35,7 @@ class MessageServiceTest {
         User user = userService.findUser("taewoo9240");
         ChattingRoom chattingRoom = chattingRoomService.findRoom(id);
         String text = "반갑습니다";
-        messageService.createMessage(text,user,chattingRoom);
+        messageService.createMessage(text,user,chattingRoom, LocalDateTime.now());
     }
 
     @Test

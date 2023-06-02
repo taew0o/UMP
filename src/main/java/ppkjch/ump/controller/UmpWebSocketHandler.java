@@ -1,6 +1,7 @@
 package ppkjch.ump.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
 import jakarta.websocket.Session;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -41,7 +42,7 @@ public class UmpWebSocketHandler extends TextWebSocketHandler {
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         super.afterConnectionEstablished(session);
     }
-
+    @Transactional
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         super.handleTextMessage(session, message);
