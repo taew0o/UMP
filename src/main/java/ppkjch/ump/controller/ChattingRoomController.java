@@ -76,14 +76,12 @@ public class ChattingRoomController {
                 User invitee = userService.findUser(id);
                 invitees.add(invitee);
             }
-
             ChattingRoom chattingRoom = chattingRoomService.findRoom(inviteDTO.getRoomId());
             chattingRoomService.inviteRoom(chattingRoom, invitees);
+
         } catch (RoomFullException e) {
             return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
         }
-
-        //HttpHeaders headers = new HttpHeaders();
 
         return ResponseEntity.status(HttpStatus.CREATED).body("성공적으로 초대");
 
