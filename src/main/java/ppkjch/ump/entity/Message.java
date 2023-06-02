@@ -27,10 +27,9 @@ public class Message {
     @JoinColumn(name="user_id")
     private User user;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime sendTime;
+    private Long sendTime;
 
-    public static Message createMessage(String text, User user,ChattingRoom chattingRoom, LocalDateTime sendTime) {
+    public static Message createMessage(String text, User user,ChattingRoom chattingRoom, Long sendTime) {
         Message message = new Message();
         message.setSendTime(sendTime);
         message.setTextMsg(text);
