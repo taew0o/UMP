@@ -10,6 +10,7 @@ import { useLocation, useParams } from "react-router-dom";
 import ReactModal from "react-modal";
 import Review from "../Review/Review";
 import { Button } from "antd";
+import axios from "axios";
 
 export default function MessageList({ props }) {
   const MY_USER_ID = props.id;
@@ -33,6 +34,7 @@ export default function MessageList({ props }) {
   const ws = useRef(null);
 
   useEffect(() => {
+    getMessages();
     localStorage.setItem("selectedKey", "room");
     if (!ws.current) {
       ws.current = new WebSocket(webSocketUrl);
@@ -56,7 +58,7 @@ export default function MessageList({ props }) {
           message: data.textMsg,
           timestamp: new Date().getTime(),
         };
-        setMessages([...messages, tempMsg]);
+        setMessages((prevMessages) => [...prevMessages, tempMsg]);
         // renderMessages();
       };
     }
@@ -66,22 +68,6 @@ export default function MessageList({ props }) {
       ws.current.close();
     };
   }, []);
-
-  // useEffect(() => {
-  //   if (sendMsg) {
-  //     ws.current.onmessage = (evt) => {
-  //       const data = JSON.parse(evt.data);
-  //       console.log(data);
-  //       const tempMsg = {
-  //         author: data.senderId,
-  //         message: data.textMsg,
-  //         timestamp: new Date().getTime(),
-  //       };
-  //       setMessages([...messages, tempMsg]);
-  //       renderMessages();
-  //     };
-  //   }
-  // }, [sendMsg]);
 
   useEffect(() => {
     console.log("My id???????????????", MY_USER_ID);
@@ -104,6 +90,10 @@ export default function MessageList({ props }) {
     // renderMessages();
   }, [text]);
 
+  useEffect(() => {
+    renderMessages();
+  }, [messages]);
+
   const getText = (prop) => {
     setText(prop);
   };
@@ -115,9 +105,24 @@ export default function MessageList({ props }) {
     }
   };
 
-  useEffect(() => {
-    renderMessages();
-  }, [messages]);
+  const getMessages = () => {
+    axios({
+      method: "get",
+      url: "/chattingroom/messages",
+      headers: {
+        "Content-Type": `application/json`,
+      },
+      params: { roomId: id },
+      withCredentials: true,
+    })
+      .then((response) => {
+        console.log("----------------", response);
+      })
+      .catch((error) => {
+        console.log(error);
+        alert(`에러 발생 관리자 문의하세요!`);
+      });
+  };
 
   const renderMessages = () => {
     let i = 0;
