@@ -9,9 +9,10 @@ import "./MessageList.css";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import ReactModal from "react-modal";
 import Review from "../Review/Review";
-import { Button } from "antd";
+import { Button, Checkbox } from "antd";
 import axios from "axios";
 
+//채팅방 구현
 export default function MessageList({ props }) {
   const MY_USER_ID = props.id;
 
@@ -31,10 +32,15 @@ export default function MessageList({ props }) {
   const [sendMsg, setSendMsg] = useState(false);
   const [items, setItems] = useState([]);
 
+  const [friends, setFriends] = useState([]);
+  const [selectedFriends, setSelectedFriends] = useState([]);
+  const [visible, setVisible] = useState(false);
+
   const webSocketUrl = "ws://localhost:8080/websocket?roomId=" + id;
   const ws = useRef(null);
 
   useEffect(() => {
+    getFriends();
     getMessages();
     localStorage.setItem("location", "room");
     if (!ws.current) {
@@ -146,6 +152,14 @@ export default function MessageList({ props }) {
     })
       .then((response) => {
         console.log("----------------", response);
+        ws.current.send(
+          JSON.stringify({
+            roomId: id,
+            textMsg: text.message,
+            sendTime: new Date().getTime(),
+            senderId: MY_USER_ID,
+          })
+        );
         navigate("/");
       })
       .catch((error) => {
@@ -214,6 +228,80 @@ export default function MessageList({ props }) {
     setResult(tempMessages);
   };
 
+  const renderFriendsList = () => {
+    return (
+      <div>
+        {friends.map((friend, index) => (
+          <div key={index}>
+            <Checkbox
+              onChange={(e) => handleSelectFriend(e, friend)}
+              checked={selectedFriends.includes(friend)}
+            >
+              {friend}
+            </Checkbox>
+          </div>
+        ))}
+        <Button onClick={addFriend}>초대</Button>
+      </div>
+    );
+  };
+
+  const addFriend = () => {
+    axios({
+      method: "post",
+      url: "/chattingroom/member",
+      headers: {
+        "Content-Type": `application/json`,
+      },
+      data: {
+        roomId: id,
+        inviteeIds: selectedFriends,
+      },
+      withCredentials: true,
+    })
+      .then((response) => {
+        console("addFriend response", response);
+      })
+      .catch((error) => {
+        console.log(error);
+        alert(`에러 발생 관리자 문의하세요!`);
+      });
+  };
+
+  // 친구 목록을 가져오는 함수
+  const getFriends = () => {
+    axios({
+      method: "get",
+      url: "/friends",
+      headers: {
+        "Content-Type": `application/json`,
+      },
+      withCredentials: true,
+    })
+      .then((response) => {
+        let newFriends = response.data.map((result) => {
+          return result.id;
+        });
+        setFriends(newFriends);
+      })
+      .catch((error) => {
+        console.log(error);
+        alert(`에러 발생 관리자 문의하세요!`);
+      });
+  };
+
+  const handleShowFriends = () => {
+    setVisible(!visible);
+  };
+  const handleSelectFriend = (e, selectedFriend) => {
+    if (e.target.checked) {
+      setSelectedFriends([...selectedFriends, selectedFriend]);
+    } else {
+      setSelectedFriends(
+        selectedFriends.filter((friendName) => friendName !== selectedFriend)
+      );
+    }
+  };
   return (
     <div className="message-list">
       <Toolbar
@@ -276,8 +364,11 @@ export default function MessageList({ props }) {
           </div>
           <div className="button-group">
             <Button className="appointment-button">약속 잡기</Button>
-            <Button className="invite-button">친구 초대</Button>
+            <Button className="invite-button" onClick={handleShowFriends}>
+              친구 초대
+            </Button>
           </div>
+          {visible && renderFriendsList()}
         </div>
       </ReactModal>
       <ReactModal
