@@ -59,7 +59,6 @@ public class UmpWebSocketHandler extends TextWebSocketHandler {
         super.handleTextMessage(session, message);
         //System.out.println(message.getPayload());
         //유저 가져오기
-        Map<String, Object> attributes = session.getAttributes();
 
         String jsonString = message.getPayload();
 
@@ -87,10 +86,14 @@ public class UmpWebSocketHandler extends TextWebSocketHandler {
             System.out.println("세션 룸 아이디" + s.getAttributes().get("roomId"));
             //세션set 순회하며 자기 세션이 아니고 같은 방id를 가진 session이면 정보를 전달
             String sessionRoomId = (String)s.getAttributes().get("roomId");
-            if(textMessageDTO.getRoomId().equals(sessionRoomId) && (s != session)){
+            System.out.println("s.getId() = " + s.getId());
+            System.out.println("s.getId() = " + session.getId());
+            System.out.println("textMessageDTO = " + textMessageDTO.getRoomId());
+            System.out.println("sessionRoomId = " + sessionRoomId);
+            if(textMessageDTO.getRoomId().equals(sessionRoomId) && !(s.getId().equals(session.getId()))){
                 logger.info("send data : {}", message);
                 try{
-                    session.sendMessage(new TextMessage(jsonString));
+                    s.sendMessage(new TextMessage(jsonString));
                 } catch (IOException e) {
                     logger.error(e.getMessage(), e);
                 }
