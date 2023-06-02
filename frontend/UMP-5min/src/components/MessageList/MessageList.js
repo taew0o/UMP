@@ -35,10 +35,11 @@ export default function MessageList({ props }) {
   const [sendMsg, setSendMsg] = useState(false);
   const [items, setItems] = useState([]);
 
-  const webSocketUrl = `ws://localhost:8080/websocket?roomId=` + id;
+  const webSocketUrl = "ws://localhost:8080/websocket?roomId=" + id;
   const ws = useRef(null);
 
   useEffect(() => {
+    localStorage.setItem("selectedKey", "room");
     if (!ws.current) {
       ws.current = new WebSocket(webSocketUrl);
       ws.current.onopen = () => {
@@ -66,22 +67,9 @@ export default function MessageList({ props }) {
     };
   }, []);
 
-  useEffect(() => {
-    if (socketConnected) {
-      if (text) {
-        ws.current.send(
-          JSON.stringify({
-            roomId: id,
-            textMsg: text.message,
-            sendTime: new Date().toLocaleString(),
-            senderId: MY_USER_ID,
-          })
-        );
-      }
+  // useEffect(() => {
 
-      setSendMsg(true);
-    }
-  }, [socketConnected]);
+  // }, [socketConnected]);
 
   useEffect(() => {
     if (sendMsg) {
@@ -97,6 +85,19 @@ export default function MessageList({ props }) {
     console.log("My id???????????????", MY_USER_ID);
     console.log(text);
     makeMsg();
+    if (socketConnected) {
+      ws.current.send(
+        JSON.stringify({
+          roomId: id,
+          textMsg: text.message,
+          sendTime: new Date().toLocaleString(),
+          senderId: MY_USER_ID,
+        })
+      );
+      console.log("메시지 보낸다");
+
+      setSendMsg(true);
+    }
     renderMessages();
   }, [text]);
 

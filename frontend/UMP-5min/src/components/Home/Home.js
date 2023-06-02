@@ -29,7 +29,6 @@ const Home = () => {
   const isOnline = useInternetConnection();
   const [isLoading, setLoad] = useState(false);
   const [isLogin, setLogin] = useState(false);
-  4;
 
   useEffect(() => {
     if (!isOnline) {
