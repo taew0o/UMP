@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./FriendList.css";
 import { Button, Modal } from "antd";
+import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
+
 
 export default function FriendList(props) {
   const { id, name, text, appointmentScore } = props.data;
@@ -17,7 +19,7 @@ export default function FriendList(props) {
     }
     setBackgroundColor(storedColor);
   }, []);
-
+  
   const handleDeleteClick = () => {
     setConfirmModalTitle("친구 삭제");
     setConfirmModalIsOpen(true);
@@ -39,7 +41,7 @@ export default function FriendList(props) {
       "#FF7EB1",
       "#ADADAD",
     ];
-    const randomIndex = Math.floor(Math.random() * colors.length);
+    const randomIndex = Math(Math.random() * colors.length);
     return colors[randomIndex];
   };
 
@@ -54,6 +56,14 @@ export default function FriendList(props) {
     marginRight: "20px",
     backgroundColor: backgroundColor,
   };
+
+  const attendanceData = [
+    { name: "참석", value: 10 },
+    { name: "불참", value: 4 },
+    { name: "지각", value: 2 },
+  ];
+
+  const COLORS = ["#4caf50", "#f44336", "#ff9800"];
 
   return (
     <>
@@ -80,21 +90,25 @@ export default function FriendList(props) {
               <h1 className="friend-title">{name}</h1>
             </div>
           </div>
-          <div className="modal-button-container">
-            <Button onClick={handleDeleteClick}>친구 삭제</Button>
-            <Button onClick={handleBlockClick}>친구 차단</Button>
-          </div>
           <div className="attendance-rate-container">
-            <h2>약속 참여율:</h2>
-            <div className="attendance-rate-box">
-              <div key={appointmentScore.length}>
-                {"참석: " + appointmentScore.numAttend}
-                <br />
-                {"불참: " + appointmentScore.numNotAttend} <br />
-                {"지각: " + appointmentScore.numLate}
-              </div>
+              <h2>약속 참여율:</h2>
+              <PieChart width={200} height={200}>
+                <Pie
+                  data={attendanceData}
+                  cx={100}
+                  cy={100}
+                  outerRadius={80}
+                  dataKey="value"
+                  label
+                >
+                  {attendanceData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+                <Legend verticalAlign="middle" height="36" align="right" />
+              </PieChart>
             </div>
-          </div>
         </div>
       </Modal>
       <Modal
