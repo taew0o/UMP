@@ -19,11 +19,11 @@ public class Message {
 
     private String textMsg;
 
-    @ManyToOne(targetEntity = ChattingRoom.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(targetEntity = ChattingRoom.class, fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name="chattingRoom_id")
     private ChattingRoom chattingRoom;
 
-    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name="user_id")
     private User user;
 

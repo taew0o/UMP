@@ -64,11 +64,12 @@ export default function MessageList({ props }) {
   }, [socketData]);
 
   const webSocketLogin = useCallback(() => {
-    ws.current = new WebSocket("ws://localhost:8080/websocket");
+    ws.current = new WebSocket("ws://localhost:8080/websocket",id); //헤더에 roomId 추가
 
     ws.current.onmessage = (message) => {
       const dataSet = JSON.parse(message.data);
       setSocketData(dataSet);
+
     };
   });
 
@@ -88,6 +89,7 @@ export default function MessageList({ props }) {
         roomId: id,
         textMsg: text.message,
         sendTime: new Date().toLocaleString(),
+        senderId: MY_USER_ID
       }; //전송 데이터(JSON)
 
       const temp = JSON.stringify(data);
