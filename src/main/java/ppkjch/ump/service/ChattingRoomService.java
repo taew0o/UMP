@@ -57,6 +57,7 @@ public class ChattingRoomService {
         UserChattingRoom userChattingRoom = new UserChattingRoom();
         userChattingRoom.setUser(invitee);
         chattingRoom.addUserChattingRoom(userChattingRoom); //persist 안해도 자동 변경감지됨
+        //chattingRoom.;
 
         return chattingRoom;
     }

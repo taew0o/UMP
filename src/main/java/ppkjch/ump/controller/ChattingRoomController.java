@@ -85,7 +85,7 @@ public class ChattingRoomController {
     }
 
     @DeleteMapping("/chattingroom/member")
-    public ResponseEntity<?> goOutChattingRoom(HttpServletRequest request, @RequestParam Long roomId){
+    public ResponseEntity<?> goOutChattingRoom(HttpServletRequest request, @RequestParam("roomId") Long roomId){
         // 세션에서 유저 ID 가져오기
         HttpSession session = request.getSession(false);
         String userId = (String)session.getAttribute("userId");
