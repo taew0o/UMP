@@ -88,6 +88,7 @@ export default function MessageList({ props }) {
         roomId: id,
         textMsg: text.message,
         sendTime: new Date().toLocaleString(),
+        senderId: MY_USER_ID,
       }; //전송 데이터(JSON)
 
       const temp = JSON.stringify(data);
