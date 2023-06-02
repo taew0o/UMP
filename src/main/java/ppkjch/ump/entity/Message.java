@@ -27,6 +27,7 @@ public class Message {
     @JoinColumn(name="user_id")
     private User user;
 
+    @Column(name = "send_time")
     private Long sendTime;
 
     public static Message createMessage(String text, User user,ChattingRoom chattingRoom, Long sendTime) {
