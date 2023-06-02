@@ -22,7 +22,7 @@ public class MessageService {
     final private JpaChattingRoomRepository jpaChattingRoomRepository;
 
     @Transactional
-    public Long createMessage(String text, User user, ChattingRoom chattingRoom, LocalDateTime sendTime){
+    public Long createMessage(String text, User user, ChattingRoom chattingRoom, Long sendTime){
         Message message = Message.createMessage(text,user,chattingRoom, sendTime);
         jpaMessageRepository.save(message);
         return message.getId();

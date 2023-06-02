@@ -43,8 +43,7 @@ const Home = () => {
   const renderContent = () => {
     switch (selectedPage) {
       case "1":
-        if (localStorage.getItem("location") === "room") return;
-        return movePage("");
+        return localStorage.getItem("location") !== "room" && movePage("");
       case "2":
         return movePage("friend");
       case "3":
@@ -86,6 +85,7 @@ const Home = () => {
   }
 
   useEffect(() => {
+    // localStorage.setItem("location", "notRoom");
     renderContent();
   }, [selectedPage]);
 
