@@ -64,9 +64,10 @@ public class ChattingRoomService {
     public List<ChattingRoom> findRoom(User user){
         return jpaChattingRoomRepository.findChattingRoomByUser(user);
     }
-    //회원 채팅방 탈퇴
+    //회원 채팅방 나가기
     public void goOutRoom(User u, ChattingRoom cr){
         jpaChattingRoomRepository.goOutRoom(u,cr);
+
     }
 
     //이 함수는 여러명 한꺼번에 초대하는 것 같긴 한데 방 객체 생성 방식 몰라서 아직 냅둠
