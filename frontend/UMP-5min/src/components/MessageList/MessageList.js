@@ -190,12 +190,7 @@ export default function MessageList({ props }) {
 
       <div className="message-list-container">{result}</div>
 
-      <Compose
-        messages={messages}
-        getText={getText}
-        setMessages={setMessages}
-        MY_USER_ID={MY_USER_ID}
-      />
+      <Compose getText={getText} MY_USER_ID={MY_USER_ID} />
 
       <ReactModal
         isOpen={modalIsOpen}
