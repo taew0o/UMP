@@ -10,6 +10,7 @@ import { useLocation, useParams } from "react-router-dom";
 import ReactModal from "react-modal";
 import Review from "../Review/Review";
 import { Button } from "antd";
+import axios from "axios";
 
 export default function MessageList({ props }) {
   const MY_USER_ID = props.id;
@@ -25,12 +26,6 @@ export default function MessageList({ props }) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [reviewIsOpen, setReviewIsOpen] = useState(false);
 
-  const [msg, setMsg] = useState("");
-  const [name, setName] = useState("");
-  const [chatt, setChatt] = useState([]);
-  const [chkLog, setChkLog] = useState(false);
-  const [socketData, setSocketData] = useState();
-
   const [socketConnected, setSocketConnected] = useState(false);
   const [sendMsg, setSendMsg] = useState(false);
   const [items, setItems] = useState([]);
@@ -39,7 +34,8 @@ export default function MessageList({ props }) {
   const ws = useRef(null);
 
   useEffect(() => {
-    localStorage.setItem("selectedKey", "room");
+    getMessages();
+    localStorage.setItem("location", "room");
     if (!ws.current) {
       ws.current = new WebSocket(webSocketUrl);
       ws.current.onopen = () => {
@@ -57,35 +53,28 @@ export default function MessageList({ props }) {
       ws.current.onmessage = (evt) => {
         const data = JSON.parse(evt.data);
         console.log(data);
-        setItems((prevItems) => [...prevItems, data]);
+        const tempMsg = {
+          author: data.senderId,
+          message: data.textMsg,
+          timestamp: new Date().getTime(),
+        };
+        setMessages((prevMessages) => [...prevMessages, tempMsg]);
+        // renderMessages();
       };
     }
 
     return () => {
       console.log("clean up");
+      localStorage.setItem("location", "notRoom");
       ws.current.close();
     };
   }, []);
-
-  // useEffect(() => {
-
-  // }, [socketConnected]);
-
-  useEffect(() => {
-    if (sendMsg) {
-      ws.current.onmessage = (evt) => {
-        const data = JSON.parse(evt.data);
-        console.log(data);
-        setItems((prevItems) => [...prevItems, data]);
-      };
-    }
-  }, [sendMsg]);
 
   useEffect(() => {
     console.log("My id???????????????", MY_USER_ID);
     console.log(text);
     makeMsg();
-    if (socketConnected) {
+    if (socketConnected && text) {
       ws.current.send(
         JSON.stringify({
           roomId: id,
@@ -98,8 +87,13 @@ export default function MessageList({ props }) {
 
       setSendMsg(true);
     }
-    renderMessages();
+    console.log("message!!!!!!!", messages);
+    // renderMessages();
   }, [text]);
+
+  useEffect(() => {
+    renderMessages();
+  }, [messages]);
 
   const getText = (prop) => {
     setText(prop);
@@ -112,62 +106,24 @@ export default function MessageList({ props }) {
     }
   };
 
-  useEffect(() => {
-    renderMessages();
-  }, [messages]);
-
-  // useEffect(() => {
-  //   if (socketData !== undefined) {
-  //     const tempData = chatt.concat(socketData);
-  //     console.log("tempData", tempData);
-  //     setChatt(tempData);
-  //   }
-  // }, [socketData]);
-
-  // const webSocketLogin = useCallback(() => {
-  //   ws.current = new WebSocket("ws://localhost:8080/websocket?roomId=" + id); //헤더에 roomId 추가
-
-  //   ws.current.onmessage = (message) => {
-  //     const dataSet = JSON.parse(message.data);
-  //     setSocketData(dataSet);
-  //     console.log("데이터 도착");
-  //     console.log("데이터::::::::::", dataSet);
-  //   };
-  // });
-
-  // const send = useCallback(() => {
-  //   if (!chkLog) {
-  //     webSocketLogin();
-  //     setChkLog(true);
-  //   }
-
-  //   if (text) {
-  //     const data = {
-  //       roomId: id,
-  //       textMsg: text.message,
-  //       sendTime: new Date().toLocaleString(),
-  //       senderId: MY_USER_ID,
-  //     }; //전송 데이터(JSON)
-
-  //     const temp = JSON.stringify(data);
-
-  //     if (ws.current.readyState === 0) {
-  //       //readyState는 웹 소켓 연결 상태를 나타냄
-  //       ws.current.onopen = () => {
-  //         //webSocket이 맺어지고 난 후, 실행
-  //         console.log(ws.current.readyState);
-  //         ws.current.send(temp);
-  //       };
-  //     } else {
-  //       ws.current.send(temp);
-  //     }
-  //   } else {
-  //     // alert("메세지를 입력하세요.");
-  //     // document.getElementById("msg").focus();
-  //     return;
-  //   }
-  //   // setMsg("");
-  // });
+  const getMessages = () => {
+    axios({
+      method: "get",
+      url: "/chattingroom/messages",
+      headers: {
+        "Content-Type": `application/json`,
+      },
+      params: { roomId: id },
+      withCredentials: true,
+    })
+      .then((response) => {
+        console.log("----------------", response);
+      })
+      .catch((error) => {
+        console.log(error);
+        alert(`에러 발생 관리자 문의하세요!`);
+      });
+  };
 
   const renderMessages = () => {
     let i = 0;

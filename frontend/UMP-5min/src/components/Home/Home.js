@@ -43,6 +43,7 @@ const Home = () => {
   const renderContent = () => {
     switch (selectedPage) {
       case "1":
+        if (localStorage.getItem("location") === "room") return;
         return movePage("");
       case "2":
         return movePage("friend");
