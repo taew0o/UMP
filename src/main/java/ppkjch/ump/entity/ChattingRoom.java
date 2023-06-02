@@ -55,6 +55,10 @@ public class ChattingRoom {
     public void updateNumPerson(int num){
         this.numPerson += num;
     }
+
+    public boolean isEmptyRoom(){
+        return this.numPerson == 0;
+    }
     public static void deleteChattingroom(){
 
         //roomId로 room찾아 삭제

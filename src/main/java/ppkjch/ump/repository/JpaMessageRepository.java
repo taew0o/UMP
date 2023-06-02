@@ -31,4 +31,8 @@ public class JpaMessageRepository {
                 .setParameter("chattingRoom", chattingRoom)
                 .getResultList();
     }
+
+    public void removeMessage(Message message){
+        em.remove(message);
+    }
 }
