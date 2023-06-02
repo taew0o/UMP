@@ -1,6 +1,7 @@
 package ppkjch.ump.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.EntityManager;
 import jakarta.websocket.Session;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -20,68 +21,71 @@ import ppkjch.ump.service.UserService;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 
 @Component
 @RequiredArgsConstructor
 public class UmpWebSocketHandler extends TextWebSocketHandler {
-    //private final
+
     // WebSocketHandler 구현
     private final MessageService messageService;
     private final UserService userService;
     private final ChattingRoomService chattingRoomService;
-    private static Set<Session> clients = Collections.synchronizedSet(new HashSet<Session>());
+    private static Set<WebSocketSession> clients = new HashSet<WebSocketSession>();
     private static Logger logger = LoggerFactory.getLogger(UmpWebSocketHandler.class);
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         super.afterConnectionEstablished(session);
+        //관리할 세션 set에 추가
+        clients.add(session);
+
     }
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         super.handleTextMessage(session, message);
-        System.out.println(message.getPayload());
-        System.out.println("session = " + session);
+        //System.out.println(message.getPayload());
         //유저 가져오기
         Map<String, Object> attributes = session.getAttributes();
 
         String jsonString = message.getPayload();
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            // JSON 문자열을 Java 객체로 파싱
-            TextMessageDTO textMessageDTO = objectMapper.readValue(jsonString, TextMessageDTO.class);
-            //유저 가져오기
-            User sender = userService.findUser(textMessageDTO.getSenderId());
-            //방 가져오기
-            ChattingRoom room = chattingRoomService.findRoom(Long.parseLong(textMessageDTO.getRoomId()));
-            //날짜 가져오기
-            LocalDateTime sendTime = LocalDateTime.parse(textMessageDTO.getSendTime());
-            //텍스트 가져오기
-            String text = textMessageDTO.getTextMsg();
-            //메세지 저장
-            messageService.createMessage(text, sender, room, sendTime);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        ObjectMapper objectMapper = new ObjectMapper();
+        // JSON 문자열을 Java 객체로 파싱
+        TextMessageDTO textMessageDTO = objectMapper.readValue(jsonString, TextMessageDTO.class);
+        //유저 가져오기
+        String senderId = textMessageDTO.getSenderId();
+        System.out.println("senderId = " + senderId);
+        User sender = userService.findUser(textMessageDTO.getSenderId());
+        //방 가져오기
+        System.out.println("textMessageDTO.getRoomId() = " + textMessageDTO.getRoomId());
+        ChattingRoom room = chattingRoomService.findRoom(Long.parseLong(textMessageDTO.getRoomId()));
+        //날짜 가져오기
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy. M. d. a h:mm:ss", Locale.KOREAN);
+        LocalDateTime sendTime = LocalDateTime.parse(textMessageDTO.getSendTime(), formatter);
+        //텍스트 가져오기
+        String text = textMessageDTO.getTextMsg();
+        //메세지 저장
+
+        messageService.createMessage(text, sender, room, sendTime);
 
 
-        for (Session s : clients) {
-            logger.info("send data : {}", message);
-            try{
-                session.sendMessage(new TextMessage(jsonString));
-            } catch (IOException e) {
-                logger.error(e.getMessage(), e);
+        for (WebSocketSession s : clients) {
+            //System.out.println("s.getHandshakeHeaders().getFirst(\"sec-websocket-protocol\") = " + s.getHandshakeHeaders().getFirst("sec-websocket-protocol"));
+            //세션set 순회하며 자기 세션이 아니고 같은 방id를 가진 session이면 정보를 전달
+            String sessionRoomId = s.getHandshakeHeaders().getFirst("sec-websocket-protocol");
+            if(textMessageDTO.getRoomId().equals(sessionRoomId) && (s != session)){
+                logger.info("send data : {}", message);
+                try{
+                    session.sendMessage(new TextMessage(jsonString));
+                } catch (IOException e) {
+                    logger.error(e.getMessage(), e);
+                }
             }
         }
     }
-        //받은 메세지 DB에 저장
-        //세션을 통해 모든 소켓에 message 전달
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {

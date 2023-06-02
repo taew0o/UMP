@@ -30,6 +30,7 @@ public class ChattingRoom {
     @OneToMany(mappedBy = "chattingRoom", cascade = CascadeType.ALL)
     private List<UserChattingRoom> userChattingRooms = new ArrayList<>();
 
+
     //==연관관계 메서드==//
     public void addUserChattingRoom(UserChattingRoom userChattingRoom) {
         userChattingRooms.add(userChattingRoom);

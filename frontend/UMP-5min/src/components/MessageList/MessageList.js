@@ -64,7 +64,7 @@ export default function MessageList({ props }) {
   }, [socketData]);
 
   const webSocketLogin = useCallback(() => {
-    ws.current = new WebSocket("ws://localhost:8080/websocket");
+    ws.current = new WebSocket("ws://localhost:8080/websocket?roomId=" + id); //헤더에 roomId 추가
 
     ws.current.onmessage = (message) => {
       const dataSet = JSON.parse(message.data);
