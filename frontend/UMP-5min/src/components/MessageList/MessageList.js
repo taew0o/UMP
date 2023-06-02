@@ -56,7 +56,7 @@ export default function MessageList({ props }) {
         const tempMsg = {
           author: data.senderId,
           message: data.textMsg,
-          timestamp: new Date().getTime(),
+          timestamp: data.sendTime,
         };
         setMessages((prevMessages) => [...prevMessages, tempMsg]);
         // renderMessages();
@@ -79,7 +79,7 @@ export default function MessageList({ props }) {
         JSON.stringify({
           roomId: id,
           textMsg: text.message,
-          sendTime: new Date().toLocaleString(),
+          sendTime: new Date().getTime(),
           senderId: MY_USER_ID,
         })
       );
@@ -118,6 +118,14 @@ export default function MessageList({ props }) {
     })
       .then((response) => {
         console.log("----------------", response);
+        response.data.map((value) => {
+          const tempMsg = {
+            author: value.senderId,
+            message: value.textMsg,
+            timestamp: value.sendTime,
+          };
+          setMessages([...messages, tempMsg]);
+        });
       })
       .catch((error) => {
         console.log(error);
