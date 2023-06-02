@@ -52,7 +52,9 @@ public class ChattingRoom {
         }
         return chattingRoom;
     }
-    //public void update
+    public void updateNumPerson(int num){
+        this.numPerson += num;
+    }
     public static void deleteChattingroom(){
 
         //roomId로 room찾아 삭제
