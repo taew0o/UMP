@@ -53,6 +53,12 @@ public class ChattingRoom {
         return chattingRoom;
     }
 
+    public static void deleteChattingroom(){
+
+        //roomId로 room찾아 삭제
+        //roomId로 message찾아 삭제
+
+    }
 }
 
 
