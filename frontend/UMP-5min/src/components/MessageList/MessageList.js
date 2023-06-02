@@ -133,6 +133,25 @@ export default function MessageList({ props }) {
       });
   };
 
+  const outRoom = () => {
+    axios({
+      method: "delete",
+      url: "/chattingroom/member",
+      headers: {
+        "Content-Type": `application/json`,
+      },
+      params: { roomId: id },
+      withCredentials: true,
+    })
+      .then((response) => {
+        console.log("----------------", response);
+      })
+      .catch((error) => {
+        console.log(error);
+        alert(`에러 발생 관리자 문의하세요!`);
+      });
+  };
+
   const renderMessages = () => {
     let i = 0;
     let messageCount = messages.length;
@@ -225,7 +244,8 @@ export default function MessageList({ props }) {
               onClick={() => {
                 if (window.confirm(`이 채팅방을 나가시겠습니까?`)) {
                   setModalIsOpen(false);
-                  setReviewIsOpen(true);
+                  outRoom();
+                  // setReviewIsOpen(true);
                 }
               }}
             >
