@@ -41,6 +41,7 @@ public class UmpWebSocketHandler extends TextWebSocketHandler {
         super.afterConnectionEstablished(session);
         //관리할 세션 set에 추가
         clients.add(session);
+        System.out.println("관리할 세션 추가" + clients.size());
         //쿼리스트링 읽어서 RoomId 정보 저장
         String roomId = null;
         String query = session.getUri().getQuery();
@@ -86,10 +87,10 @@ public class UmpWebSocketHandler extends TextWebSocketHandler {
             System.out.println("세션 룸 아이디" + s.getAttributes().get("roomId"));
             //세션set 순회하며 자기 세션이 아니고 같은 방id를 가진 session이면 정보를 전달
             String sessionRoomId = (String)s.getAttributes().get("roomId");
-            System.out.println("s.getId() = " + s.getId());
-            System.out.println("s.getId() = " + session.getId());
-            System.out.println("textMessageDTO = " + textMessageDTO.getRoomId());
             System.out.println("sessionRoomId = " + sessionRoomId);
+            System.out.println("sessionRoomId = " + textMessageDTO.getRoomId());
+            System.out.println("sessionRoomId = " + s.getId());
+            System.out.println("sessionRoomId = " + session.getId());
             if(textMessageDTO.getRoomId().equals(sessionRoomId) && !(s.getId().equals(session.getId()))){
                 logger.info("send data : {}", message);
                 try{
@@ -104,5 +105,7 @@ public class UmpWebSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         super.afterConnectionClosed(session, status);
+        clients.remove(session);
+        System.out.println(session.getId() + "세션 연결 종료 및 clients에서 제거");
     }
 }
