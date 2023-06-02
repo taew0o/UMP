@@ -120,7 +120,7 @@ export default function MessageList({ props }) {
         console.log("----------------", response);
         response.data.map((value) => {
           const tempMsg = {
-            author: value.user.id,
+            author: value.senderId,
             message: value.textMsg,
             timestamp: value.sendTime,
           };
