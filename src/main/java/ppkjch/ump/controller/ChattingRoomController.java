@@ -70,7 +70,9 @@ public class ChattingRoomController {
     public ResponseEntity<String> inviteChattingRoom(@RequestBody UserAndRoomDTO inviteDTO){
         //유저 ID정보로 채팅방에 user정보 추가하고 추가된 방을 반환
         try {
-            Long roomId = chattingRoomService.inviteRoom(inviteDTO.getRoomId(), inviteDTO.getInviteeId());
+            User invitee = userService.findUser(inviteDTO.getInviteeId());
+            ChattingRoom chattingRoom = chattingRoomService.findRoom(inviteDTO.getRoomId());
+            chattingRoomService.inviteRoom(chattingRoom, invitee);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

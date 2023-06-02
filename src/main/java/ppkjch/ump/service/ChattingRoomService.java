@@ -47,21 +47,18 @@ public class ChattingRoomService {
         return chattingRoom.getId();
     }
 
-    public Long inviteRoom(Long roomId, String inviteeId) {
-        //ID 정보로 엔티티 조회
-        ChattingRoom findRoom = jpaChattingRoomRepository.findOne(roomId);
+    public ChattingRoom inviteRoom(ChattingRoom chattingRoom, User invitee) {
         //방이 full인지 확인
-        if(findRoom.getNumPerson() == 10){
+        if(chattingRoom.getNumPerson() == 10){
             throw new RoomFullException("10명인 방에는 초대할 수 없습니다.");
         }
-        User findUser = jpaUserRepository.findOne(inviteeId);
 
         //UserChattingRoom 객체 만들고 연관관계 매핑
         UserChattingRoom userChattingRoom = new UserChattingRoom();
-        userChattingRoom.setUser(findUser);
-        findRoom.addUserChattingRoom(userChattingRoom); //persist 안해도 자동 변경감지됨
+        userChattingRoom.setUser(invitee);
+        chattingRoom.addUserChattingRoom(userChattingRoom); //persist 안해도 자동 변경감지됨
 
-        return roomId;
+        return chattingRoom;
     }
     //회원 참여중인 채팅방 목록 조회
     public List<ChattingRoom> findRoom(User user){
