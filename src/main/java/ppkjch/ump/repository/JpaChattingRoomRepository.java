@@ -40,9 +40,12 @@ public class JpaChattingRoomRepository {
                 .getResultList();
     }
     public void goOutRoom(User user, ChattingRoom cr){
-        em.createQuery("delete from UserChattingRoom ucr where ucr.chattingRoom =:user and ucr.chattingRoom =:cr")
+        em.createQuery("delete from UserChattingRoom ucr where ucr.user =:user and ucr.chattingRoom =:cr")
                 .setParameter("user",user)
                 .setParameter("cr",cr)
                 .executeUpdate();
+    }
+    public void removeRoom(ChattingRoom chattingRoom){
+        em.remove(chattingRoom);
     }
 }

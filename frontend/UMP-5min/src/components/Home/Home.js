@@ -29,7 +29,6 @@ const Home = () => {
   const isOnline = useInternetConnection();
   const [isLoading, setLoad] = useState(false);
   const [isLogin, setLogin] = useState(false);
-  4;
 
   useEffect(() => {
     if (!isOnline) {
@@ -44,7 +43,7 @@ const Home = () => {
   const renderContent = () => {
     switch (selectedPage) {
       case "1":
-        return movePage("");
+        return localStorage.getItem("location") !== "room" && movePage("");
       case "2":
         return movePage("friend");
       case "3":
@@ -86,6 +85,7 @@ const Home = () => {
   }
 
   useEffect(() => {
+    // localStorage.setItem("location", "notRoom");
     renderContent();
   }, [selectedPage]);
 
@@ -158,7 +158,10 @@ const Home = () => {
                       path="/setting"
                       element={<SettingPage props={myData} />}
                     />
-                    <Route path="/room/:id" element={<MessageList />} />
+                    <Route
+                      path="/room/:id"
+                      element={<MessageList props={myData} />}
+                    />
                     <Route path="/review/:id" element={<Review />} />
                   </Routes>
                 </div>

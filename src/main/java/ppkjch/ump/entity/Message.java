@@ -19,18 +19,18 @@ public class Message {
 
     private String textMsg;
 
-    @ManyToOne(targetEntity = ChattingRoom.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(targetEntity = ChattingRoom.class, fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name="chattingRoom_id")
     private ChattingRoom chattingRoom;
 
-    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name="user_id")
     private User user;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime sendTime;
+    @Column(name = "send_time")
+    private Long sendTime;
 
-    public static Message createMessage(String text, User user,ChattingRoom chattingRoom, LocalDateTime sendTime) {
+    public static Message createMessage(String text, User user,ChattingRoom chattingRoom, Long sendTime) {
         Message message = new Message();
         message.setSendTime(sendTime);
         message.setTextMsg(text);

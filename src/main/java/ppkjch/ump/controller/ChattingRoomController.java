@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import ppkjch.ump.dto.GetMessageDTO;
 import ppkjch.ump.dto.MakeRoomDTO;
 import ppkjch.ump.dto.RoomIdDTO;
 import ppkjch.ump.dto.UserAndRoomDTO;
@@ -70,9 +71,16 @@ public class ChattingRoomController {
     public ResponseEntity<String> inviteChattingRoom(@RequestBody UserAndRoomDTO inviteDTO){
         //유저 ID정보로 채팅방에 user정보 추가하고 추가된 방을 반환
         try {
-            Long roomId = chattingRoomService.inviteRoom(inviteDTO.getRoomId(), inviteDTO.getInviteeId());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            List<User> invitees = new ArrayList<>();
+            for (String id: inviteDTO.getInviteeIds()) {
+                User invitee = userService.findUser(id);
+                invitees.add(invitee);
+            }
+
+            ChattingRoom chattingRoom = chattingRoomService.findRoom(inviteDTO.getRoomId());
+            chattingRoomService.inviteRoom(chattingRoom, invitees);
+        } catch (RoomFullException e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
         }
 
         //HttpHeaders headers = new HttpHeaders();
@@ -82,20 +90,35 @@ public class ChattingRoomController {
     }
 
     @DeleteMapping("/chattingroom/member")
-    public ResponseEntity<?> goOutChattingRoom(@CookieValue String userId, @RequestBody Long roomId){
-        //유저 ID정보와 RoomId정보로 UserChattingRoom에서 찾아 삭제
+    public ResponseEntity<?> goOutChattingRoom(HttpServletRequest request, @RequestParam("roomId") Long roomId){
+        // 세션에서 유저 ID 가져오기
+        System.out.println("roomId... = " + roomId);
+        HttpSession session = request.getSession(false);
+        String userId = (String)session.getAttribute("userId");
+        // 유저 ID를 사용하여 유저 정보 조회
         User user = userService.findUser(userId);
+        //방ID 사용하여 방 조회
         ChattingRoom room = chattingRoomService.findRoom(roomId);
         //goOutRoom(User, ChattingRoom): void - 태우 추가 완. 테스트 필요
+
         chattingRoomService.goOutRoom(user,room);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @GetMapping("/chattingroom/messages")
-    public ResponseEntity<List<Message>> getMessages(@RequestBody RoomIdDTO roomIdDTO){ //보안 때문에 userId 넣어야 할 수도?
-        Long roomId = roomIdDTO.getRoomId();
+    public ResponseEntity<List<GetMessageDTO>> getMessages(@RequestParam("roomId") Long roomId){ //보안 때문에 userId 넣어야 할 수도?
         List<Message> messages = messageService.findMessages(roomId);
-        return ResponseEntity.status(HttpStatus.OK).body(messages);
+        List<GetMessageDTO> messageDTOs = new ArrayList<>();
+        for (Message m: messages) {
+            GetMessageDTO getMessageDTO = new GetMessageDTO();
+            getMessageDTO.setChattingRoom(m.getChattingRoom());
+            getMessageDTO.setId(m.getId());
+            getMessageDTO.setSenderId(m.getUser().getId());
+            getMessageDTO.setSendTime(m.getSendTime());
+            getMessageDTO.setTextMsg(m.getTextMsg());
+            messageDTOs.add(getMessageDTO);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(messageDTOs);
     }
 //    @ExceptionHandler(RoomFullException.class)
 //    public ResponseEntity<ErrorResponse> handleCustomException(RoomFullException ex) {

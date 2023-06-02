@@ -47,31 +47,39 @@ public class ChattingRoomService {
         return chattingRoom.getId();
     }
 
-    @Transactional
-    public Long inviteRoom(Long roomId, String inviteeId) {
-        //ID 정보로 엔티티 조회
-        ChattingRoom findRoom = jpaChattingRoomRepository.findOne(roomId);
+    public ChattingRoom inviteRoom(ChattingRoom chattingRoom, List<User> invitees) {
         //방이 full인지 확인
-        if(findRoom.getNumPerson() == 10){
-            throw new RoomFullException("10명인 방에는 초대할 수 없습니다.");
-        }
-        User findUser = jpaUserRepository.findOne(inviteeId);
 
         //UserChattingRoom 객체 만들고 연관관계 매핑
-        UserChattingRoom userChattingRoom = new UserChattingRoom();
-        userChattingRoom.setUser(findUser);
-        findRoom.addUserChattingRoom(userChattingRoom); //persist 안해도 자동 변경감지됨
+        for (User invitee: invitees) {
+            if(chattingRoom.getNumPerson() == 10){
+                throw new RoomFullException("10명인 방에는 초대할 수 없습니다.");
+            }
+            UserChattingRoom userChattingRoom = new UserChattingRoom();
+            userChattingRoom.setUser(invitee);
+            chattingRoom.addUserChattingRoom(userChattingRoom); //persist 안해도 자동 변경감지됨
+            chattingRoom.updateNumPerson(1);
+        }
 
-        return roomId;
+        return chattingRoom;
     }
     //회원 참여중인 채팅방 목록 조회
     public List<ChattingRoom> findRoom(User user){
         return jpaChattingRoomRepository.findChattingRoomByUser(user);
     }
-    //회원 채팅방 탈퇴
+    //회원 채팅방 나가기
     @Transactional
     public void goOutRoom(User u, ChattingRoom cr){
         jpaChattingRoomRepository.goOutRoom(u,cr);
+        cr.updateNumPerson(-1);
+        if(cr.isEmptyRoom()){
+            jpaChattingRoomRepository.removeRoom(cr);
+            List<Message> messages = jpaMessageRepository.findMessageByRoom(cr);
+            for (Message m: messages) {
+                jpaMessageRepository.removeMessage(m);
+            }
+        }
+
     }
 
     //이 함수는 여러명 한꺼번에 초대하는 것 같긴 한데 방 객체 생성 방식 몰라서 아직 냅둠

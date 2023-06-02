@@ -30,6 +30,7 @@ public class ChattingRoom {
     @OneToMany(mappedBy = "chattingRoom", cascade = CascadeType.ALL)
     private List<UserChattingRoom> userChattingRooms = new ArrayList<>();
 
+
     //==연관관계 메서드==//
     public void addUserChattingRoom(UserChattingRoom userChattingRoom) {
         userChattingRooms.add(userChattingRoom);
@@ -51,7 +52,19 @@ public class ChattingRoom {
         }
         return chattingRoom;
     }
+    public void updateNumPerson(int num){
+        this.numPerson += num;
+    }
 
+    public boolean isEmptyRoom(){
+        return this.numPerson == 0;
+    }
+    public static void deleteChattingroom(){
+
+        //roomId로 room찾아 삭제
+        //roomId로 message찾아 삭제
+
+    }
 }
 
 

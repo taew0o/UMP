@@ -14,12 +14,18 @@ export default function ConversationList(props) {
   const [friends, setFriends] = useState([]);
   const [selectedFriends, setSelectedFriends] = useState([]);
   const [visible, setVisible] = useState(false);
+  const [searchValue, setSearchValue] = useState(""); // New state for search value
+  const [filteredConversations, setFilteredConversations] = useState([]); // New state for filtered conversations
 
   useEffect(() => {
     getConversations();
     getFriends();
     console.log(friends);
   }, []);
+
+  useEffect(() => {
+    filterConversations();
+  }, [searchValue, conversations]);
 
   const getConversations = () => {
     axios({
@@ -135,6 +141,7 @@ export default function ConversationList(props) {
       );
     }
   };
+
   const popoverContent = (
     <>
       <Input
@@ -147,6 +154,17 @@ export default function ConversationList(props) {
       {visible && renderFriendsList()}
     </>
   );
+
+  const handleSearch = (e) => {
+    setSearchValue(e.target.value);
+  };
+
+  const filterConversations = () => {
+    const filtered = conversations.filter((conversation) => {
+      return conversation.name.toLowerCase().includes(searchValue.toLowerCase());
+    });
+    setFilteredConversations(filtered);
+  };
 
   return (
     <div className="conversation-list">
@@ -162,10 +180,16 @@ export default function ConversationList(props) {
         ]}
         popoverContent={popoverContent}
       />
-      <ConversationSearch />
-      {conversations.map((conversation) => (
-        <ConversationListItem key={conversation.name} data={conversation} />
-      ))}
+      <ConversationSearch handleSearch={handleSearch} />
+      {filteredConversations.length === 0 ? (
+        <div style={{ textAlign: "center", marginTop: "20px" }}>
+          오른쪽 상단 플러스 버튼을 눌러 채팅방을 추가해주세요
+        </div>
+      ) : (
+        filteredConversations.map((conversation) => (
+          <ConversationListItem key={conversation.name} data={conversation} />
+        ))
+      )}
     </div>
   );
 }

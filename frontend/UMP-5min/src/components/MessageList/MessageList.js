@@ -6,15 +6,18 @@ import Message from "../Message/Message";
 import moment from "moment";
 
 import "./MessageList.css";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import ReactModal from "react-modal";
 import Review from "../Review/Review";
-import { Button } from "antd";
+import { Button, Checkbox } from "antd";
+import axios from "axios";
 
-const MY_USER_ID = "apple";
+//채팅방 구현
+export default function MessageList({ props }) {
+  const MY_USER_ID = props.id;
 
-export default function MessageList(props) {
   const [messages, setMessages] = useState([]);
+  const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();
   const state = location.state;
@@ -25,21 +28,77 @@ export default function MessageList(props) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [reviewIsOpen, setReviewIsOpen] = useState(false);
 
-  const [msg, setMsg] = useState("");
-  const [name, setName] = useState("");
-  const [chatt, setChatt] = useState([]);
-  const [chkLog, setChkLog] = useState(false);
-  const [socketData, setSocketData] = useState();
+  const [socketConnected, setSocketConnected] = useState(false);
+  const [sendMsg, setSendMsg] = useState(false);
+  const [items, setItems] = useState([]);
 
+  const [friends, setFriends] = useState([]);
+  const [selectedFriends, setSelectedFriends] = useState([]);
+  const [visible, setVisible] = useState(false);
+
+  const webSocketUrl = "ws://localhost:8080/websocket?roomId=" + id;
   const ws = useRef(null);
 
   useEffect(() => {
+    getFriends();
+    getMessages();
+    localStorage.setItem("location", "room");
+    if (!ws.current) {
+      ws.current = new WebSocket(webSocketUrl);
+      ws.current.onopen = () => {
+        console.log("connected to " + webSocketUrl);
+        setSocketConnected(true);
+      };
+      ws.current.onclose = (error) => {
+        console.log("disconnect from " + webSocketUrl);
+        console.log(error);
+      };
+      ws.current.onerror = (error) => {
+        console.log("connection error " + webSocketUrl);
+        console.log(error);
+      };
+      ws.current.onmessage = (evt) => {
+        const data = JSON.parse(evt.data);
+        console.log(data);
+        const tempMsg = {
+          author: data.senderId,
+          message: data.textMsg,
+          timestamp: data.sendTime,
+        };
+        setMessages((prevMessages) => [...prevMessages, tempMsg]);
+      };
+    }
+
+    return () => {
+      console.log("clean up");
+      localStorage.setItem("location", "notRoom");
+      ws.current.close();
+    };
+  }, []);
+
+  useEffect(() => {
+    console.log("My id???????????????", MY_USER_ID);
     console.log(text);
     makeMsg();
-    renderMessages();
+    if (socketConnected && text) {
+      ws.current.send(
+        JSON.stringify({
+          roomId: id,
+          textMsg: text.message,
+          sendTime: new Date().getTime(),
+          senderId: MY_USER_ID,
+        })
+      );
+      console.log("메시지 보낸다");
 
-    console.log(messages);
+      setSendMsg(true);
+    }
+    console.log("message!!!!!!!", messages);
   }, [text]);
+
+  useEffect(() => {
+    renderMessages();
+  }, [messages]);
 
   const getText = (prop) => {
     setText(prop);
@@ -47,69 +106,64 @@ export default function MessageList(props) {
 
   const makeMsg = () => {
     if (text) {
-      setMessages([...messages, ...text]);
-      send();
+      setMessages([...messages, text]);
     }
   };
 
-  useEffect(() => {
-    renderMessages();
-  }, [messages]);
+  const getMessages = () => {
+    axios({
+      method: "get",
+      url: "/chattingroom/messages",
+      headers: {
+        "Content-Type": `application/json`,
+      },
+      params: { roomId: id },
+      withCredentials: true,
+    })
+      .then((response) => {
+        console.log("----------------", response);
+        response.data.map((value) => {
+          const tempMsg = {
+            author: value.senderId,
+            message: value.textMsg,
+            timestamp: value.sendTime,
+          };
+          setMessages((prevMessages) => [...prevMessages, tempMsg]);
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        alert(`에러 발생 관리자 문의하세요!`);
+      });
+  };
 
-  useEffect(() => {
-    if (socketData !== undefined) {
-      const tempData = chatt.concat(socketData);
-      console.log(tempData);
-      setChatt(tempData);
-    }
-  }, [socketData]);
-
-  const webSocketLogin = useCallback(() => {
-    ws.current = new WebSocket("ws://localhost:8080/websocket");
-
-    ws.current.onmessage = (message) => {
-      const dataSet = JSON.parse(message.data);
-      setSocketData(dataSet);
-    };
-  });
-
-  const send = useCallback(() => {
-    if (!chkLog) {
-      // if (name === "") {
-      //   alert("이름을 입력하세요.");
-      //   document.getElementById("name").focus();
-      //   return;
-      // }
-      webSocketLogin();
-      setChkLog(true);
-    }
-
-    if (text) {
-      // const data = {
-      //   name,
-      //   msg,
-      //   date: new Date().toLocaleString(),
-      // }; //전송 데이터(JSON)
-
-      const temp = JSON.stringify(text);
-
-      if (ws.current.readyState === 0) {
-        //readyState는 웹 소켓 연결 상태를 나타냄
-        ws.current.onopen = () => {
-          //webSocket이 맺어지고 난 후, 실행
-          console.log(ws.current.readyState);
-          ws.current.send(temp);
-        };
-      } else {
-        ws.current.send(temp);
-      }
-    } else {
-      // alert("메세지를 입력하세요.");
-      // document.getElementById("msg").focus();
-      return;
-    }
-    // setMsg("");
-  });
+  const outRoom = () => {
+    axios({
+      method: "delete",
+      url: "/chattingroom/member",
+      headers: {
+        "Content-Type": `application/json`,
+      },
+      params: { roomId: id },
+      withCredentials: true,
+    })
+      .then((response) => {
+        console.log("----------------", response);
+        ws.current.send(
+          JSON.stringify({
+            roomId: id,
+            textMsg: text.message,
+            sendTime: new Date().getTime(),
+            senderId: MY_USER_ID,
+          })
+        );
+        navigate("/");
+      })
+      .catch((error) => {
+        console.log(error);
+        alert(`에러 발생 관리자 문의하세요!`);
+      });
+  };
 
   const renderMessages = () => {
     let i = 0;
@@ -154,6 +208,8 @@ export default function MessageList(props) {
         }
       }
 
+      const senderId = isMine ? MY_USER_ID : current.author;
+
       tempMessages.push(
         <Message
           key={i}
@@ -162,6 +218,7 @@ export default function MessageList(props) {
           endsSequence={endsSequence}
           showTimestamp={showTimestamp}
           data={current}
+          senderName={senderId} // Pass senderId as senderName prop
         />
       );
 
@@ -171,6 +228,80 @@ export default function MessageList(props) {
     setResult(tempMessages);
   };
 
+  const renderFriendsList = () => {
+    return (
+      <div>
+        {friends.map((friend, index) => (
+          <div key={index}>
+            <Checkbox
+              onChange={(e) => handleSelectFriend(e, friend)}
+              checked={selectedFriends.includes(friend)}
+            >
+              {friend}
+            </Checkbox>
+          </div>
+        ))}
+        <Button onClick={addFriend}>초대</Button>
+      </div>
+    );
+  };
+
+  const addFriend = () => {
+    axios({
+      method: "post",
+      url: "/chattingroom/member",
+      headers: {
+        "Content-Type": `application/json`,
+      },
+      data: {
+        roomId: id,
+        inviteeIds: selectedFriends,
+      },
+      withCredentials: true,
+    })
+      .then((response) => {
+        console.log("addFriend response", response);
+      })
+      .catch((error) => {
+        console.log(error);
+        alert(`에러 발생 관리자 문의하세요!`);
+      });
+  };
+
+  // 친구 목록을 가져오는 함수
+  const getFriends = () => {
+    axios({
+      method: "get",
+      url: "/friends",
+      headers: {
+        "Content-Type": `application/json`,
+      },
+      withCredentials: true,
+    })
+      .then((response) => {
+        let newFriends = response.data.map((result) => {
+          return result.id;
+        });
+        setFriends(newFriends);
+      })
+      .catch((error) => {
+        console.log(error);
+        alert(`에러 발생 관리자 문의하세요!`);
+      });
+  };
+
+  const handleShowFriends = () => {
+    setVisible(!visible);
+  };
+  const handleSelectFriend = (e, selectedFriend) => {
+    if (e.target.checked) {
+      setSelectedFriends([...selectedFriends, selectedFriend]);
+    } else {
+      setSelectedFriends(
+        selectedFriends.filter((friendName) => friendName !== selectedFriend)
+      );
+    }
+  };
   return (
     <div className="message-list">
       <Toolbar
@@ -188,11 +319,7 @@ export default function MessageList(props) {
 
       <div className="message-list-container">{result}</div>
 
-      <Compose
-        messages={messages}
-        getText={getText}
-        setMessages={setMessages}
-      />
+      <Compose getText={getText} MY_USER_ID={MY_USER_ID} />
 
       <ReactModal
         isOpen={modalIsOpen}
@@ -207,7 +334,8 @@ export default function MessageList(props) {
               onClick={() => {
                 if (window.confirm(`이 채팅방을 나가시겠습니까?`)) {
                   setModalIsOpen(false);
-                  setReviewIsOpen(true);
+                  outRoom();
+                  // setReviewIsOpen(true);
                 }
               }}
             >
@@ -218,7 +346,7 @@ export default function MessageList(props) {
 
         <div className="modal-content">
           <div className="room-info">
-            <div>채팅방 정보: {id}</div>
+            <div>채팅방 정보: {state.name}</div>
           </div>
           <div className="appointment-info">
             <div>
@@ -236,8 +364,11 @@ export default function MessageList(props) {
           </div>
           <div className="button-group">
             <Button className="appointment-button">약속 잡기</Button>
-            <Button className="invite-button">친구 초대</Button>
+            <Button className="invite-button" onClick={handleShowFriends}>
+              친구 초대
+            </Button>
           </div>
+          {visible && renderFriendsList()}
         </div>
       </ReactModal>
       <ReactModal
