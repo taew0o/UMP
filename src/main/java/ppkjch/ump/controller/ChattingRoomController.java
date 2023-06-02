@@ -94,8 +94,7 @@ public class ChattingRoomController {
     }
 
     @GetMapping("/chattingroom/messages")
-    public ResponseEntity<List<Message>> getMessages(@RequestBody RoomIdDTO roomIdDTO){ //보안 때문에 userId 넣어야 할 수도?
-        Long roomId = roomIdDTO.getRoomId();
+    public ResponseEntity<List<Message>> getMessages(@RequestParam("roomId") Long roomId){ //보안 때문에 userId 넣어야 할 수도?
         List<Message> messages = messageService.findMessages(roomId);
         return ResponseEntity.status(HttpStatus.OK).body(messages);
     }
