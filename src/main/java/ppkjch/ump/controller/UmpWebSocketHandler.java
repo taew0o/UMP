@@ -20,6 +20,7 @@ import ppkjch.ump.service.MessageService;
 import ppkjch.ump.service.UserService;
 
 import java.io.IOException;
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -40,7 +41,17 @@ public class UmpWebSocketHandler extends TextWebSocketHandler {
         super.afterConnectionEstablished(session);
         //관리할 세션 set에 추가
         clients.add(session);
-
+        //쿼리스트링 읽어서 RoomId 정보 저장
+        String roomId = null;
+        String query = session.getUri().getQuery();
+        for (int i = 0; i< query.length(); i++) {
+            if(query.charAt(i) == '='){
+                roomId = query.substring(i+1);
+                break;
+            }
+        }
+        System.out.println("roomId" + roomId);
+        session.getAttributes().put("roomId", roomId);
     }
 
     @Override
@@ -73,9 +84,9 @@ public class UmpWebSocketHandler extends TextWebSocketHandler {
 
 
         for (WebSocketSession s : clients) {
-            //System.out.println("s.getHandshakeHeaders().getFirst(\"sec-websocket-protocol\") = " + s.getHandshakeHeaders().getFirst("sec-websocket-protocol"));
+            System.out.println("세션 룸 아이디" + s.getAttributes().get("roomId"));
             //세션set 순회하며 자기 세션이 아니고 같은 방id를 가진 session이면 정보를 전달
-            String sessionRoomId = s.getHandshakeHeaders().getFirst("sec-websocket-protocol");
+            String sessionRoomId = (String)s.getAttributes().get("roomId");
             if(textMessageDTO.getRoomId().equals(sessionRoomId) && (s != session)){
                 logger.info("send data : {}", message);
                 try{
