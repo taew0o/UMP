@@ -1,6 +1,7 @@
 package ppkjch.ump.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import jakarta.persistence.EntityManager;
 import jakarta.websocket.Session;
 import lombok.RequiredArgsConstructor;
