@@ -69,6 +69,7 @@ export default function MessageList({ props }) {
     ws.current.onmessage = (message) => {
       const dataSet = JSON.parse(message.data);
       setSocketData(dataSet);
+      console.log("데이터 도착");
     };
   });
 
@@ -219,7 +220,7 @@ export default function MessageList({ props }) {
 
         <div className="modal-content">
           <div className="room-info">
-            <div>채팅방 정보: {id}</div>
+            <div>채팅방 정보: {state.name}</div>
           </div>
           <div className="appointment-info">
             <div>
