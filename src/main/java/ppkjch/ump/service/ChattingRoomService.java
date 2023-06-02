@@ -8,6 +8,7 @@ import ppkjch.ump.entity.ChattingRoom;
 import ppkjch.ump.entity.Message;
 import ppkjch.ump.entity.User;
 import ppkjch.ump.entity.UserChattingRoom;
+import ppkjch.ump.exception.NoFriendSelectedException;
 import ppkjch.ump.exception.RoomFullException;
 import ppkjch.ump.repository.JpaChattingRoomRepository;
 import ppkjch.ump.repository.JpaMessageRepository;
@@ -31,7 +32,10 @@ public class ChattingRoomService {
     public Long makeRoom(List<User> users, String roomName){
         //유저 채팅방 생성
         int numPerson = users.size();
-        if(numPerson > 10){
+        if(numPerson == 1){
+            throw new NoFriendSelectedException("최소한 한 명의 친구를 선택해주십시오.");
+        }
+        else if(numPerson > 10){
             throw new RoomFullException("10명 이하의 유저를 선택해주십시오.");
         }
         List<UserChattingRoom> userChattingRooms = new ArrayList<>();
