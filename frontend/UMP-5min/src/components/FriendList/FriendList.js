@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./FriendList.css";
 import { Button, Modal } from "antd";
+import Chart from "chart.js/auto";
 
 export default function FriendList(props) {
   const { id, name, text, appointmentScore } = props.data;
@@ -17,6 +18,50 @@ export default function FriendList(props) {
     }
     setBackgroundColor(storedColor);
   }, []);
+
+  useEffect(() => {
+    if (appointmentScore && id) {
+      const labels = ["참석", "불참", "지각"];
+      const data = [
+        appointmentScore.numAttend,
+        appointmentScore.numNotAttend,
+        appointmentScore.numLate,
+      ];
+
+      const chartConfig = {
+        type: "bar",
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              data: data,
+              backgroundColor: [
+                "rgba(75, 192, 192, 0.6)",
+                "rgba(255, 99, 132, 0.6)",
+                "rgba(255, 205, 86, 0.6)",
+              ],
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: Math.max(...data) + 1,
+              precision: 0,
+              stepSize: 1,
+            },
+          },
+        },
+      };
+
+      const canvas = document.getElementById(`chart-${id}`);
+      if (canvas) {
+        new Chart(canvas, chartConfig);
+      }
+    }
+  }, [appointmentScore, id]);
 
   const handleDeleteClick = () => {
     setConfirmModalTitle("친구 삭제");
@@ -87,12 +132,7 @@ export default function FriendList(props) {
           <div className="attendance-rate-container">
             <h2>약속 참여율:</h2>
             <div className="attendance-rate-box">
-              <div key={appointmentScore.length}>
-                {"참석: " + appointmentScore.numAttend}
-                <br />
-                {"불참: " + appointmentScore.numNotAttend} <br />
-                {"지각: " + appointmentScore.numLate}
-              </div>
+              <canvas id={`chart-${id}`} width="400" height="200"></canvas>
             </div>
           </div>
         </div>
