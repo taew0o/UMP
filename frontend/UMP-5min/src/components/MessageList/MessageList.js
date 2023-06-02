@@ -6,7 +6,7 @@ import Message from "../Message/Message";
 import moment from "moment";
 
 import "./MessageList.css";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import ReactModal from "react-modal";
 import Review from "../Review/Review";
 import { Button } from "antd";
@@ -16,6 +16,7 @@ export default function MessageList({ props }) {
   const MY_USER_ID = props.id;
 
   const [messages, setMessages] = useState([]);
+  const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();
   const state = location.state;
@@ -145,6 +146,7 @@ export default function MessageList({ props }) {
     })
       .then((response) => {
         console.log("----------------", response);
+        navigate("/");
       })
       .catch((error) => {
         console.log(error);
