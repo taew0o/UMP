@@ -169,7 +169,7 @@ export default function MessageList({ props }) {
     let i = 0;
     let messageCount = messages.length;
     let tempMessages = [];
-  
+
     while (i < messageCount) {
       let previous = messages[i - 1];
       let current = messages[i];
@@ -181,35 +181,35 @@ export default function MessageList({ props }) {
       let startsSequence = true;
       let endsSequence = true;
       let showTimestamp = true;
-  
+
       if (previous) {
         let previousMoment = moment(previous.timestamp);
         let previousDuration = moment.duration(
           currentMoment.diff(previousMoment)
         );
         prevBySameAuthor = previous.author === current.author;
-  
+
         if (prevBySameAuthor && previousDuration.as("hours") < 1) {
           startsSequence = false;
         }
-  
+
         if (previousDuration.as("hours") < 1) {
           showTimestamp = false;
         }
       }
-  
+
       if (next) {
         let nextMoment = moment(next.timestamp);
         let nextDuration = moment.duration(nextMoment.diff(currentMoment));
         nextBySameAuthor = next.author === current.author;
-  
+
         if (nextBySameAuthor && nextDuration.as("hours") < 1) {
           endsSequence = false;
         }
       }
-  
+
       const senderId = isMine ? MY_USER_ID : current.author;
-  
+
       tempMessages.push(
         <Message
           key={i}
@@ -221,13 +221,12 @@ export default function MessageList({ props }) {
           senderName={senderId} // Pass senderId as senderName prop
         />
       );
-  
+
       // Proceed to the next message.
       i += 1;
     }
     setResult(tempMessages);
   };
-  
 
   const renderFriendsList = () => {
     return (
@@ -261,7 +260,7 @@ export default function MessageList({ props }) {
       withCredentials: true,
     })
       .then((response) => {
-        console("addFriend response", response);
+        console.log("addFriend response", response);
       })
       .catch((error) => {
         console.log(error);
@@ -321,7 +320,6 @@ export default function MessageList({ props }) {
       <div className="message-list-container">{result}</div>
 
       <Compose getText={getText} MY_USER_ID={MY_USER_ID} />
-
 
       <ReactModal
         isOpen={modalIsOpen}
