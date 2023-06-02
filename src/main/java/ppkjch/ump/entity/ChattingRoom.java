@@ -52,7 +52,7 @@ public class ChattingRoom {
         }
         return chattingRoom;
     }
-
+    //public void update
     public static void deleteChattingroom(){
 
         //roomId로 room찾아 삭제
