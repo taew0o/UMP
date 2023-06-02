@@ -18,7 +18,8 @@
     "react-modal": "^3.16.1",
     "react-router-dom": "^6.11.2",
     "react-scripts": "^5.0.1",
-    "react-session-api": "^1.1.0"
+    "react-session-api": "^1.1.0",
+    "recharts": "^2.6.2"
   },
   "scripts": {
     "start": "react-scripts start",
