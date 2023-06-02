@@ -71,11 +71,16 @@ public class ChattingRoomController {
     public ResponseEntity<String> inviteChattingRoom(@RequestBody UserAndRoomDTO inviteDTO){
         //유저 ID정보로 채팅방에 user정보 추가하고 추가된 방을 반환
         try {
-            User invitee = userService.findUser(inviteDTO.getInviteeId());
+            List<User> invitees = new ArrayList<>();
+            for (String id: inviteDTO.getInviteeIds()) {
+                User invitee = userService.findUser(id);
+                invitees.add(invitee);
+            }
+
             ChattingRoom chattingRoom = chattingRoomService.findRoom(inviteDTO.getRoomId());
-            chattingRoomService.inviteRoom(chattingRoom, invitee);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            chattingRoomService.inviteRoom(chattingRoom, invitees);
+        } catch (RoomFullException e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
         }
 
         //HttpHeaders headers = new HttpHeaders();

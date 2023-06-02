@@ -45,4 +45,7 @@ public class JpaChattingRoomRepository {
                 .setParameter("cr",cr)
                 .executeUpdate();
     }
+    public void removeRoom(ChattingRoom chattingRoom){
+        em.remove(chattingRoom);
+    }
 }

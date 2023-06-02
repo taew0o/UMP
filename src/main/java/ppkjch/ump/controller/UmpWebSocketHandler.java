@@ -107,5 +107,7 @@ public class UmpWebSocketHandler extends TextWebSocketHandler {
         super.afterConnectionClosed(session, status);
         clients.remove(session);
         System.out.println(session.getId() + "세션 연결 종료 및 clients에서 제거");
+        //서버에 나감 메세지 userId = "sever"로 해서 저장 하기 및
+        //나머지 같은방 세션 실시간 사용자들에게 해당 메세지 보내기
     }
 }

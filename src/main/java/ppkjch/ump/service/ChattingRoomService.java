@@ -47,17 +47,19 @@ public class ChattingRoomService {
         return chattingRoom.getId();
     }
 
-    public ChattingRoom inviteRoom(ChattingRoom chattingRoom, User invitee) {
+    public ChattingRoom inviteRoom(ChattingRoom chattingRoom, List<User> invitees) {
         //방이 full인지 확인
-        if(chattingRoom.getNumPerson() == 10){
-            throw new RoomFullException("10명인 방에는 초대할 수 없습니다.");
-        }
 
         //UserChattingRoom 객체 만들고 연관관계 매핑
-        UserChattingRoom userChattingRoom = new UserChattingRoom();
-        userChattingRoom.setUser(invitee);
-        chattingRoom.addUserChattingRoom(userChattingRoom); //persist 안해도 자동 변경감지됨
-        //chattingRoom.;
+        for (User invitee: invitees) {
+            if(chattingRoom.getNumPerson() == 10){
+                throw new RoomFullException("10명인 방에는 초대할 수 없습니다.");
+            }
+            UserChattingRoom userChattingRoom = new UserChattingRoom();
+            userChattingRoom.setUser(invitee);
+            chattingRoom.addUserChattingRoom(userChattingRoom); //persist 안해도 자동 변경감지됨
+            chattingRoom.updateNumPerson(1);
+        }
 
         return chattingRoom;
     }
@@ -69,6 +71,14 @@ public class ChattingRoomService {
     @Transactional
     public void goOutRoom(User u, ChattingRoom cr){
         jpaChattingRoomRepository.goOutRoom(u,cr);
+        cr.updateNumPerson(-1);
+        if(cr.isEmptyRoom()){
+            jpaChattingRoomRepository.removeRoom(cr);
+            List<Message> messages = jpaMessageRepository.findMessageByRoom(cr);
+            for (Message m: messages) {
+                jpaMessageRepository.removeMessage(m);
+            }
+        }
 
     }
 
