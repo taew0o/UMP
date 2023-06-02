@@ -120,11 +120,11 @@ export default function MessageList({ props }) {
         console.log("----------------", response);
         response.data.map((value) => {
           const tempMsg = {
-            author: value.senderId,
+            author: value.user.id,
             message: value.textMsg,
             timestamp: value.sendTime,
           };
-          setMessages([...messages, tempMsg]);
+          setMessages((prevMessages) => [...prevMessages, tempMsg]);
         });
       })
       .catch((error) => {
