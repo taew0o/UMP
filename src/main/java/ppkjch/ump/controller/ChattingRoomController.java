@@ -87,14 +87,15 @@ public class ChattingRoomController {
     @DeleteMapping("/chattingroom/member")
     public ResponseEntity<?> goOutChattingRoom(HttpServletRequest request, @RequestParam("roomId") Long roomId){
         // 세션에서 유저 ID 가져오기
+        System.out.println("roomId... = " + roomId);
         HttpSession session = request.getSession(false);
         String userId = (String)session.getAttribute("userId");
         // 유저 ID를 사용하여 유저 정보 조회
         User user = userService.findUser(userId);
-
         //방ID 사용하여 방 조회
         ChattingRoom room = chattingRoomService.findRoom(roomId);
         //goOutRoom(User, ChattingRoom): void - 태우 추가 완. 테스트 필요
+
         chattingRoomService.goOutRoom(user,room);
         return ResponseEntity.status(HttpStatus.OK).build();
     }

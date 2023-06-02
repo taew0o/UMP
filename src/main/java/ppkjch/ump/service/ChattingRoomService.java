@@ -66,6 +66,7 @@ public class ChattingRoomService {
         return jpaChattingRoomRepository.findChattingRoomByUser(user);
     }
     //회원 채팅방 나가기
+    @Transactional
     public void goOutRoom(User u, ChattingRoom cr){
         jpaChattingRoomRepository.goOutRoom(u,cr);
 
