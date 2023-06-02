@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import ppkjch.ump.dto.GetMessageDTO;
 import ppkjch.ump.dto.MakeRoomDTO;
 import ppkjch.ump.dto.RoomIdDTO;
 import ppkjch.ump.dto.UserAndRoomDTO;
@@ -94,9 +95,19 @@ public class ChattingRoomController {
     }
 
     @GetMapping("/chattingroom/messages")
-    public ResponseEntity<List<Message>> getMessages(@RequestParam("roomId") Long roomId){ //보안 때문에 userId 넣어야 할 수도?
+    public ResponseEntity<List<GetMessageDTO>> getMessages(@RequestParam("roomId") Long roomId){ //보안 때문에 userId 넣어야 할 수도?
         List<Message> messages = messageService.findMessages(roomId);
-        return ResponseEntity.status(HttpStatus.OK).body(messages);
+        List<GetMessageDTO> messageDTOs = new ArrayList<>();
+        for (Message m: messages) {
+            GetMessageDTO getMessageDTO = new GetMessageDTO();
+            getMessageDTO.setChattingRoom(m.getChattingRoom());
+            getMessageDTO.setId(m.getId());
+            getMessageDTO.setSenderId(m.getUser().getId());
+            getMessageDTO.setSendTime(m.getSendTime());
+            getMessageDTO.setTextMsg(m.getTextMsg());
+            messageDTOs.add(getMessageDTO);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(messageDTOs);
     }
 //    @ExceptionHandler(RoomFullException.class)
 //    public ResponseEntity<ErrorResponse> handleCustomException(RoomFullException ex) {
