@@ -35,7 +35,7 @@ export default function MessageList({ props }) {
 
   useEffect(() => {
     getMessages();
-    localStorage.setItem("selectedKey", "room");
+    localStorage.setItem("location", "room");
     if (!ws.current) {
       ws.current = new WebSocket(webSocketUrl);
       ws.current.onopen = () => {
@@ -65,6 +65,7 @@ export default function MessageList({ props }) {
 
     return () => {
       console.log("clean up");
+      localStorage.setItem("location", "notRoom");
       ws.current.close();
     };
   }, []);
