@@ -25,12 +25,6 @@ export default function MessageList({ props }) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [reviewIsOpen, setReviewIsOpen] = useState(false);
 
-  const [msg, setMsg] = useState("");
-  const [name, setName] = useState("");
-  const [chatt, setChatt] = useState([]);
-  const [chkLog, setChkLog] = useState(false);
-  const [socketData, setSocketData] = useState();
-
   const [socketConnected, setSocketConnected] = useState(false);
   const [sendMsg, setSendMsg] = useState(false);
   const [items, setItems] = useState([]);
@@ -57,7 +51,13 @@ export default function MessageList({ props }) {
       ws.current.onmessage = (evt) => {
         const data = JSON.parse(evt.data);
         console.log(data);
-        setItems((prevItems) => [...prevItems, data]);
+        const tempMsg = {
+          author: data.senderId,
+          message: data.textMsg,
+          timestamp: new Date().getTime(),
+        };
+        setMessages([...messages, tempMsg]);
+        // renderMessages();
       };
     }
 
@@ -68,24 +68,26 @@ export default function MessageList({ props }) {
   }, []);
 
   // useEffect(() => {
-
-  // }, [socketConnected]);
-
-  useEffect(() => {
-    if (sendMsg) {
-      ws.current.onmessage = (evt) => {
-        const data = JSON.parse(evt.data);
-        console.log(data);
-        setItems((prevItems) => [...prevItems, data]);
-      };
-    }
-  }, [sendMsg]);
+  //   if (sendMsg) {
+  //     ws.current.onmessage = (evt) => {
+  //       const data = JSON.parse(evt.data);
+  //       console.log(data);
+  //       const tempMsg = {
+  //         author: data.senderId,
+  //         message: data.textMsg,
+  //         timestamp: new Date().getTime(),
+  //       };
+  //       setMessages([...messages, tempMsg]);
+  //       renderMessages();
+  //     };
+  //   }
+  // }, [sendMsg]);
 
   useEffect(() => {
     console.log("My id???????????????", MY_USER_ID);
     console.log(text);
     makeMsg();
-    if (socketConnected) {
+    if (socketConnected && text) {
       ws.current.send(
         JSON.stringify({
           roomId: id,
@@ -98,7 +100,8 @@ export default function MessageList({ props }) {
 
       setSendMsg(true);
     }
-    renderMessages();
+    console.log("message!!!!!!!", messages);
+    // renderMessages();
   }, [text]);
 
   const getText = (prop) => {
@@ -115,59 +118,6 @@ export default function MessageList({ props }) {
   useEffect(() => {
     renderMessages();
   }, [messages]);
-
-  // useEffect(() => {
-  //   if (socketData !== undefined) {
-  //     const tempData = chatt.concat(socketData);
-  //     console.log("tempData", tempData);
-  //     setChatt(tempData);
-  //   }
-  // }, [socketData]);
-
-  // const webSocketLogin = useCallback(() => {
-  //   ws.current = new WebSocket("ws://localhost:8080/websocket?roomId=" + id); //헤더에 roomId 추가
-
-  //   ws.current.onmessage = (message) => {
-  //     const dataSet = JSON.parse(message.data);
-  //     setSocketData(dataSet);
-  //     console.log("데이터 도착");
-  //     console.log("데이터::::::::::", dataSet);
-  //   };
-  // });
-
-  // const send = useCallback(() => {
-  //   if (!chkLog) {
-  //     webSocketLogin();
-  //     setChkLog(true);
-  //   }
-
-  //   if (text) {
-  //     const data = {
-  //       roomId: id,
-  //       textMsg: text.message,
-  //       sendTime: new Date().toLocaleString(),
-  //       senderId: MY_USER_ID,
-  //     }; //전송 데이터(JSON)
-
-  //     const temp = JSON.stringify(data);
-
-  //     if (ws.current.readyState === 0) {
-  //       //readyState는 웹 소켓 연결 상태를 나타냄
-  //       ws.current.onopen = () => {
-  //         //webSocket이 맺어지고 난 후, 실행
-  //         console.log(ws.current.readyState);
-  //         ws.current.send(temp);
-  //       };
-  //     } else {
-  //       ws.current.send(temp);
-  //     }
-  //   } else {
-  //     // alert("메세지를 입력하세요.");
-  //     // document.getElementById("msg").focus();
-  //     return;
-  //   }
-  //   // setMsg("");
-  // });
 
   const renderMessages = () => {
     let i = 0;
