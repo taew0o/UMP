@@ -53,7 +53,6 @@ const FriendPage = (props) => {
     setSearch(e.target.value);
   };
 
-
   const getFriend = () => {
     axios({
       method: "get",
@@ -244,7 +243,44 @@ const FriendPage = (props) => {
         onCancel={closeRequestsModal}
         footer={null}
       >
-        {/* ... */}
+        {friendRequests.length === 0 ? (
+          <div
+            style={{
+              marginBottom: 12,
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            친구 요청이 없습니다
+          </div>
+        ) : (
+          friendRequests.map((request) => (
+            <div
+              key={request.id}
+              style={{
+                marginBottom: 12,
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              <span>{request.name + "(" + request.id + ")"}</span>
+              <div>
+                <Button
+                  onClick={() => acceptRequest(request.id)}
+                  style={{ marginLeft: 8 }}
+                >
+                  수락
+                </Button>
+                <Button
+                  onClick={() => declineRequest(request.id)}
+                  style={{ marginLeft: 8 }}
+                >
+                  거절
+                </Button>
+              </div>
+            </div>
+          ))
+        )}
       </Modal>
 
       <FriendSearch handleSearch={handleSearch} />
