@@ -15,6 +15,7 @@ import axios from "axios";
 //채팅방 구현
 export default function MessageList({ props }) {
   const MY_USER_ID = props.id;
+  const MY_NAME = props.name;
 
   const [messages, setMessages] = useState([]);
   const navigate = useNavigate();
@@ -29,8 +30,6 @@ export default function MessageList({ props }) {
   const [reviewIsOpen, setReviewIsOpen] = useState(false);
 
   const [socketConnected, setSocketConnected] = useState(false);
-  const [sendMsg, setSendMsg] = useState(false);
-  const [items, setItems] = useState([]);
 
   const [friends, setFriends] = useState([]);
   const [selectedFriends, setSelectedFriends] = useState([]);
@@ -64,6 +63,7 @@ export default function MessageList({ props }) {
           author: data.senderId,
           message: data.textMsg,
           timestamp: data.sendTime,
+          name: data.sendName,
         };
         setMessages((prevMessages) => [...prevMessages, tempMsg]);
       };
@@ -87,11 +87,10 @@ export default function MessageList({ props }) {
           textMsg: text.message,
           sendTime: new Date().getTime(),
           senderId: MY_USER_ID,
+          sendName: MY_NAME,
         })
       );
       console.log("메시지 보낸다");
-
-      setSendMsg(true);
     }
     console.log("message!!!!!!!", messages);
   }, [text]);
@@ -127,6 +126,7 @@ export default function MessageList({ props }) {
             author: value.senderId,
             message: value.textMsg,
             timestamp: value.sendTime,
+            name: value.sendName,
           };
           setMessages((prevMessages) => [...prevMessages, tempMsg]);
         });
@@ -149,14 +149,14 @@ export default function MessageList({ props }) {
     })
       .then((response) => {
         console.log("----------------", response);
-        ws.current.send(
-          JSON.stringify({
-            roomId: id,
-            textMsg: text.message,
-            sendTime: new Date().getTime(),
-            senderId: MY_USER_ID,
-          })
-        );
+        // ws.current.send(
+        //   JSON.stringify({
+        //     roomId: id,
+        //     textMsg: text.message,
+        //     sendTime: new Date().getTime(),
+        //     senderId: MY_USER_ID,
+        //   })
+        // );
         navigate("/");
       })
       .catch((error) => {
@@ -208,7 +208,7 @@ export default function MessageList({ props }) {
         }
       }
 
-      const senderId = isMine ? MY_USER_ID : current.author;
+      const senderName = isMine ? MY_NAME : current.name;
 
       tempMessages.push(
         <Message
@@ -218,7 +218,7 @@ export default function MessageList({ props }) {
           endsSequence={endsSequence}
           showTimestamp={showTimestamp}
           data={current}
-          senderName={senderId} // Pass senderId as senderName prop
+          senderName={senderName} // Pass senderId as senderName prop
         />
       );
 
@@ -234,10 +234,10 @@ export default function MessageList({ props }) {
         {friends.map((friend, index) => (
           <div key={index}>
             <Checkbox
-              onChange={(e) => handleSelectFriend(e, friend)}
-              checked={selectedFriends.includes(friend)}
+              onChange={(e) => handleSelectFriend(e, friend.id)}
+              checked={selectedFriends.includes(friend.id)}
             >
-              {friend}
+              {friend.name}
             </Checkbox>
           </div>
         ))}
@@ -280,7 +280,7 @@ export default function MessageList({ props }) {
     })
       .then((response) => {
         let newFriends = response.data.map((result) => {
-          return result.id;
+          return { id: result.id, name: result.name };
         });
         setFriends(newFriends);
       })
@@ -319,7 +319,7 @@ export default function MessageList({ props }) {
 
       <div className="message-list-container">{result}</div>
 
-      <Compose getText={getText} MY_USER_ID={MY_USER_ID} />
+      <Compose getText={getText} MY_USER_ID={MY_USER_ID} MY_NAME={MY_NAME} />
 
       <ReactModal
         isOpen={modalIsOpen}
