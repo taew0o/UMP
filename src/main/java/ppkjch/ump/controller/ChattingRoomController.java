@@ -111,10 +111,12 @@ public class ChattingRoomController {
             GetMessageDTO getMessageDTO = new GetMessageDTO();
             getMessageDTO.setChattingRoom(m.getChattingRoom());
             getMessageDTO.setId(m.getId());
-            getMessageDTO.setSenderId(m.getUser().getId());
+            if(m.getUser() != null){
+                getMessageDTO.setSenderId(m.getUser().getId());
+                getMessageDTO.setSendName(m.getUser().getName());
+            }
             getMessageDTO.setSendTime(m.getSendTime());
             getMessageDTO.setTextMsg(m.getTextMsg());
-            getMessageDTO.setSendName(m.getUser().getName());
             messageDTOs.add(getMessageDTO);
         }
         return ResponseEntity.status(HttpStatus.OK).body(messageDTOs);
