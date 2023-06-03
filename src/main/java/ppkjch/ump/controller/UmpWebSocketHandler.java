@@ -68,12 +68,15 @@ public class UmpWebSocketHandler extends TextWebSocketHandler {
         // JSON 문자열을 Java 객체로 파싱
         TextMessageDTO textMessageDTO = objectMapper.readValue(jsonString, TextMessageDTO.class);
         //유저 가져오기
+        User sender = null;
 
         String senderId = textMessageDTO.getSenderId();
-        System.out.println("senderId = " + senderId);
-        User sender = userService.findUser(textMessageDTO.getSenderId());
-        //유저 이름 가져오기
-        textMessageDTO.setSendName(sender.getName());
+        if(!senderId.equals("server")) { //server일 때는 안함
+            System.out.println("senderId = " + senderId);
+            sender = userService.findUser(textMessageDTO.getSenderId());
+            //유저 이름 가져오기
+            textMessageDTO.setSendName(sender.getName());
+        }
         //방 가져오기
         System.out.println("textMessageDTO.getRoomId() = " + textMessageDTO.getRoomId());
         ChattingRoom room = chattingRoomService.findRoom(Long.parseLong(textMessageDTO.getRoomId()));
@@ -110,9 +113,9 @@ public class UmpWebSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         super.afterConnectionClosed(session, status);
+        System.out.println("status = " + status);
         clients.remove(session);
         System.out.println(session.getId() + "세션 연결 종료 및 clients에서 제거");
-        //서버에 나감 메세지 userId = "sever"로 해서 저장 하기 및
-        //나머지 같은방 세션 실시간 사용자들에게 해당 메세지 보내기
+        
     }
 }

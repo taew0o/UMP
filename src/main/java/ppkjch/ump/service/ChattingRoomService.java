@@ -75,8 +75,11 @@ public class ChattingRoomService {
     //회원 채팅방 나가기
     @Transactional
     public void goOutRoom(User u, ChattingRoom cr){
+        //userChattingroom DB에서 지우고 채팅방 인원 수를 갱신
         jpaChattingRoomRepository.goOutRoom(u,cr);
         cr.updateNumPerson(-1);
+
+        //만약 빈방이 되었다면 해당 방의 메세지 및 방 정보 삭제
         if(cr.isEmptyRoom()){
             jpaChattingRoomRepository.removeRoom(cr);
             List<Message> messages = jpaMessageRepository.findMessageByRoom(cr);
@@ -84,7 +87,6 @@ public class ChattingRoomService {
                 jpaMessageRepository.removeMessage(m);
             }
         }
-
     }
 
     //이 함수는 여러명 한꺼번에 초대하는 것 같긴 한데 방 객체 생성 방식 몰라서 아직 냅둠
