@@ -54,7 +54,7 @@ export default function ConversationList(props) {
       })
       .catch((error) => {
         console.log(error);
-        alert(`에러 발생 관리자 문의하세요!`);
+        alert(error.response.data);
       });
   };
 
@@ -76,7 +76,7 @@ export default function ConversationList(props) {
       })
       .catch((error) => {
         console.log(error);
-        alert(`에러 발생 관리자 문의하세요!`);
+        alert(error.response.data);
       });
   };
 
@@ -107,7 +107,7 @@ export default function ConversationList(props) {
       })
       .catch((error) => {
         console.log(error);
-        alert(`에러 발생 관리자 문의하세요!`);
+        alert(error.response.data);
       });
   };
 
@@ -161,7 +161,9 @@ export default function ConversationList(props) {
 
   const filterConversations = () => {
     const filtered = conversations.filter((conversation) => {
-      return conversation.name.toLowerCase().includes(searchValue.toLowerCase());
+      return conversation.name
+        .toLowerCase()
+        .includes(searchValue.toLowerCase());
     });
     setFilteredConversations(filtered);
   };

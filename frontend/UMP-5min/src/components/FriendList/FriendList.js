@@ -59,19 +59,28 @@ export default function FriendList(props) {
   };
 
   const attendanceData = [
-    { name: "참석", value: 10 },
-    { name: "불참", value: 4 },
-    { name: "지각", value: 2 },
+    { name: "참석", value: appointmentScore.numAttend },
+    { name: "불참", value: appointmentScore.numNotAttend },
+    { name: "지각", value: appointmentScore.numLate },
   ];
-  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
+  const renderCustomizedLabel = ({
+    cx,
+    cy,
+    midAngle,
+    innerRadius,
+    outerRadius,
+    percent,
+    index,
+  }) => {
     const radius = outerRadius + 20;
     const radiusOffset = radius + 30;
     const x = cx + radiusOffset * Math.cos(-midAngle * (Math.PI / 180));
     const y = cy + radiusOffset * Math.sin(-midAngle * (Math.PI / 180));
-  
+
     // 각 막대 끝에 표시할 레이블
-    const labelText = index === 0 ? "참석" : index === 1 ? "지각" : index === 2 ? "불참" : "";
-  
+    const labelText =
+      index === 0 ? "참석" : index === 1 ? "지각" : index === 2 ? "불참" : "";
+
     return (
       <text
         x={x}
@@ -81,13 +90,13 @@ export default function FriendList(props) {
         dominantBaseline="central"
       >
         {`${(percent * 100).toFixed(0)}%`}
-        <tspan x={x} dy={15}>{labelText}</tspan> {/* 막대 끝에 레이블 표시 */}
+        <tspan x={x} dy={15}>
+          {labelText}
+        </tspan>{" "}
+        {/* 막대 끝에 레이블 표시 */}
       </text>
     );
   };
-  
-  
-  
 
   const renderLegend = (props) => {
     const { payload } = props;
@@ -96,8 +105,13 @@ export default function FriendList(props) {
       <ul className="pie-chart-legend">
         {payload.map((entry, index) => (
           <li key={`legend-${index}`}>
-            <span className="legend-icon" style={{ backgroundColor: COLORS[index % COLORS.length] }}></span>
-            <span className="legend-label">{attendanceData[index].name}: {attendanceData[index].value}</span>
+            <span
+              className="legend-icon"
+              style={{ backgroundColor: COLORS[index % COLORS.length] }}
+            ></span>
+            <span className="legend-label">
+              {attendanceData[index].name}: {attendanceData[index].value}
+            </span>
           </li>
         ))}
       </ul>
@@ -157,8 +171,19 @@ export default function FriendList(props) {
             </PieChart>
           </div>
         </div>
-        <div className="friend-modal-buttons" style={{ marginTop: "10px", display: "flex", justifyContent: "flex-end" }}>
-          <Button type="primary" onClick={handleDeleteClick} style={{ marginRight: "10px" }}>
+        <div
+          className="friend-modal-buttons"
+          style={{
+            marginTop: "10px",
+            display: "flex",
+            justifyContent: "flex-end",
+          }}
+        >
+          <Button
+            type="primary"
+            onClick={handleDeleteClick}
+            style={{ marginRight: "10px" }}
+          >
             삭제
           </Button>
           <Button type="primary" onClick={handleBlockClick}>
@@ -183,7 +208,4 @@ export default function FriendList(props) {
       </Modal>
     </>
   );
-  
-  
-  
-}  
+}

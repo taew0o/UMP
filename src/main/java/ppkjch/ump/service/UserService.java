@@ -41,7 +41,10 @@ public class UserService {
     }
 
     public void signUp(String id, String name, String pw, String pw_re){
-        if (findUser(id) != null) {
+        if(id.equals("server")){
+            throw new NotValidUserId("해당 아이디는 사용하실 수 없습니다.");
+        }
+        else if (findUser(id) != null) {
             throw new IdDuplicateException("이미 입력하신 아이디가 존재합니다.");
         }
         else{

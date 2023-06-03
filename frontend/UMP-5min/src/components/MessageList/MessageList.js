@@ -133,7 +133,7 @@ export default function MessageList({ props }) {
       })
       .catch((error) => {
         console.log(error);
-        alert(`에러 발생 관리자 문의하세요!`);
+        alert(error.response.data);
       });
   };
 
@@ -161,7 +161,7 @@ export default function MessageList({ props }) {
       })
       .catch((error) => {
         console.log(error);
-        alert(`에러 발생 관리자 문의하세요!`);
+        alert(error.response.data);
       });
   };
 
@@ -264,7 +264,7 @@ export default function MessageList({ props }) {
       })
       .catch((error) => {
         console.log(error);
-        alert(`에러 발생 관리자 문의하세요!`);
+        alert(error.response.data);
       });
   };
 
@@ -286,7 +286,7 @@ export default function MessageList({ props }) {
       })
       .catch((error) => {
         console.log(error);
-        alert(`에러 발생 관리자 문의하세요!`);
+        alert(error.response.data);
       });
   };
 

@@ -68,14 +68,14 @@ const FriendPage = (props) => {
             id: `${result.id}`,
             name: `${result.name}`,
             text: "친구 정보",
-            appointmentScore: `${result.appointmentScore}`,
+            appointmentScore: result.appointmentScore,
           };
         });
         setFriends(newFriend);
       })
       .catch((error) => {
         console.log(error);
-        alert(`에러 발생 관리자 문의하세요!`);
+        alert(error.response.data);
       });
   };
   const getFriendRequestList = () => {
@@ -104,7 +104,7 @@ const FriendPage = (props) => {
       })
       .catch((error) => {
         console.log(error);
-        alert(`에러 발생 관리자 문의하세요!`);
+        alert(error.response.data);
       });
   };
 
@@ -127,20 +127,7 @@ const FriendPage = (props) => {
         console.log("----------------", response);
       })
       .catch((error) => {
-        if (error.response.status === 400) {
-          if (
-            error.response.data === "해당 유저가 존재하지 않습니다." ||
-            error.response.data === "이미 해당 유저에게 친구 요청을 하였습니다."
-          ) {
-            alert(error.response.data);
-          }
-
-          console.log(error.response.data.message);
-        } else {
-          console.log("기타 에러 발생");
-        }
-        console.log(error);
-        alert(`에러 발생 관리자 문의하세요!`);
+        alert(error.response.data);
       });
   };
 
@@ -168,7 +155,7 @@ const FriendPage = (props) => {
       })
       .catch((error) => {
         console.log(error);
-        // alert(`에러 발생 관리자 문의하세요!`);
+        alert(error.response.data);
       });
   };
 
@@ -196,7 +183,7 @@ const FriendPage = (props) => {
       })
       .catch((error) => {
         console.log(error);
-        alert(`에러 발생 관리자 문의하세요!`);
+        alert(error.response.data);
       });
   };
 
