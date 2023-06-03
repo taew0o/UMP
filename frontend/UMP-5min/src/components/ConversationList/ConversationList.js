@@ -70,7 +70,7 @@ export default function ConversationList(props) {
     })
       .then((response) => {
         let newFriends = response.data.map((result) => {
-          return result.id;
+          return { id: result.id, name: result.name };
         });
         setFriends(newFriends);
       })
@@ -93,7 +93,7 @@ export default function ConversationList(props) {
         "Content-Type": `application/json`,
       },
       data: {
-        userIds: friends,
+        userIds: selectedFriends,
         roomName: inputValue,
       },
       withCredentials: true,
@@ -108,6 +108,7 @@ export default function ConversationList(props) {
       .catch((error) => {
         console.log(error);
         alert(error.response.data);
+        console.log(friends);
       });
   };
 
@@ -121,10 +122,10 @@ export default function ConversationList(props) {
         {friends.map((friend, index) => (
           <div key={index}>
             <Checkbox
-              onChange={(e) => handleSelectFriend(e, friend)}
-              checked={selectedFriends.includes(friend)}
+              onChange={(e) => handleSelectFriend(e, friend.id)}
+              checked={selectedFriends.includes(friend.id)}
             >
-              {friend}
+              {friend.name}
             </Checkbox>
           </div>
         ))}

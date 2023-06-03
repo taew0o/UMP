@@ -14,6 +14,7 @@ export default function Compose(props) {
       author: props.MY_USER_ID,
       message: msg,
       timestamp: new Date().getTime(),
+      name: props.MY_NAME,
     });
   };
 
