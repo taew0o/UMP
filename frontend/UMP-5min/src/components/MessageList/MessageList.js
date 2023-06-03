@@ -149,14 +149,15 @@ export default function MessageList({ props }) {
     })
       .then((response) => {
         console.log("----------------", response);
-        // ws.current.send(
-        //   JSON.stringify({
-        //     roomId: id,
-        //     textMsg: text.message,
-        //     sendTime: new Date().getTime(),
-        //     senderId: MY_USER_ID,
-        //   })
-        // );
+        ws.current.send(
+          JSON.stringify({
+            roomId: id,
+            textMsg: `※알림 ${MY_NAME}님이 나갔습니다.`,
+            sendTime: new Date().getTime(),
+            senderId: `server`,
+            sendName: `server`,
+          })
+        );
         navigate("/");
       })
       .catch((error) => {
@@ -210,6 +211,8 @@ export default function MessageList({ props }) {
 
       const senderName = isMine ? MY_NAME : current.name;
 
+      const isServer = current.author === `server`;
+
       tempMessages.push(
         <Message
           key={i}
@@ -219,6 +222,7 @@ export default function MessageList({ props }) {
           showTimestamp={showTimestamp}
           data={current}
           senderName={senderName} // Pass senderId as senderName prop
+          isServer={isServer}
         />
       );
 
