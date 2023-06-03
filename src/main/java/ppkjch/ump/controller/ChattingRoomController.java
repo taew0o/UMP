@@ -119,9 +119,4 @@ public class ChattingRoomController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(messageDTOs);
     }
-//    @ExceptionHandler(RoomFullException.class)
-//    public ResponseEntity<ErrorResponse> handleCustomException(RoomFullException ex) {
-//        ErrorResponse errorResponse = new ErrorResponse(ex.getErrorCode(), ex.getErrorMessage());
-//        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-//    }
 }
