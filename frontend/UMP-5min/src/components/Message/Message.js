@@ -12,15 +12,20 @@ export default function Message(props) {
     senderName // Add the sender's name as a prop
   } = props;
 
-  const friendlyTimestamp = moment(data.timestamp).format('LLLL');
-  
+  let friendlyTimestamp = `${senderName} - ${moment().format("LT")}`;
+  if (startsSequence || showTimestamp) {
+    friendlyTimestamp = `${senderName} - ${moment().format("LLLL")}`;
+  }
+
   return (
-    <div className={[
-      'message',
-      `${isMine ? 'mine' : ''}`,
-      `${startsSequence ? 'start' : ''}`,
-      `${endsSequence ? 'end' : ''}`
-    ].join(' ')}>
+    <div
+      className={[
+        "message",
+        `${isMine ? "mine" : ""}`,
+        `${startsSequence ? "start" : ""}`,
+        `${endsSequence ? "end" : ""}`,
+      ].join(" ")}
+    >
       {showTimestamp && (
         <div className="timestamp">
           {friendlyTimestamp}
@@ -29,10 +34,9 @@ export default function Message(props) {
 
       <div className="bubble-container">
         <div className="bubble" title={friendlyTimestamp}>
-          {!isMine && ( // Render the sender's name if the message is not from the current user
-            <div className="sender-name">
-              {senderName}
-            </div>
+          {!isMine && (
+            // Render the sender's name if the message is not from the current user
+            <div className="sender-name">{senderName}</div>
           )}
           {data.message}
         </div>
