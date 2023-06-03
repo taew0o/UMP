@@ -33,6 +33,7 @@ export default function MessageList({ props }) {
 
   const [friends, setFriends] = useState([]);
   const [selectedFriends, setSelectedFriends] = useState([]);
+  const [selectedFriendName, setSelectedFriendName] = useState([]);
   const [visible, setVisible] = useState(false);
 
   const webSocketUrl = "ws://localhost:8080/websocket?roomId=" + id;
@@ -51,6 +52,8 @@ export default function MessageList({ props }) {
       ws.current.onclose = (error) => {
         console.log("disconnect from " + webSocketUrl);
         console.log(error);
+        // alert(`에러발생!`);
+        // window.location.reload();
       };
       ws.current.onerror = (error) => {
         console.log("connection error " + webSocketUrl);
@@ -238,7 +241,7 @@ export default function MessageList({ props }) {
         {friends.map((friend, index) => (
           <div key={index}>
             <Checkbox
-              onChange={(e) => handleSelectFriend(e, friend.id)}
+              onChange={(e) => handleSelectFriend(e, friend.id, friend.name)}
               checked={selectedFriends.includes(friend.id)}
             >
               {friend.name}
@@ -265,6 +268,21 @@ export default function MessageList({ props }) {
     })
       .then((response) => {
         console.log("addFriend response", response);
+        let friendNames;
+        if (selectedFriendName.length === 1) {
+          friendNames = selectedFriendName[0]; // 선택된 친구가 한 명인 경우
+        } else {
+          friendNames = selectedFriendName.join(", "); // 선택된 친구 이름들을 쉼표로 구분하여 하나의 문자열로 변환
+        }
+        ws.current.send(
+          JSON.stringify({
+            roomId: id,
+            textMsg: `※알림 ${friendNames}님이 들어왔습니다.`,
+            sendTime: new Date().getTime(),
+            senderId: `server`,
+            sendName: `server`,
+          })
+        );
       })
       .catch((error) => {
         console.log(error);
@@ -297,12 +315,16 @@ export default function MessageList({ props }) {
   const handleShowFriends = () => {
     setVisible(!visible);
   };
-  const handleSelectFriend = (e, selectedFriend) => {
+  const handleSelectFriend = (e, selectedFriend, FriendName) => {
     if (e.target.checked) {
       setSelectedFriends([...selectedFriends, selectedFriend]);
+      setSelectedFriendName([...selectedFriendName, FriendName]);
     } else {
       setSelectedFriends(
         selectedFriends.filter((friendName) => friendName !== selectedFriend)
+      );
+      setSelectedFriendName(
+        selectedFriendName.filter((friendName) => friendName !== FriendName)
       );
     }
   };
