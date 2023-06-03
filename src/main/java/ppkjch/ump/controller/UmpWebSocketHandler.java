@@ -63,14 +63,17 @@ public class UmpWebSocketHandler extends TextWebSocketHandler {
         //유저 가져오기
 
         String jsonString = message.getPayload();
-
+        System.out.println("jsonString = " + jsonString);
         ObjectMapper objectMapper = new ObjectMapper();
         // JSON 문자열을 Java 객체로 파싱
         TextMessageDTO textMessageDTO = objectMapper.readValue(jsonString, TextMessageDTO.class);
         //유저 가져오기
+
         String senderId = textMessageDTO.getSenderId();
         System.out.println("senderId = " + senderId);
         User sender = userService.findUser(textMessageDTO.getSenderId());
+        //유저 이름 가져오기
+        textMessageDTO.setSendName(sender.getName());
         //방 가져오기
         System.out.println("textMessageDTO.getRoomId() = " + textMessageDTO.getRoomId());
         ChattingRoom room = chattingRoomService.findRoom(Long.parseLong(textMessageDTO.getRoomId()));
@@ -79,22 +82,24 @@ public class UmpWebSocketHandler extends TextWebSocketHandler {
         //텍스트 가져오기
         String text = textMessageDTO.getTextMsg();
         //메세지 저장
-
+        
         messageService.createMessage(text, sender, room, sendTime);
-
+        //sender이름 추가하여 다시 json 형태로 직렬화
+        String jsonMessage = objectMapper.writeValueAsString(textMessageDTO);
+        //System.out.println("jsonMessage = " + jsonMessage);
 
         for (WebSocketSession s : clients) {
             System.out.println("세션 룸 아이디" + s.getAttributes().get("roomId"));
             //세션set 순회하며 자기 세션이 아니고 같은 방id를 가진 session이면 정보를 전달
             String sessionRoomId = (String)s.getAttributes().get("roomId");
-            System.out.println("sessionRoomId = " + sessionRoomId);
-            System.out.println("sessionRoomId = " + textMessageDTO.getRoomId());
-            System.out.println("sessionRoomId = " + s.getId());
-            System.out.println("sessionRoomId = " + session.getId());
+//            System.out.println("sessionRoomId = " + sessionRoomId);
+//            System.out.println("sessionRoomId = " + textMessageDTO.getRoomId());
+//            System.out.println("sessionRoomId = " + s.getId());
+//            System.out.println("sessionRoomId = " + session.getId());
             if(textMessageDTO.getRoomId().equals(sessionRoomId) && !(s.getId().equals(session.getId()))){
                 logger.info("send data : {}", message);
                 try{
-                    s.sendMessage(new TextMessage(jsonString));
+                    s.sendMessage(new TextMessage(jsonMessage));
                 } catch (IOException e) {
                     logger.error(e.getMessage(), e);
                 }

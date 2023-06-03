@@ -114,6 +114,7 @@ public class ChattingRoomController {
             getMessageDTO.setSenderId(m.getUser().getId());
             getMessageDTO.setSendTime(m.getSendTime());
             getMessageDTO.setTextMsg(m.getTextMsg());
+            getMessageDTO.setSendName(m.getUser().getName());
             messageDTOs.add(getMessageDTO);
         }
         return ResponseEntity.status(HttpStatus.OK).body(messageDTOs);

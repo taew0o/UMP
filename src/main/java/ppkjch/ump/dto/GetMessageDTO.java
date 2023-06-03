@@ -18,5 +18,7 @@ public class GetMessageDTO {
 
     private String senderId;
 
+    private String sendName;
+
     private Long sendTime;
 }
