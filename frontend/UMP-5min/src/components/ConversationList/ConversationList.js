@@ -95,6 +95,7 @@ export default function ConversationList(props) {
       data: {
         userIds: selectedFriends,
         roomName: inputValue,
+        createTime: new Date().getTime(),
       },
       withCredentials: true,
     })

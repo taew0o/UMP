@@ -40,8 +40,6 @@ export default function MessageList({ props }) {
   const ws = useRef(null);
 
   useEffect(() => {
-    getFriends();
-    getMessages();
     localStorage.setItem("location", "room");
     if (!ws.current) {
       ws.current = new WebSocket(webSocketUrl);
@@ -70,6 +68,8 @@ export default function MessageList({ props }) {
         };
         setMessages((prevMessages) => [...prevMessages, tempMsg]);
       };
+      getFriends();
+      getMessages();
     }
 
     return () => {
@@ -254,6 +254,7 @@ export default function MessageList({ props }) {
   };
 
   const addFriend = () => {
+    const nowTime = new Date().getTime();
     axios({
       method: "post",
       url: "/chattingroom/member",
@@ -263,10 +264,12 @@ export default function MessageList({ props }) {
       data: {
         roomId: id,
         inviteeIds: selectedFriends,
+        enterTime: nowTime,
       },
       withCredentials: true,
     })
       .then((response) => {
+        console.log("초대 ID들", selectedFriends);
         console.log("addFriend response", response);
         let friendNames;
         if (selectedFriendName.length === 1) {
@@ -278,11 +281,20 @@ export default function MessageList({ props }) {
           JSON.stringify({
             roomId: id,
             textMsg: `※알림 ${friendNames}님이 들어왔습니다.`,
-            sendTime: new Date().getTime(),
+            sendTime: nowTime,
             senderId: `server`,
             sendName: `server`,
           })
         );
+        const tempMsg = {
+          author: `server`,
+          message: `※알림 ${friendNames}님이 들어왔습니다.`,
+          timestamp: nowTime,
+          name: `server`,
+        };
+        setMessages((prevMessages) => [...prevMessages, tempMsg]);
+
+        alert(`${friendNames}님을 초대했습니다`);
       })
       .catch((error) => {
         console.log(error);
