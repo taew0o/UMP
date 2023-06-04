@@ -23,6 +23,8 @@ public class UserChattingRoom {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private ChattingRoom chattingRoom;
 
+    private Long enterTime;
+
     @Override
     public String toString() {
         return "UserChattingRoom{" +

@@ -12,5 +12,6 @@ import java.util.List;
 public class MakeRoomDTO {
     private ArrayList<String> userIds;
     private String roomName;
+    private Long createTime;
 
 }

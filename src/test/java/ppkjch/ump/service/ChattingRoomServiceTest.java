@@ -41,7 +41,7 @@ class ChattingRoomServiceTest {
         users.add(user2);
 
         String chatroom_name = "관리자 채팅방";
-        Long chattingroom_id = chattingRoomService.makeRoom(users,chatroom_name);
+        Long chattingroom_id = chattingRoomService.makeRoom(users,chatroom_name, null);
 
         //Assertions.assertEquals(chattingRoom1, chattingRoom2);
         //Assertions.assertEquals(chattingRoom2, chattingRoom3);

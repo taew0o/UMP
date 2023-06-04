@@ -10,11 +10,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ppkjch.ump.dto.GetMessageDTO;
 import ppkjch.ump.dto.MakeRoomDTO;
-import ppkjch.ump.dto.RoomIdDTO;
-import ppkjch.ump.dto.UserAndRoomDTO;
+import ppkjch.ump.dto.InviteRoomDTO;
 import ppkjch.ump.entity.ChattingRoom;
 import ppkjch.ump.entity.Message;
 import ppkjch.ump.entity.User;
+import ppkjch.ump.entity.UserChattingRoom;
 import ppkjch.ump.exception.RoomFullException;
 import ppkjch.ump.service.ChattingRoomService;
 import ppkjch.ump.service.MessageService;
@@ -47,7 +47,7 @@ public class ChattingRoomController {
         }
         //유저 정보로 채팅방 만들기
         try{
-            Long chattingRoomId = chattingRoomService.makeRoom(users, roomInfo.getRoomName());
+            Long chattingRoomId = chattingRoomService.makeRoom(users, roomInfo.getRoomName(), roomInfo.getCreateTime());
             return new ResponseEntity<Long>(chattingRoomId, HttpStatus.OK);
         }
         catch (RoomFullException e){
@@ -68,7 +68,7 @@ public class ChattingRoomController {
     }
 
     @PostMapping("/chattingroom/member")
-    public ResponseEntity<String> inviteChattingRoom(@RequestBody UserAndRoomDTO inviteDTO){
+    public ResponseEntity<String> inviteChattingRoom(@RequestBody InviteRoomDTO inviteDTO){
         //유저 ID정보로 채팅방에 user정보 추가하고 추가된 방을 반환
         try {
             List<User> invitees = new ArrayList<>();
@@ -77,7 +77,7 @@ public class ChattingRoomController {
                 invitees.add(invitee);
             }
             ChattingRoom chattingRoom = chattingRoomService.findRoom(inviteDTO.getRoomId());
-            chattingRoomService.inviteRoom(chattingRoom, invitees);
+            chattingRoomService.inviteRoom(chattingRoom, invitees, inviteDTO.getEnterTime());
 
         } catch (RoomFullException e) {
             return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
@@ -90,7 +90,6 @@ public class ChattingRoomController {
     @DeleteMapping("/chattingroom/member")
     public ResponseEntity<?> goOutChattingRoom(HttpServletRequest request, @RequestParam("roomId") Long roomId){
         // 세션에서 유저 ID 가져오기
-        System.out.println("roomId... = " + roomId);
         HttpSession session = request.getSession(false);
         String userId = (String)session.getAttribute("userId");
         // 유저 ID를 사용하여 유저 정보 조회
@@ -104,10 +103,27 @@ public class ChattingRoomController {
     }
 
     @GetMapping("/chattingroom/messages")
-    public ResponseEntity<List<GetMessageDTO>> getMessages(@RequestParam("roomId") Long roomId){ //보안 때문에 userId 넣어야 할 수도?
+    public ResponseEntity<List<GetMessageDTO>> getMessages(HttpServletRequest request, @RequestParam("roomId") Long roomId){
+        // 세션에서 유저 ID 가져오기
+        HttpSession session = request.getSession(false);
+        String userId = (String)session.getAttribute("userId");
+        // 유저 ID를 사용하여 유저 정보 조회
+        User user = userService.findUser(userId);
+        ChattingRoom chattingRoom = chattingRoomService.findRoom(roomId);
+        //해당 방 ID로 유저채팅룸 객체 가져와서 user의 입장 시간 알아내기 (나중에 리팩토링 필요할듯)
+        List<UserChattingRoom> userChattingRooms = chattingRoom.getUserChattingRooms();
+        Long enterTime = null;
+        for (UserChattingRoom ucr:userChattingRooms) {
+            if(ucr.getUser().getId().equals(user.getId())); //해당 유저의 해당 방 입장시간을 가저옴
+                enterTime = ucr.getEnterTime();
+        }
+
+        //roomId에 해당하는 메세지 가저오기
         List<Message> messages = messageService.findMessages(roomId);
+        List<Message> filteredMessages = messageService.filterMessage(messages, enterTime);
+
         List<GetMessageDTO> messageDTOs = new ArrayList<>();
-        for (Message m: messages) {
+        for (Message m: filteredMessages) {
             GetMessageDTO getMessageDTO = new GetMessageDTO();
             getMessageDTO.setChattingRoom(m.getChattingRoom());
             getMessageDTO.setId(m.getId());

@@ -8,7 +8,8 @@ import java.util.List;
 
 @Getter
 @Setter
-public class UserAndRoomDTO {
+public class InviteRoomDTO {
     private Long roomId;
     private List<String> InviteeIds;
+    private Long enterTime;
 }

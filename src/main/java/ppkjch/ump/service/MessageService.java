@@ -12,6 +12,7 @@ import ppkjch.ump.repository.JpaChattingRoomRepository;
 import ppkjch.ump.repository.JpaMessageRepository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -41,4 +42,13 @@ public class MessageService {
         return jpaMessageRepository.findOne(id);
     }
 
+    public List<Message> filterMessage(List<Message> messages, Long enterTime) {
+        ArrayList<Message> filteredMessages = new ArrayList<>();
+        for (Message m: messages) {
+            if(m.getSendTime() > enterTime){ // 메세지를 보낸 시간이 입장시간보다 나중인 것만 필터
+                filteredMessages.add(m);
+            }
+        }
+        return filteredMessages;
+    }
 }

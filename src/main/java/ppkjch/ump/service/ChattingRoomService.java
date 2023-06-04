@@ -29,7 +29,7 @@ public class ChattingRoomService {
     }
 
     @Transactional
-    public Long makeRoom(List<User> users, String roomName){
+    public Long makeRoom(List<User> users, String roomName, Long createTime){
         //유저 채팅방 생성
         int numPerson = users.size();
         if(numPerson == 1){
@@ -42,6 +42,7 @@ public class ChattingRoomService {
         for (User user: users) { //각 유저ID로 User 찾아 UserChattingroom객체 만들어 매핑
             UserChattingRoom userChattingRoom = new UserChattingRoom();
             userChattingRoom.setUser(user);
+            userChattingRoom.setEnterTime(createTime);
             userChattingRooms.add(userChattingRoom);
         }
 
@@ -52,7 +53,7 @@ public class ChattingRoomService {
     }
 
     @Transactional
-    public ChattingRoom inviteRoom(ChattingRoom chattingRoom, List<User> invitees) {
+    public ChattingRoom inviteRoom(ChattingRoom chattingRoom, List<User> invitees, Long enterTime) {
         //방이 full인지 확인
 
         //UserChattingRoom 객체 만들고 연관관계 매핑
@@ -62,6 +63,7 @@ public class ChattingRoomService {
             }
             UserChattingRoom userChattingRoom = new UserChattingRoom();
             userChattingRoom.setUser(invitee);
+            userChattingRoom.setEnterTime(enterTime);
             chattingRoom.addUserChattingRoom(userChattingRoom); //persist 안해도 자동 변경감지됨
             chattingRoom.updateNumPerson(1);
         }
