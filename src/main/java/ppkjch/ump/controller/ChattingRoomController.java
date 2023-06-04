@@ -115,13 +115,17 @@ public class ChattingRoomController {
         List<UserChattingRoom> userChattingRooms = chattingRoom.getUserChattingRooms();
         Long enterTime = null;
         System.out.println("userChattingRooms = " + userChattingRooms.size());
+        System.out.println(userChattingRooms.get(0).getUser().getId()+"  " + userChattingRooms.get(0).getEnterTime());
+        System.out.println(userChattingRooms.get(1).getUser().getId()+"  " + userChattingRooms.get(1).getEnterTime());
         for (UserChattingRoom ucr:userChattingRooms) {
-            if(ucr.getUser().getId().equals(user.getId())); //해당 유저의 해당 방 입장시간을 가저옴
-
+            if( ucr.getUser().getId().equals(user.getId())) {//해당 유저의 해당 방 입장시간을 가저옴
                 enterTime = ucr.getEnterTime();
+                System.out.println("ucr.getUser() = " + ucr.getUser().getId());
+                System.out.println("ucr.getEnterTime() = " + ucr.getEnterTime());
                 System.out.println("ucr = " + user.getId());
                 System.out.println("ucr = " + enterTime);
                 break;
+            }
         }
 
         //roomId에 해당하는 메세지 가저오기
