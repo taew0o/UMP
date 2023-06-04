@@ -70,6 +70,7 @@ public class ChattingRoomController {
     @PostMapping("/chattingroom/member")
     public ResponseEntity<String> inviteChattingRoom(@RequestBody InviteRoomDTO inviteDTO){
         //유저 ID정보로 채팅방에 user정보 추가하고 추가된 방을 반환
+        System.out.println("inviteDTO.getEnterTime() = " + inviteDTO.getEnterTime());
         try {
             List<User> invitees = new ArrayList<>();
             for (String id: inviteDTO.getInviteeIds()) {
@@ -113,9 +114,14 @@ public class ChattingRoomController {
         //해당 방 ID로 유저채팅룸 객체 가져와서 user의 입장 시간 알아내기 (나중에 리팩토링 필요할듯)
         List<UserChattingRoom> userChattingRooms = chattingRoom.getUserChattingRooms();
         Long enterTime = null;
+        System.out.println("userChattingRooms = " + userChattingRooms.size());
         for (UserChattingRoom ucr:userChattingRooms) {
             if(ucr.getUser().getId().equals(user.getId())); //해당 유저의 해당 방 입장시간을 가저옴
+
                 enterTime = ucr.getEnterTime();
+                System.out.println("ucr = " + user.getId());
+                System.out.println("ucr = " + enterTime);
+                break;
         }
 
         //roomId에 해당하는 메세지 가저오기
@@ -127,7 +133,7 @@ public class ChattingRoomController {
             GetMessageDTO getMessageDTO = new GetMessageDTO();
             getMessageDTO.setChattingRoom(m.getChattingRoom());
             getMessageDTO.setId(m.getId());
-            if(m.getUser() != null){
+            if(m.getUser() != null){ //나감, 들어옴 메세지일 경우
                 getMessageDTO.setSenderId(m.getUser().getId());
                 getMessageDTO.setSendName(m.getUser().getName());
             }
