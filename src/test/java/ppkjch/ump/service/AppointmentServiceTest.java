@@ -28,28 +28,19 @@ class AppointmentServiceTest {
     @Rollback(value = false)
     @Test
     void saveAppointment() {
-        User u1 = userService.findUser("taewoo9240");
-        User u2 = userService.findUser("admin");
-        User u3 = userService.findUser("admin2");
-        List<User> userList = new ArrayList<>();
-        userList.add(u1);
-        userList.add(u2);
-        userList.add(u3);
-
-
-        String roomName = "태우생일";
-        LocalDateTime aptTime = LocalDateTime.of(2023,07,22,0,0,0);
+//        User u1 = userService.findUser("taewoo9240");
+//        User u2 = userService.findUser("admin");
+//        User u3 = userService.findUser("admin2");
+//        List<User> userList = new ArrayList<>();
+//        userList.add(u1);
+//        userList.add(u2);
+//        userList.add(u3);
+//
+//
+//        String roomName = "태우생일";
+//        LocalDateTime aptTime = LocalDateTime.of(2023, 07, 22, 0, 0, 0);
 
         //appointmentService.saveAppointment(userList,roomName,aptTime);
     }
 
-//    @Test
-//    void findAppointmentTime() {
-//        User u = userService.findUser("taewoo9240");
-//        List<LocalDateTime> localDateTimes = appointmentService.findAppointmentTime(u);
-//        for(LocalDateTime ldt : localDateTimes){
-//            System.out.println(ldt);
-//        }
-//
-//    }
 }

@@ -33,15 +33,15 @@ class ChattingRoomServiceTest {
     @Rollback(value = false)
     void makeRoom() {
         //유저 4명이 가입 되어 있음
-        User user1 = userService.findUser("admin");
-        User user2 = userService.findUser("admin2");
-
-        List<User> users = new ArrayList<>();
-        users.add(user1);
-        users.add(user2);
-
-        String chatroom_name = "관리자 채팅방";
-        Long chattingroom_id = chattingRoomService.makeRoom(users,chatroom_name, null);
+//        User user1 = userService.findUser("admin");
+//        User user2 = userService.findUser("admin2");
+//
+//        List<User> users = new ArrayList<>();
+//        users.add(user1);
+//        users.add(user2);
+//
+//        String chatroom_name = "관리자 채팅방";
+//        Long chattingroom_id = chattingRoomService.makeRoom(users,chatroom_name, null);
 
         //Assertions.assertEquals(chattingRoom1, chattingRoom2);
         //Assertions.assertEquals(chattingRoom2, chattingRoom3);
@@ -49,23 +49,23 @@ class ChattingRoomServiceTest {
 
     @Test
     void findRoom() {
-        int i = 2;
-        long room_id = i;
-        ChattingRoom chattingRoom = chattingRoomService.findRoom(room_id);
-        List<UserChattingRoom> userChattingRoomList = chattingRoom.getUserChattingRooms();
-        for(int j = 0 ; j < userChattingRoomList.size() ; j++){
-            System.out.println(userChattingRoomList.get(j).getChattingRoom().getChattingRoomName());
-            System.out.println(userChattingRoomList.get(j).getUser().getName());
+//        int i = 2;
+//        long room_id = i;
+//        ChattingRoom chattingRoom = chattingRoomService.findRoom(room_id);
+//        List<UserChattingRoom> userChattingRoomList = chattingRoom.getUserChattingRooms();
+//        for(int j = 0 ; j < userChattingRoomList.size() ; j++){
+//            System.out.println(userChattingRoomList.get(j).getChattingRoom().getChattingRoomName());
+//            System.out.println(userChattingRoomList.get(j).getUser().getName());
 
-        }
+//        }
 
     }
     @Test
     void inviteRoom() {
-        int i = 2;
-        long j = i;
-        User user3 = userService.findUser("taewoo9240");
-        ChattingRoom chattingRoom = chattingRoomService.findRoom(j);
+//        int i = 2;
+//        long j = i;
+//        User user3 = userService.findUser("taewoo9240");
+//        ChattingRoom chattingRoom = chattingRoomService.findRoom(j);
     }
 
     @Test

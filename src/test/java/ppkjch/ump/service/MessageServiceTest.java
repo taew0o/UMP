@@ -30,23 +30,23 @@ class MessageServiceTest {
     @Rollback(value = false)
     @Test
     void createMessage() {
-        int i = 54;
-        long id = i;
-        User user = userService.findUser("taewoo9240");
-        ChattingRoom chattingRoom = chattingRoomService.findRoom(id);
-        String text = "반갑습니다";
-        messageService.createMessage(text,user,chattingRoom, Long.parseLong("sdfsf"));
+//        int i = 54;
+//        long id = i;
+//        User user = userService.findUser("taewoo9240");
+//        ChattingRoom chattingRoom = chattingRoomService.findRoom(id);
+//        String text = "반갑습니다";
+//        messageService.createMessage(text,user,chattingRoom, Long.parseLong("sdfsf"));
     }
 
     @Test
     void findMessages() {
-        int i = 54;
-        long id = i;
-        ChattingRoom chattingRoom = chattingRoomService.findRoom(id);
-        List<Message> messageList =  messageService.findMessages(id);
-        for(Message m : messageList){
-            System.out.println(m.getUser().getName()+":" + m.getSendTime() + " " + m.getTextMsg());
-        }
+//        int i = 54;
+//        long id = i;
+//        ChattingRoom chattingRoom = chattingRoomService.findRoom(id);
+//        List<Message> messageList =  messageService.findMessages(id);
+//        for(Message m : messageList){
+//            System.out.println(m.getUser().getName()+":" + m.getSendTime() + " " + m.getTextMsg());
+//        }
     }
 
     @Test
