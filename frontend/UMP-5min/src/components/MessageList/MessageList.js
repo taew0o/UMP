@@ -73,6 +73,7 @@ export default function MessageList({ props }) {
       };
       getFriends();
       getMessages();
+      getRoomPeople();
     }
 
     return () => {
@@ -105,6 +106,25 @@ export default function MessageList({ props }) {
     renderMessages();
     scrollToBottom();
   }, [messages]);
+
+  const getRoomPeople = () => {
+    axios({
+      method: "get",
+      url: "/chattingroom/members",
+      headers: {
+        "Content-Type": `application/json`,
+      },
+      params: { roomId: id },
+      withCredentials: true,
+    })
+      .then((response) => {
+        console.log("----------------", response);
+      })
+      .catch((error) => {
+        console.log(error);
+        alert(error.response.data);
+      });
+  };
 
   const scrollToBottom = () => {
     if (scrollRef.current) {
