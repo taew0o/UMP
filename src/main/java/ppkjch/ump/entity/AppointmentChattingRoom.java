@@ -15,15 +15,13 @@ import java.util.List;
 @Getter
 public class AppointmentChattingRoom extends ChattingRoom{
 
-    private String date;
     private String time;
     private String location;
 
     public static AppointmentChattingRoom createAppointmentChattingRoom(int numPerson, List<UserChattingRoom> userChattingRooms
-            , String roomName, String date, String time, String location){
+            , String roomName, String time, String location){
         AppointmentChattingRoom appointmentChattingRoom = new AppointmentChattingRoom();
         appointmentChattingRoom.setNumPerson(numPerson);
-        appointmentChattingRoom.setDate(date);
         appointmentChattingRoom.setTime(time);
         appointmentChattingRoom.setLocation(location);
         appointmentChattingRoom.setChattingRoomName(roomName);

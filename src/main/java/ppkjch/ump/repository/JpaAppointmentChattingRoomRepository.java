@@ -31,9 +31,19 @@ public class JpaAppointmentChattingRoomRepository {
                 .getResultList();
     }
 
-    public List<AppointmentChattingRoom> findAppointment(User user){
+    public List<AppointmentChattingRoom> findAppointmentByUser(User user){
         return em.createQuery("select apcr from AppointmentChattingRoom apcr join UserChattingRoom ucr where apcr.id = ucr.chattingRoom.id and ucr.user = :user", AppointmentChattingRoom.class)
                 .setParameter("user", user)
                 .getResultList();
+    }
+
+    public void goOutRoom(User user, AppointmentChattingRoom acr){
+        em.createQuery("delete from UserChattingRoom ucr where ucr.user =:user and ucr.chattingRoom =:cr")
+                .setParameter("user",user)
+                .setParameter("acr",acr)
+                .executeUpdate();
+    }
+    public void removeRoom(AppointmentChattingRoom chattingRoom){
+        em.remove(chattingRoom);
     }
 }
