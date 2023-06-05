@@ -22,14 +22,14 @@ import ppkjch.ump.service.UserService;
 import java.util.ArrayList;
 
 @Controller
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
 @RequiredArgsConstructor
 public class AppointmentController {
     private final AppointmentService appointmentService;
     private final UserService userService;
     private final ChattingRoomService chattingRoomService;
 
-    @PostMapping("/appointmentroom")
+    @PostMapping("/appointment-room")
     public ResponseEntity<?> makeChattingRoom(HttpServletRequest request, @RequestBody MakeAppointmentRoomDTO roomInfo){
         // 세션에서 유저 ID 가져오기
         HttpSession session = request.getSession(false);
