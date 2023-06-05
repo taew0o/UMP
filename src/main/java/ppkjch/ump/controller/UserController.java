@@ -25,7 +25,7 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-//@CrossOrigin(origins = {"http://localhost:3000","http://localhost:3001"})
+//@CrossOrigin(origins = {"https://ppkjc-ump.netlify.app/"})
 public class UserController {
 
     private final UserService userService;
