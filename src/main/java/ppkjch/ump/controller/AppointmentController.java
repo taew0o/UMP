@@ -55,7 +55,7 @@ public class AppointmentController {
         try{
             Long chattingRoomId = appointmentService.saveAppointment(users, roomInfo.getRoomName(), roomInfo.getCreateTime(), roomInfo.getDate(), roomInfo.getTime(), roomInfo.getLocation());
             ChattingRoom room = chattingRoomService.findRoom(chattingRoomId);
-            appointmentService.explodeRoom();
+            appointmentService.explodeRoom(room);
             return new ResponseEntity<Long>(chattingRoomId, HttpStatus.OK);
         }
         catch (RoomFullException | InterruptedException e ){
