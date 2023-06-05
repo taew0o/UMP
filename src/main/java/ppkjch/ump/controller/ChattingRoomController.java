@@ -88,15 +88,14 @@ public class ChattingRoomController {
 
     }
     @GetMapping("/chattingroom/members")
-    public ResponseEntity<List<User>> getMembers(@RequestBody RoomIdDTO roomIdDTO){
+    public ResponseEntity<List<User>> getMembers(@RequestParam(name = "roomId") Long roomId){
         //방 id로 방 찾기
-        Long roomId = roomIdDTO.getRoomId();
         ChattingRoom room = chattingRoomService.findRoom(roomId);
 
         //방에 있는 유저들 찾기
         List<User> members = chattingRoomService.findRoomMember(room);
 
-        //찾으 유저 정보 넘겨주기
+        //찾으 유저 정보 넘겨주
         return ResponseEntity.status(HttpStatus.CREATED).body(members);
     }
 
