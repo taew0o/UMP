@@ -39,6 +39,7 @@ export default function MessageList({ props }) {
   const [selectedFriends, setSelectedFriends] = useState([]);
   const [selectedFriendName, setSelectedFriendName] = useState([]);
   const [visible, setVisible] = useState(false);
+  const [visibleAppoint, setAppoint] = useState(false);
 
   const [appointment, setAppointment] = useState({
     date: "",
@@ -311,6 +312,30 @@ export default function MessageList({ props }) {
     );
   };
 
+  const renderAppointmentList = () => {
+    return roomPeople.length !== 0 ? (
+      <div>
+        {roomPeople.map((friend, index) =>
+          friend.id !== MY_USER_ID ? (
+            <div key={index}>
+              <Checkbox
+                onChange={(e) => handleSelectFriend(e, friend.id, friend.name)}
+                checked={selectedFriends.includes(friend.id)}
+              >
+                {friend.name}
+              </Checkbox>
+            </div>
+          ) : (
+            <></>
+          )
+        )}
+        <Button onClick={addAppointment}>약속 확정</Button>
+      </div>
+    ) : (
+      <div>초대할 사람이 없습니다</div>
+    );
+  };
+
   const addFriend = () => {
     const nowTime = new Date().getTime();
     axios({
@@ -353,6 +378,7 @@ export default function MessageList({ props }) {
         setMessages((prevMessages) => [...prevMessages, tempMsg]);
 
         alert(`${friendNames}님을 초대했습니다`);
+        setVisible(!visible);
       })
       .catch((error) => {
         console.log(error);
@@ -388,10 +414,13 @@ export default function MessageList({ props }) {
   };
 
   const handleShowFriends = () => {
+    setSelectedFriends([]);
+    setSelectedFriendName([]);
     getFriends();
     console.log("friends", friends);
     setVisible(!visible);
   };
+
   const handleSelectFriend = (e, selectedFriend, FriendName) => {
     if (e.target.checked) {
       setSelectedFriends([...selectedFriends, selectedFriend]);
@@ -405,6 +434,41 @@ export default function MessageList({ props }) {
       );
     }
   };
+
+  const addAppointment = () => {
+    console.log("약속 데이터들", selectedFriends, appointment.roomName);
+    axios({
+      method: "post",
+      url: "/appointment-room",
+      headers: {
+        "Content-Type": `application/json`,
+      },
+      data: {
+        userIds: selectedFriends,
+        roomName: appointment.roomName,
+        createTime: new Date().getTime(),
+        date: appointment.date,
+        time: appointment.time,
+        location: appointment.location,
+      },
+      withCredentials: true,
+    })
+      .then((response) => {
+        console.log(response);
+        setAppoint(!visibleAppoint);
+      })
+      .catch((error) => {
+        console.log(error);
+        alert(error.response.data);
+      });
+  };
+
+  const handleAppointment = () => {
+    setSelectedFriends([]);
+    setSelectedFriendName([]);
+    setAppoint(!visibleAppoint);
+  };
+
   return (
     <div className="message-list" ref={scrollRef}>
       <Toolbar
@@ -489,19 +553,22 @@ export default function MessageList({ props }) {
               약속 이름:
               <input
                 type="text"
-                name="name"
-                value={appointment.name}
+                name="roomName"
+                value={appointment.roomName}
                 onChange={handleAppointmentChange}
               />
             </div>
           </div>
           <div className="button-group">
-            <Button className="appointment-button">약속 잡기</Button>
+            <Button className="appointment-button" onClick={handleAppointment}>
+              약속 잡기
+            </Button>
             <Button className="invite-button" onClick={handleShowFriends}>
               친구 초대
             </Button>
           </div>
           {visible && renderFriendsList()}
+          {visibleAppoint && renderAppointmentList()}
         </div>
       </ReactModal>
       <ReactModal

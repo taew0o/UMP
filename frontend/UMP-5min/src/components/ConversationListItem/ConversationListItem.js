@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import shave from "shave";
+import { BiTimeFive } from "react-icons/bi";
 import "./ConversationListItem.css";
 
 const ConversationListItem = (props) => {
@@ -24,7 +25,7 @@ const ConversationListItem = (props) => {
     console.log(name);
     navigate(`/room/${id}`, { state: { id, name, member, createTime } });
   };
-  const { id, member, name, createTime } = props.data;
+  const { id, member, name, createTime, isAppoint } = props.data;
 
   const getRandomColor = () => {
     const colors = [
@@ -42,25 +43,29 @@ const ConversationListItem = (props) => {
   };
 
   const Style = {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    width: "50px",
-    height: "50px",
-    borderRadius: "50%",
-    color: "black",
-    marginRight: "20px",
     backgroundColor: backgroundColor,
   };
 
   return (
     <div className="conversation-list-item" onClick={clickHandler}>
       <div className="conversation-photo" style={Style}>
-        {name}
+        <span>{name}</span>
       </div>
-      <div className="conversation-info">
-        <h1 className="conversation-title">{name}</h1>
-        {/* <p className="conversation-snippet">{text}</p> */}
+      <div className="conversation-time">
+        <div className="conversation-info">
+          <h1 className="conversation-title">{name}</h1>
+          {/* <p className="conversation-snippet">{text}</p> */}
+        </div>
+
+        {isAppoint ? (
+          <div className="conversation-appoint">
+            <BiTimeFive
+              style={{ display: "flex", fontSize: "24px", color: "blue" }}
+            />
+          </div>
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   );
