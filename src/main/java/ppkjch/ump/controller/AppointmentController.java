@@ -22,7 +22,7 @@ import ppkjch.ump.service.UserService;
 import java.util.ArrayList;
 
 @Controller
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
 @RequiredArgsConstructor
 public class AppointmentController {
     private final AppointmentService appointmentService;
