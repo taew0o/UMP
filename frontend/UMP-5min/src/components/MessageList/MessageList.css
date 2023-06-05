@@ -1,13 +1,14 @@
-.message-list-container {
-  padding: 10px;
-  padding-bottom: 70px;
-}
+
 .modal-content {
   margin-top: 20px;
 }
 
 .room-info {
   margin-bottom: 20px;
+}
+
+.room-people{
+  margin-top: 20px;
 }
 
 .appointment-info {

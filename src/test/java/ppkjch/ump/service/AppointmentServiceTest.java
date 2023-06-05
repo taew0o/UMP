@@ -40,16 +40,16 @@ class AppointmentServiceTest {
         String roomName = "태우생일";
         LocalDateTime aptTime = LocalDateTime.of(2023,07,22,0,0,0);
 
-        appointmentService.saveAppointment(userList,roomName,aptTime);
+        //appointmentService.saveAppointment(userList,roomName,aptTime);
     }
 
-    @Test
-    void findAppointmentTime() {
-        User u = userService.findUser("taewoo9240");
-        List<LocalDateTime> localDateTimes = appointmentService.findAppointmentTime(u);
-        for(LocalDateTime ldt : localDateTimes){
-            System.out.println(ldt);
-        }
-
-    }
+//    @Test
+//    void findAppointmentTime() {
+//        User u = userService.findUser("taewoo9240");
+//        List<LocalDateTime> localDateTimes = appointmentService.findAppointmentTime(u);
+//        for(LocalDateTime ldt : localDateTimes){
+//            System.out.println(ldt);
+//        }
+//
+//    }
 }

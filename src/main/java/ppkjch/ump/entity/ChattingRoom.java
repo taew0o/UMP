@@ -23,9 +23,6 @@ public class ChattingRoom {
 
     public String chattingRoomName;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime createTime;
-
     @JsonIgnore //객체 참조용(DB엔 안들감)
     @OneToMany(mappedBy = "chattingRoom", cascade = CascadeType.ALL)
     private List<UserChattingRoom> userChattingRooms = new ArrayList<>();
@@ -43,7 +40,6 @@ public class ChattingRoom {
     public static ChattingRoom createChattingroom(int numPerson, List<UserChattingRoom> userChattingRooms, String roomName) {
         //ChattingRoom 객체만들어 속성 set하고 받은 userChattingRooms와 양방향으로 연관관계 설정(서로를 멤버로 설정)
         ChattingRoom chattingRoom = new ChattingRoom();
-        chattingRoom.setCreateTime(LocalDateTime.now());
         chattingRoom.setNumPerson(numPerson);
         chattingRoom.setChattingRoomName(roomName);
         //System.out.println("userChattingRooms.isEmpty() = " + userChattingRooms.isEmpty());
