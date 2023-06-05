@@ -11,6 +11,7 @@ import ReactModal from "react-modal";
 import Review from "../Review/Review";
 import { Button, Checkbox } from "antd";
 import axios from "axios";
+import FriendList from "../FriendList/FriendList";
 
 //채팅방 구현
 export default function MessageList({ props }) {
@@ -33,10 +34,18 @@ export default function MessageList({ props }) {
 
   const [socketConnected, setSocketConnected] = useState(false);
 
+  const [roomPeople, setRoomPeople] = useState([]);
   const [friends, setFriends] = useState([]);
   const [selectedFriends, setSelectedFriends] = useState([]);
   const [selectedFriendName, setSelectedFriendName] = useState([]);
   const [visible, setVisible] = useState(false);
+
+  const [appointment, setAppointment] = useState({
+    date: "",
+    time: "",
+    location: "",
+    roomName: "",
+  });
 
   const webSocketUrl = "ws://localhost:8080/websocket?roomId=" + id;
   const ws = useRef(null);
@@ -71,9 +80,10 @@ export default function MessageList({ props }) {
         };
         setMessages((prevMessages) => [...prevMessages, tempMsg]);
       };
-      getFriends();
+
       getMessages();
       getRoomPeople();
+      getFriends();
     }
 
     return () => {
@@ -107,6 +117,15 @@ export default function MessageList({ props }) {
     scrollToBottom();
   }, [messages]);
 
+  const handleAppointmentChange = (event) => {
+    const { name, value } = event.target;
+    setAppointment((prevAppointment) => ({
+      ...prevAppointment,
+      [name]: value,
+    }));
+    console.log("appointment", appointment);
+  };
+
   const getRoomPeople = () => {
     axios({
       method: "get",
@@ -119,6 +138,9 @@ export default function MessageList({ props }) {
     })
       .then((response) => {
         console.log("----------------", response);
+        response.data.map((value) => {
+          setRoomPeople((prevPeople) => [...prevPeople, value]);
+        });
       })
       .catch((error) => {
         console.log(error);
@@ -270,7 +292,7 @@ export default function MessageList({ props }) {
   };
 
   const renderFriendsList = () => {
-    return (
+    return friends.length !== 0 ? (
       <div>
         {friends.map((friend, index) => (
           <div key={index}>
@@ -284,6 +306,8 @@ export default function MessageList({ props }) {
         ))}
         <Button onClick={addFriend}>초대</Button>
       </div>
+    ) : (
+      <div>초대할 사람이 없습니다</div>
     );
   };
 
@@ -350,7 +374,12 @@ export default function MessageList({ props }) {
         let newFriends = response.data.map((result) => {
           return { id: result.id, name: result.name };
         });
-        setFriends(newFriends);
+        const filteredFriends = newFriends.filter((friend) => {
+          const friendIds = roomPeople.map((person) => person.id);
+          return !friendIds.includes(friend.id);
+        });
+
+        setFriends(filteredFriends);
       })
       .catch((error) => {
         console.log(error);
@@ -359,6 +388,8 @@ export default function MessageList({ props }) {
   };
 
   const handleShowFriends = () => {
+    getFriends();
+    console.log("friends", friends);
     setVisible(!visible);
   };
   const handleSelectFriend = (e, selectedFriend, FriendName) => {
@@ -420,19 +451,48 @@ export default function MessageList({ props }) {
         <div className="modal-content">
           <div className="room-info">
             <div>채팅방 정보: {state.name}</div>
+            <div className="room-people">
+              {roomPeople.map((friend) => (
+                <FriendList key={friend.name} data={friend} />
+              ))}
+            </div>
           </div>
           <div className="appointment-info">
             <div>
               약속 날짜:
-              <input type="date" />
+              <input
+                type="date"
+                name="date"
+                value={appointment.date}
+                onChange={handleAppointmentChange}
+              />
+            </div>
+            <div>
+              약속 시간:
+              <input
+                type="time"
+                name="time"
+                value={appointment.time}
+                onChange={handleAppointmentChange}
+              />
             </div>
             <div>
               약속 장소:
-              <input type="text" />
+              <input
+                type="text"
+                name="location"
+                value={appointment.location}
+                onChange={handleAppointmentChange}
+              />
             </div>
             <div>
               약속 이름:
-              <input type="text" />
+              <input
+                type="text"
+                name="name"
+                value={appointment.name}
+                onChange={handleAppointmentChange}
+              />
             </div>
           </div>
           <div className="button-group">
