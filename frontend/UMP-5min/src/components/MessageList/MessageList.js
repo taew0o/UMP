@@ -9,9 +9,15 @@ import "./MessageList.css";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import ReactModal from "react-modal";
 import Review from "../Review/Review";
-import { Button, Checkbox } from "antd";
+import { Button, Checkbox, Form } from "antd";
 import axios from "axios";
 import FriendList from "../FriendList/FriendList";
+import { DatePicker, Space, TimePicker, Input, Modal } from "antd";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+
+dayjs.extend(customParseFormat);
+const { RangePicker } = DatePicker;
 
 //채팅방 구현
 export default function MessageList({ props }) {
@@ -41,8 +47,22 @@ export default function MessageList({ props }) {
   const [visible, setVisible] = useState(false);
   const [visibleAppoint, setAppoint] = useState(false);
 
+  const onChange = (time, timeString) => {
+    console.log(time, timeString);
+    setAppointment((prevAppointment) => ({
+      ...prevAppointment,
+      time: timeString,
+    }));
+  };
+
+  const onOk = (time, timeString) => {
+    console.log(time, timeString);
+    setAppointment((prevAppointment) => ({
+      ...prevAppointment,
+      time: timeString,
+    }));
+  };
   const [appointment, setAppointment] = useState({
-    date: "",
     time: "",
     location: "",
     roomName: "",
@@ -52,7 +72,6 @@ export default function MessageList({ props }) {
   const ws = useRef(null);
 
   useEffect(() => {
-    scrollToBottom();
     localStorage.setItem("location", "room");
     if (!ws.current) {
       ws.current = new WebSocket(webSocketUrl);
@@ -85,11 +104,26 @@ export default function MessageList({ props }) {
       getMessages();
       getRoomPeople();
       getFriends();
+      if (state.isAppoint) {
+        const currentDate = new Date();
+        const appointmentDate = new Date(state.time);
+
+        if (currentDate > appointmentDate) {
+          console.log("약속 시간이 이미 지났습니다.");
+          setReviewIsOpen(true);
+        } else {
+          console.log("약속 시간이 아직 남았습니다.");
+        }
+      }
     }
+    scrollToBottom();
+    window.addEventListener("load", scrollToBottom); // 페이지 로드될 때 스크롤 이벤트 처리
 
     return () => {
       console.log("clean up");
       localStorage.setItem("location", "notRoom");
+      window.removeEventListener("load", scrollToBottom); // 컴포넌트 언마운트 시 이벤트 리스너 제거
+
       ws.current.close();
     };
   }, []);
@@ -100,13 +134,13 @@ export default function MessageList({ props }) {
     makeMsg();
     if (socketConnected && text) {
       ws.current.send(
-          JSON.stringify({
-            roomId: id,
-            textMsg: text.message,
-            sendTime: new Date().getTime(),
-            senderId: MY_USER_ID,
-            sendName: MY_NAME,
-          })
+        JSON.stringify({
+          roomId: id,
+          textMsg: text.message,
+          sendTime: new Date().getTime(),
+          senderId: MY_USER_ID,
+          sendName: MY_NAME,
+        })
       );
       console.log("메시지 보낸다");
     }
@@ -137,23 +171,24 @@ export default function MessageList({ props }) {
       params: { roomId: id },
       withCredentials: true,
     })
-        .then((response) => {
-          console.log("----------------", response);
-          response.data.map((value) => {
-            setRoomPeople((prevPeople) => [...prevPeople, value]);
-          });
-        })
-        .catch((error) => {
-          console.log(error);
-          alert(error.response.data);
+      .then((response) => {
+        console.log("----------------", response);
+        response.data.map((value) => {
+          setRoomPeople((prevPeople) => [...prevPeople, value]);
         });
+        console.log(roomPeople);
+      })
+      .catch((error) => {
+        console.log(error);
+        alert(error.response.data);
+      });
   };
 
   const scrollToBottom = () => {
     if (scrollRef.current) {
       // scrollRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
       window.scrollBy({
-        top: 2200,
+        top: 9999999999999,
         behavior: "smooth", // 스크롤 애니메이션 적용 (optional)
       });
     }
@@ -179,22 +214,22 @@ export default function MessageList({ props }) {
       params: { roomId: id },
       withCredentials: true,
     })
-        .then((response) => {
-          console.log("----------------", response);
-          response.data.map((value) => {
-            const tempMsg = {
-              author: value.senderId,
-              message: value.textMsg,
-              timestamp: value.sendTime,
-              name: value.sendName,
-            };
-            setMessages((prevMessages) => [...prevMessages, tempMsg]);
-          });
-        })
-        .catch((error) => {
-          console.log(error);
-          alert(error.response.data);
+      .then((response) => {
+        console.log("----------------", response);
+        response.data.map((value) => {
+          const tempMsg = {
+            author: value.senderId,
+            message: value.textMsg,
+            timestamp: value.sendTime,
+            name: value.sendName,
+          };
+          setMessages((prevMessages) => [...prevMessages, tempMsg]);
         });
+      })
+      .catch((error) => {
+        console.log(error);
+        alert(error.response.data);
+      });
   };
 
   const outRoom = () => {
@@ -207,23 +242,23 @@ export default function MessageList({ props }) {
       params: { roomId: id },
       withCredentials: true,
     })
-        .then((response) => {
-          console.log("----------------", response);
-          ws.current.send(
-              JSON.stringify({
-                roomId: id,
-                textMsg: `※알림 ${MY_NAME}님이 나갔습니다.`,
-                sendTime: new Date().getTime(),
-                senderId: `server`,
-                sendName: `server`,
-              })
-          );
-          navigate("/");
-        })
-        .catch((error) => {
-          console.log(error);
-          alert(error.response.data);
-        });
+      .then((response) => {
+        console.log("----------------", response);
+        ws.current.send(
+          JSON.stringify({
+            roomId: id,
+            textMsg: `※알림 ${MY_NAME}님이 나갔습니다.`,
+            sendTime: new Date().getTime(),
+            senderId: `server`,
+            sendName: `server`,
+          })
+        );
+        navigate("/");
+      })
+      .catch((error) => {
+        console.log(error);
+        alert(error.response.data);
+      });
   };
 
   const renderMessages = () => {
@@ -246,7 +281,7 @@ export default function MessageList({ props }) {
       if (previous) {
         let previousMoment = moment(previous.timestamp);
         let previousDuration = moment.duration(
-            currentMoment.diff(previousMoment)
+          currentMoment.diff(previousMoment)
         );
         prevBySameAuthor = previous.author === current.author;
 
@@ -274,16 +309,16 @@ export default function MessageList({ props }) {
       const isServer = current.author === `server`;
 
       tempMessages.push(
-          <Message
-              key={i}
-              isMine={isMine}
-              startsSequence={startsSequence}
-              endsSequence={endsSequence}
-              showTimestamp={showTimestamp}
-              data={current}
-              senderName={senderName} // Pass senderId as senderName prop
-              isServer={isServer}
-          />
+        <Message
+          key={i}
+          isMine={isMine}
+          startsSequence={startsSequence}
+          endsSequence={endsSequence}
+          showTimestamp={showTimestamp}
+          data={current}
+          senderName={senderName} // Pass senderId as senderName prop
+          isServer={isServer}
+        />
       );
 
       // Proceed to the next message.
@@ -294,45 +329,45 @@ export default function MessageList({ props }) {
 
   const renderFriendsList = () => {
     return friends.length !== 0 ? (
-        <div>
-          {friends.map((friend, index) => (
-              <div key={index}>
-                <Checkbox
-                    onChange={(e) => handleSelectFriend(e, friend.id, friend.name)}
-                    checked={selectedFriends.includes(friend.id)}
-                >
-                  {friend.name}
-                </Checkbox>
-              </div>
-          ))}
-          <Button onClick={addFriend}>초대</Button>
-        </div>
+      <div>
+        {friends.map((friend, index) => (
+          <div key={index}>
+            <Checkbox
+              onChange={(e) => handleSelectFriend(e, friend.id, friend.name)}
+              checked={selectedFriends.includes(friend.id)}
+            >
+              {friend.name}
+            </Checkbox>
+          </div>
+        ))}
+        <Button onClick={addFriend}>초대</Button>
+      </div>
     ) : (
-        <div>초대할 사람이 없습니다</div>
+      <div>초대할 사람이 없습니다</div>
     );
   };
 
   const renderAppointmentList = () => {
     return roomPeople.length !== 0 ? (
-        <div>
-          {roomPeople.map((friend, index) =>
-              friend.id !== MY_USER_ID ? (
-                  <div key={index}>
-                    <Checkbox
-                        onChange={(e) => handleSelectFriend(e, friend.id, friend.name)}
-                        checked={selectedFriends.includes(friend.id)}
-                    >
-                      {friend.name}
-                    </Checkbox>
-                  </div>
-              ) : (
-                  <></>
-              )
-          )}
-          <Button onClick={addAppointment}>약속 확정</Button>
-        </div>
+      <div>
+        {roomPeople.map((friend, index) =>
+          friend.id !== MY_USER_ID ? (
+            <div key={index}>
+              <Checkbox
+                onChange={(e) => handleSelectFriend(e, friend.id, friend.name)}
+                checked={selectedFriends.includes(friend.id)}
+              >
+                {friend.name}
+              </Checkbox>
+            </div>
+          ) : (
+            <></>
+          )
+        )}
+        <Button onClick={addAppointment}>약속 확정</Button>
+      </div>
     ) : (
-        <div>초대할 사람이 없습니다</div>
+      <div>초대할 사람이 없습니다</div>
     );
   };
 
@@ -351,39 +386,39 @@ export default function MessageList({ props }) {
       },
       withCredentials: true,
     })
-        .then((response) => {
-          console.log("초대 ID들", selectedFriends);
-          console.log("addFriend response", response);
-          let friendNames;
-          if (selectedFriendName.length === 1) {
-            friendNames = selectedFriendName[0]; // 선택된 친구가 한 명인 경우
-          } else {
-            friendNames = selectedFriendName.join(", "); // 선택된 친구 이름들을 쉼표로 구분하여 하나의 문자열로 변환
-          }
-          ws.current.send(
-              JSON.stringify({
-                roomId: id,
-                textMsg: `※알림 ${friendNames}님이 들어왔습니다.`,
-                sendTime: nowTime,
-                senderId: `server`,
-                sendName: `server`,
-              })
-          );
-          const tempMsg = {
-            author: `server`,
-            message: `※알림 ${friendNames}님이 들어왔습니다.`,
-            timestamp: nowTime,
-            name: `server`,
-          };
-          setMessages((prevMessages) => [...prevMessages, tempMsg]);
+      .then((response) => {
+        console.log("초대 ID들", selectedFriends);
+        console.log("addFriend response", response);
+        let friendNames;
+        if (selectedFriendName.length === 1) {
+          friendNames = selectedFriendName[0]; // 선택된 친구가 한 명인 경우
+        } else {
+          friendNames = selectedFriendName.join(", "); // 선택된 친구 이름들을 쉼표로 구분하여 하나의 문자열로 변환
+        }
+        ws.current.send(
+          JSON.stringify({
+            roomId: id,
+            textMsg: `※알림 ${friendNames}님이 들어왔습니다.`,
+            sendTime: nowTime,
+            senderId: `server`,
+            sendName: `server`,
+          })
+        );
+        const tempMsg = {
+          author: `server`,
+          message: `※알림 ${friendNames}님이 들어왔습니다.`,
+          timestamp: nowTime,
+          name: `server`,
+        };
+        setMessages((prevMessages) => [...prevMessages, tempMsg]);
 
-          alert(`${friendNames}님을 초대했습니다`);
-          setVisible(!visible);
-        })
-        .catch((error) => {
-          console.log(error);
-          alert(error.response.data);
-        });
+        alert(`${friendNames}님을 초대했습니다`);
+        setVisible(!visible);
+      })
+      .catch((error) => {
+        console.log(error);
+        alert(error.response.data);
+      });
   };
 
   // 친구 목록을 가져오는 함수
@@ -396,21 +431,21 @@ export default function MessageList({ props }) {
       },
       withCredentials: true,
     })
-        .then((response) => {
-          let newFriends = response.data.map((result) => {
-            return { id: result.id, name: result.name };
-          });
-          const filteredFriends = newFriends.filter((friend) => {
-            const friendIds = roomPeople.map((person) => person.id);
-            return !friendIds.includes(friend.id);
-          });
-
-          setFriends(filteredFriends);
-        })
-        .catch((error) => {
-          console.log(error);
-          alert(error.response.data);
+      .then((response) => {
+        let newFriends = response.data.map((result) => {
+          return { id: result.id, name: result.name };
         });
+        const filteredFriends = newFriends.filter((friend) => {
+          const friendIds = roomPeople.map((person) => person.id);
+          return !friendIds.includes(friend.id);
+        });
+
+        setFriends(filteredFriends);
+      })
+      .catch((error) => {
+        console.log(error);
+        alert(error.response.data);
+      });
   };
 
   const handleShowFriends = () => {
@@ -427,10 +462,10 @@ export default function MessageList({ props }) {
       setSelectedFriendName([...selectedFriendName, FriendName]);
     } else {
       setSelectedFriends(
-          selectedFriends.filter((friendName) => friendName !== selectedFriend)
+        selectedFriends.filter((friendName) => friendName !== selectedFriend)
       );
       setSelectedFriendName(
-          selectedFriendName.filter((friendName) => friendName !== FriendName)
+        selectedFriendName.filter((friendName) => friendName !== FriendName)
       );
     }
   };
@@ -447,20 +482,19 @@ export default function MessageList({ props }) {
         userIds: selectedFriends,
         roomName: appointment.roomName,
         createTime: new Date().getTime(),
-        date: appointment.date,
         time: appointment.time,
         location: appointment.location,
       },
       withCredentials: true,
     })
-        .then((response) => {
-          console.log(response);
-          setAppoint(!visibleAppoint);
-        })
-        .catch((error) => {
-          console.log(error);
-          alert(error.response.data);
-        });
+      .then((response) => {
+        console.log(response);
+        setAppoint(!visibleAppoint);
+      })
+      .catch((error) => {
+        console.log(error);
+        alert(error.response.data);
+      });
   };
 
   const handleAppointment = () => {
@@ -470,115 +504,129 @@ export default function MessageList({ props }) {
   };
 
   return (
-      <div className="message-list" ref={scrollRef}>
+    <div className="message-list" ref={scrollRef}>
+      <Toolbar
+        title={state.name}
+        rightItems={[
+          <div
+            onClick={() => {
+              setModalIsOpen(true);
+            }}
+          >
+            <ToolbarButton key="menu" icon="ion-ios-menu" />
+          </div>,
+        ]}
+      />
+
+      <div className="message-list-container" ref={scrollRef}>
+        {result}
+
+        <Compose getText={getText} MY_USER_ID={MY_USER_ID} MY_NAME={MY_NAME} />
+      </div>
+      <ReactModal
+        isOpen={modalIsOpen}
+        onRequestClose={() => setModalIsOpen(false)}
+        className={`modal ${modalIsOpen ? "open" : ""}`}
+        overlayClassName={`overlay ${modalIsOpen ? "open" : ""}`}
+      >
         <Toolbar
-            title={state.name}
-            rightItems={[
-              <div
-                  onClick={() => {
-                    setModalIsOpen(true);
-                  }}
-              >
-                <ToolbarButton key="menu" icon="ion-ios-menu" />
-              </div>,
-            ]}
+          title={"메뉴"}
+          rightItems={[
+            <div
+              onClick={() => {
+                if (window.confirm(`이 채팅방을 나가시겠습니까?`)) {
+                  setModalIsOpen(false);
+                  outRoom();
+                  // setReviewIsOpen(true);
+                }
+              }}
+            >
+              <ToolbarButton key="exit" icon="ion-ios-exit" />
+            </div>,
+          ]}
         />
 
-        <div className="message-list-container" ref={scrollRef}>
-          {result}
-
-          <Compose getText={getText} MY_USER_ID={MY_USER_ID} MY_NAME={MY_NAME} />
-        </div>
-        <ReactModal
-            isOpen={modalIsOpen}
-            onRequestClose={() => setModalIsOpen(false)}
-            className={`modal ${modalIsOpen ? "open" : ""}`}
-            overlayClassName={`overlay ${modalIsOpen ? "open" : ""}`}
-        >
-          <Toolbar
-              title={"메뉴"}
-              rightItems={[
-                <div
-                    onClick={() => {
-                      if (window.confirm(`이 채팅방을 나가시겠습니까?`)) {
-                        setModalIsOpen(false);
-                        outRoom();
-                        // setReviewIsOpen(true);
-                      }
-                    }}
-                >
-                  <ToolbarButton key="exit" icon="ion-ios-exit" />
-                </div>,
-              ]}
-          />
-
-          <div className="modal-content">
-            <div className="room-info">
-              <div>채팅방 정보: {state.name}</div>
-              <div className="room-people">
-                {roomPeople.map((friend) => (
-                    <FriendList key={friend.name} data={friend} />
-                ))}
-              </div>
+        <div className="modal-content">
+          <div className="room-info">
+            <div>채팅방 정보: {state.name}</div>
+            <div className="room-people">
+              {roomPeople.map((friend) => (
+                <FriendList key={friend.name} data={friend} />
+              ))}
             </div>
             <div className="appointment-info">
               <div>
-                약속 날짜:
-                <input
-                    type="date"
-                    name="date"
-                    value={appointment.date}
-                    onChange={handleAppointmentChange}
+                약속 시간
+                <Space direction="vertical" size={12}>
+                  <DatePicker
+                    showTime={{
+                      format: "HH:mm",
+                    }}
+                    format="YYYY-MM-DD HH:mm"
+                    onChange={onChange}
+                    onOk={onOk}
+                  />
+                </Space>
+              </div>
+              {/* <div>
+                약속 시간
+                <TimePicker
+                  type="time"
+                  name="time"
+                  onChange={setTime}
+                  value={appointment.time}
+                  defaultValue={dayjs("12:08", format)}
+                  format={format}
+                />
+              </div> */}
+              <div>
+                약속 장소
+                <Input
+                  placeholder="약속장소"
+                  name="location"
+                  value={appointment.location}
+                  onChange={handleAppointmentChange}
                 />
               </div>
               <div>
-                약속 시간:
-                <input
-                    type="time"
-                    name="time"
-                    value={appointment.time}
-                    onChange={handleAppointmentChange}
-                />
-              </div>
-              <div>
-                약속 장소:
-                <input
-                    type="text"
-                    name="location"
-                    value={appointment.location}
-                    onChange={handleAppointmentChange}
-                />
-              </div>
-              <div>
-                약속 이름:
-                <input
-                    type="text"
-                    name="roomName"
-                    value={appointment.roomName}
-                    onChange={handleAppointmentChange}
+                약속 이름
+                <Input
+                  placeholder="약속이름"
+                  name="roomName"
+                  value={appointment.roomName}
+                  onChange={handleAppointmentChange}
                 />
               </div>
             </div>
             <div className="button-group">
-              <Button className="appointment-button" onClick={handleAppointment}>
-                약속 잡기
+              <Button
+                type="primary"
+                className="appointment-button"
+                onClick={handleAppointment}
+              >
+                약속잡기
               </Button>
-              <Button className="invite-button" onClick={handleShowFriends}>
-                친구 초대
+              <Button
+                type="primary"
+                className="invite-button"
+                onClick={handleShowFriends}
+              >
+                친구초대
               </Button>
             </div>
-            {visible && renderFriendsList()}
             {visibleAppoint && renderAppointmentList()}
+            {visible && renderFriendsList()}
           </div>
-        </ReactModal>
-        <ReactModal
-            isOpen={reviewIsOpen}
-            onRequestClose={() => setReviewIsOpen(false)}
-            className={`modal ${reviewIsOpen ? "open" : ""}`}
-            overlayClassName={`overlay ${reviewIsOpen ? "open" : ""}`}
-        >
-          <Review />
-        </ReactModal>
-      </div>
+        </div>
+      </ReactModal>
+      <ReactModal
+        isOpen={reviewIsOpen}
+        onRequestClose={() => setReviewIsOpen(false)}
+        className={`modal ${reviewIsOpen ? "open" : ""}`}
+        overlayClassName={`overlay ${reviewIsOpen ? "open" : ""}`}
+      >
+        <Review id={id} roomPeople={roomPeople} />
+      </ReactModal>
+    </div>
   );
 }

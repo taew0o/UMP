@@ -23,9 +23,11 @@ const ConversationListItem = (props) => {
 
   const clickHandler = () => {
     console.log(name);
-    navigate(`/room/${id}`, { state: { id, name, member, createTime } });
+    navigate(`/room/${id}`, {
+      state: { id, name, member, createTime, isAppoint, date, time },
+    });
   };
-  const { id, member, name, createTime, isAppoint } = props.data;
+  const { id, member, name, createTime, isAppoint, date, time } = props.data;
 
   const getRandomColor = () => {
     const colors = [
