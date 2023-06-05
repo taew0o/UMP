@@ -35,7 +35,7 @@ class MessageServiceTest {
         User user = userService.findUser("taewoo9240");
         ChattingRoom chattingRoom = chattingRoomService.findRoom(id);
         String text = "반갑습니다";
-        messageService.createMessage(text,user,chattingRoom, Long.parseLong("sdfsf"));
+        messageService.createMessage(text,user,chattingRoom, Long.parseLong("20230602181822111"));
     }
 
     @Test
@@ -50,6 +50,8 @@ class MessageServiceTest {
     }
 
     @Test
-    void findMessage() {
+    @Rollback(value = false)
+    void filterMessage() {
+        
     }
 }
