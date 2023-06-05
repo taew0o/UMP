@@ -3,6 +3,7 @@ package ppkjch.ump.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.util.List;
 
 
 @EnableScheduling
+@EnableAsync
 @RequiredArgsConstructor
 @Service
 public class AppointmentService {
@@ -47,7 +49,7 @@ public class AppointmentService {
     @Scheduled(initialDelay = 10000, fixedDelay = 1000000)
     @Async //initialDelay 후 병렬적으로 실행
     @Transactional
-    public void explodeRoom() throws InterruptedException{
+    public void explodeRoom(ChattingRoom cr) throws InterruptedException{
         //관련 userChatting 정보 모두 삭제
         //jpaChattingRoomRepository.removeRoom(cr);
         //관련 메세지 정보 모두 삭제
