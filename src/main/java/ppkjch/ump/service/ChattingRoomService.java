@@ -122,4 +122,8 @@ public class ChattingRoomService {
         result.sort(comparator);
         return result;
     }
+
+    public List<User> findRoomMember(ChattingRoom cr){
+        return jpaChattingRoomRepository.findUserByRoom(cr);
+    }
 }
