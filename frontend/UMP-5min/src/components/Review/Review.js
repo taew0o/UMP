@@ -3,15 +3,43 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Review.css"; // Review 컴포넌트를 위한 CSS 파일 import
 import React from "react";
-const Review = () => {
-  const navigate = useNavigate();
-  const toChat = () => {
-    navigate("/");
-  };
-  const user = ["박태우", "이새롬", "박지후"];
+import axios from "axios";
 
-  const initialUserReviews = user.map((userName) => ({
-    name: userName,
+//props = roomPeople에 방에 있는 사람 정보 다 들어있음
+const Review = (props) => {
+  const navigate = useNavigate();
+  const onFinish = () => {
+    const review = userReviews.map((value) => ({
+      userId: value.id,
+      numAttend: value.attend,
+      numLate: value.late,
+      numNotAttend: value.absence,
+    }));
+    axios({
+      method: "post",
+      url: "/appointment-score",
+      headers: {
+        "Content-Type": `application/json`,
+      },
+      data: {
+        evaluateAppointmentDTOs: review,
+      },
+      withCredentials: true,
+    })
+      .then((response) => {
+        console.log("----------------", response);
+      })
+      .catch((error) => {
+        console.log(error);
+        alert(error.response.data);
+      });
+    // navigate("/");
+  };
+  const users = props.roomPeople;
+
+  const initialUserReviews = users.map((user) => ({
+    id: user.id,
+    name: user.name,
     attend: 0,
     late: 0,
     absence: 0,
@@ -80,10 +108,10 @@ const Review = () => {
       <div className="review-heading">평가</div>
       <div className="user-review">{userReview}</div>
       <span className="total-stats">
-        총 인원 {user.length}명 (참석 {totalAttend}명 / 지각 {totalLate}명 /
+        총 인원 {users.length}명 (참석 {totalAttend}명 / 지각 {totalLate}명 /
         불참 {totalAbsence}명)
       </span>
-      <Button className="to-chat-button" onClick={toChat}>
+      <Button className="to-chat-button" onClick={onFinish}>
         제출
       </Button>
     </div>

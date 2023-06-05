@@ -108,6 +108,17 @@ export default function MessageList({ props }) {
       getMessages();
       getRoomPeople();
       getFriends();
+      if (state.isAppoint) {
+        const currentDate = new Date();
+        const appointmentDate = new Date(state.date + " " + state.time);
+
+        if (currentDate > appointmentDate) {
+          console.log("약속 시간이 이미 지났습니다.");
+          setReviewIsOpen(true);
+        } else {
+          console.log("약속 시간이 아직 남았습니다.");
+        }
+      }
     }
     scrollToBottom();
     window.addEventListener("load", scrollToBottom); // 페이지 로드될 때 스크롤 이벤트 처리
@@ -169,6 +180,7 @@ export default function MessageList({ props }) {
         response.data.map((value) => {
           setRoomPeople((prevPeople) => [...prevPeople, value]);
         });
+        console.log(roomPeople);
       })
       .catch((error) => {
         console.log(error);
@@ -609,7 +621,7 @@ export default function MessageList({ props }) {
         className={`modal ${reviewIsOpen ? "open" : ""}`}
         overlayClassName={`overlay ${reviewIsOpen ? "open" : ""}`}
       >
-        <Review />
+        <Review props={roomPeople} />
       </ReactModal>
     </div>
   );

@@ -47,6 +47,8 @@ export default function ConversationList(props) {
               createTime: value.createTime,
               id: value.id,
               isAppoint: value.date ? true : false,
+              date: value.date ? value.date : null,
+              time: value.time ? value.time : null,
             };
             acc.push(newChatRoom);
           }
