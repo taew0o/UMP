@@ -40,4 +40,5 @@ public class JpaFriendRequestRepository {
                 .setParameter("receiver",receiver)
                 .executeUpdate();
     }
+
 }
