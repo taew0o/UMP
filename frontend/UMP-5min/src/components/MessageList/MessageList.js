@@ -17,6 +17,8 @@ export default function MessageList({ props }) {
   const MY_USER_ID = props.id;
   const MY_NAME = props.name;
 
+  const scrollRef = useRef();
+
   const [messages, setMessages] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
@@ -40,6 +42,7 @@ export default function MessageList({ props }) {
   const ws = useRef(null);
 
   useEffect(() => {
+    scrollToBottom();
     localStorage.setItem("location", "room");
     if (!ws.current) {
       ws.current = new WebSocket(webSocketUrl);
@@ -100,7 +103,18 @@ export default function MessageList({ props }) {
 
   useEffect(() => {
     renderMessages();
+    scrollToBottom();
   }, [messages]);
+
+  const scrollToBottom = () => {
+    if (scrollRef.current) {
+      // scrollRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+      window.scrollBy({
+        top: 2200,
+        behavior: "smooth", // 스크롤 애니메이션 적용 (optional)
+      });
+    }
+  };
 
   const getText = (prop) => {
     setText(prop);
@@ -341,7 +355,7 @@ export default function MessageList({ props }) {
     }
   };
   return (
-    <div className="message-list">
+    <div className="message-list" ref={scrollRef}>
       <Toolbar
         title={state.name}
         rightItems={[
@@ -355,10 +369,11 @@ export default function MessageList({ props }) {
         ]}
       />
 
-      <div className="message-list-container">{result}</div>
+      <div className="message-list-container" ref={scrollRef}>
+        {result}
 
-      <Compose getText={getText} MY_USER_ID={MY_USER_ID} MY_NAME={MY_NAME} />
-
+        <Compose getText={getText} MY_USER_ID={MY_USER_ID} MY_NAME={MY_NAME} />
+      </div>
       <ReactModal
         isOpen={modalIsOpen}
         onRequestClose={() => setModalIsOpen(false)}
