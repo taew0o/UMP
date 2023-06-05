@@ -15,6 +15,7 @@ import ppkjch.ump.exception.FriendRequestExistException;
 import ppkjch.ump.repository.JpaFriendRepository;
 import ppkjch.ump.repository.JpaFriendRequestRepository;
 import ppkjch.ump.repository.JpaUserRepository;
+import java.util.List;
 @Transactional
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
@@ -26,28 +27,6 @@ class FriendServiceTest {
     User U = new User();
     User M = new User();
     User P = new User();
-
-    @Test
-    @Rollback(value = false)
-    void findFriendList() {
-        U.setId("alexander");
-        U.setPassword("123");
-        U.setName("arnold");
-        U.setPhone_num("01012345678");
-        userService.join(U);
-        M.setId("jordan");
-        M.setPassword("456");
-        M.setName("henderson");
-        M.setPhone_num("01012345678");
-        userService.join(M);
-        P.setId("mohamed");
-        P.setPassword("789");
-        P.setName("salah");
-        P.setPhone_num("01012345678");
-        userService.join(P);
-
-
-    }
 
     @Test
     @Rollback(value = false)
@@ -80,17 +59,23 @@ class FriendServiceTest {
         U.setName("arnold");
         U.setPhone_num("01012345678");
         userService.join(U);
+
         M.setId("jordan");
         M.setPassword("456");
         M.setName("henderson");
         M.setPhone_num("01012345678");
         userService.join(M);
+
         P.setId("mohamed");
         P.setPassword("789");
         P.setName("salah");
         P.setPhone_num("01012345678");
         userService.join(P);
 
+        friendService.request(U,M);
+        friendService.request(U,P);
+
+        System.out.println(friendService.findFriendRequestList(U));
     }
 
     @Test
