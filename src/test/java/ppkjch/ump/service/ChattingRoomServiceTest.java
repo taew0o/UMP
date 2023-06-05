@@ -69,11 +69,8 @@ class ChattingRoomServiceTest {
     }
 
     @Test
-    void testFindRoom() {
-    }
-
-    @Test
     void goOutRoom() {
+
     }
 
     @Test

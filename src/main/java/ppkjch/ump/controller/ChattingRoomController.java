@@ -108,7 +108,7 @@ public class ChattingRoomController {
         // 세션에서 유저 ID 가져오기
         HttpSession session = request.getSession(false);
         String userId = (String)session.getAttribute("userId");
-        // 유저 ID를 사용하여 유저 정보 조회
+        // 유저 ID를 사용하여 유저 정보 조회 (로그인 한 유저)
         User user = userService.findUser(userId);
         ChattingRoom chattingRoom = chattingRoomService.findRoom(roomId);
         //해당 방 ID로 유저채팅룸 객체 가져와서 user의 입장 시간 알아내기 (나중에 리팩토링 필요할듯)
@@ -116,12 +116,15 @@ public class ChattingRoomController {
         Long enterTime = null;
         System.out.println("userChattingRooms = " + userChattingRooms.size());
         for (UserChattingRoom ucr:userChattingRooms) {
-            if(ucr.getUser().getId().equals(user.getId())); //해당 유저의 해당 방 입장시간을 가저옴
+            if(ucr.getUser().getId().equals(user.getId())) {//해당 유저의 해당 방 입장시간을 가저옴
 
                 enterTime = ucr.getEnterTime();
-                System.out.println("ucr = " + user.getId());
+                System.out.println(ucr.getUser().getId().equals(user.getId()));
+                System.out.println("user = " + user.getId());
+                System.out.println("ucr = " + ucr.getUser().getId());
                 System.out.println("ucr = " + enterTime);
                 break;
+            }
         }
 
         //roomId에 해당하는 메세지 가저오기
