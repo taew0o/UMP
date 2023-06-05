@@ -14,7 +14,6 @@ public class MakeAppointmentRoomDTO {
     private String roomName;
     private Long createTime;
 
-    private String date;
     private String time;
     private String location;
 }

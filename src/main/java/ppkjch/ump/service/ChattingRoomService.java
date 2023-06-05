@@ -128,4 +128,8 @@ public class ChattingRoomService {
     public List<User> findRoomMember(ChattingRoom cr){
         return jpaChattingRoomRepository.findUserByRoom(cr);
     }
+
+    public UserChattingRoom findUserChattingRoom(User user, ChattingRoom chattingRoom){
+        return jpaChattingRoomRepository.findUserChatRoomByUser(user, chattingRoom).get(0);
+    }
 }
