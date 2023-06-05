@@ -5,26 +5,31 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Time;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Entity
 @Setter
 @Getter
 public class AppointmentChattingRoom extends ChattingRoom{
-    @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime apt_time;
 
+    private String date;
+    private String time;
+    private String location;
 
-    public static AppointmentChattingRoom createAppointmentChattingRoom(int numPerson, List<UserChattingRoom> userChattingRooms, String roomName, LocalDateTime aptTime){
+    public static AppointmentChattingRoom createAppointmentChattingRoom(int numPerson, List<UserChattingRoom> userChattingRooms
+            , String roomName, String date, String time, String location){
         AppointmentChattingRoom appointmentChattingRoom = new AppointmentChattingRoom();
         appointmentChattingRoom.setNumPerson(numPerson);
-        appointmentChattingRoom.setCreateTime(LocalDateTime.now());
+        appointmentChattingRoom.setDate(date);
+        appointmentChattingRoom.setTime(time);
+        appointmentChattingRoom.setLocation(location);
         appointmentChattingRoom.setChattingRoomName(roomName);
         for(UserChattingRoom ucr : userChattingRooms){
             appointmentChattingRoom.addUserChattingRoom(ucr);
         }
-        appointmentChattingRoom.setApt_time(aptTime);
         return appointmentChattingRoom;
 
     }

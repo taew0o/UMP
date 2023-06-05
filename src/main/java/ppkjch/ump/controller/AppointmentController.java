@@ -8,8 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import ppkjch.ump.dto.MakeAppointmentRoomDTO;
 import ppkjch.ump.dto.MakeRoomDTO;
 import ppkjch.ump.entity.User;
 import ppkjch.ump.exception.RoomFullException;
@@ -28,7 +30,7 @@ public class AppointmentController {
     private final ChattingRoomService chattingRoomService;
 
     @PostMapping("/appointmentroom")
-    public ResponseEntity<?> makeChattingRoom(HttpServletRequest request, @RequestBody MakeRoomDTO roomInfo){
+    public ResponseEntity<?> makeChattingRoom(HttpServletRequest request, @RequestBody MakeAppointmentRoomDTO roomInfo){
         // 세션에서 유저 ID 가져오기
         HttpSession session = request.getSession(false);
         String userId = (String)session.getAttribute("userId");
@@ -43,11 +45,14 @@ public class AppointmentController {
         }
         //유저 정보로 채팅방 만들기
         try{
-            Long chattingRoomId = chattingRoomService.makeRoom(users, roomInfo.getRoomName(), roomInfo.getCreateTime());
+            Long chattingRoomId = appointmentService.saveAppointment(users, roomInfo.getRoomName(), roomInfo.getCreateTime(), roomInfo.getDate(), roomInfo.getTime(), roomInfo.getLocation());
             return new ResponseEntity<Long>(chattingRoomId, HttpStatus.OK);
         }
         catch (RoomFullException e){
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+//    @GetMapping("/appintment")
+//    public ResponseEntity<?> getAppointment()
 }
