@@ -15,6 +15,7 @@ public class AppointmentChattingRoom extends ChattingRoom{
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime apt_time;
 
+
     public static AppointmentChattingRoom createAppointmentChattingRoom(int numPerson, List<UserChattingRoom> userChattingRooms, String roomName, LocalDateTime aptTime){
         AppointmentChattingRoom appointmentChattingRoom = new AppointmentChattingRoom();
         appointmentChattingRoom.setNumPerson(numPerson);
