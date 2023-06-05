@@ -12,9 +12,25 @@ import Review from "../Review/Review";
 import { Button, Checkbox } from "antd";
 import axios from "axios";
 import FriendList from "../FriendList/FriendList";
+import { DatePicker, Space, TimePicker, Input, Modal } from "antd";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+
+dayjs.extend(customParseFormat);
+const { RangePicker } = DatePicker;
+const dateFormat = "YYYY/MM/DD";
+const weekFormat = "MM/DD";
+const monthFormat = "YYYY/MM";
+
+dayjs.extend(customParseFormat);
 
 //채팅방 구현
 export default function MessageList({ props }) {
+  dayjs.extend(customParseFormat);
+  const { RangePicker } = DatePicker;
+  const dateFormat = "YYYY/MM/DD";
+  const weekFormat = "MM/DD";
+  const monthFormat = "YYYY/MM";
   const MY_USER_ID = props.id;
   const MY_NAME = props.name;
 
@@ -40,7 +56,15 @@ export default function MessageList({ props }) {
   const [selectedFriendName, setSelectedFriendName] = useState([]);
   const [visible, setVisible] = useState(false);
   const [visibleAppoint, setAppoint] = useState(false);
-
+  const dateFormatList = ["DD/MM/YYYY", "DD/MM/YY", "DD-MM-YYYY", "DD-MM-YY"];
+  const customFormat = (value) => `custom format: ${value.format(dateFormat)}`;
+  const customWeekStartEndFormat = (value) =>
+    `${dayjs(value).startOf("week").format(weekFormat)} ~ ${dayjs(value)
+      .endOf("week")
+      .format(weekFormat)}`;
+  const onChange = (time, timeString) => {
+    console.log(time, timeString);
+  };
   const [appointment, setAppointment] = useState({
     date: "",
     time: "",
@@ -523,55 +547,60 @@ export default function MessageList({ props }) {
                 <FriendList key={friend.name} data={friend} />
               ))}
             </div>
+            <div className="appointment-info">
+              <div>
+                약속 날짜
+                <Space direction="vertical" size={12}>
+                  <DatePicker
+                    defaultValue={dayjs("0000/00/00", dateFormat)}
+                    format={dateFormat}
+                  />
+                </Space>
+              </div>
+              <div>
+                약속 시간
+                <TimePicker
+                  onChange={onChange}
+                  value={appointment.time}
+                  defaultOpenValue={moment("00:00:00", "HH:mm:ss")}
+                />
+              </div>
+              <div>
+                약속 장소
+                <Input
+                  placeholder="약속장소"
+                  value={appointment.location}
+                  onChange={handleAppointmentChange}
+                />
+              </div>
+              <div>
+                약속 이름
+                <Input
+                  placeholder="약속이름"
+                  value={appointment.roomName}
+                  onChange={handleAppointmentChange}
+                />
+              </div>
+            </div>
+            <div className="button-group">
+              <Button
+                type="primary"
+                className="appointment-button"
+                onClick={handleAppointment}
+              >
+                약속잡기
+              </Button>
+              <Button
+                type="primary"
+                className="invite-button"
+                onClick={handleShowFriends}
+              >
+                친구초대
+              </Button>
+            </div>
+            {visibleAppoint && renderAppointmentList()}
+            {visible && renderFriendsList()}
           </div>
-          <div className="appointment-info">
-            <div>
-              약속 날짜:
-              <input
-                type="date"
-                name="date"
-                value={appointment.date}
-                onChange={handleAppointmentChange}
-              />
-            </div>
-            <div>
-              약속 시간:
-              <input
-                type="time"
-                name="time"
-                value={appointment.time}
-                onChange={handleAppointmentChange}
-              />
-            </div>
-            <div>
-              약속 장소:
-              <input
-                type="text"
-                name="location"
-                value={appointment.location}
-                onChange={handleAppointmentChange}
-              />
-            </div>
-            <div>
-              약속 이름:
-              <input
-                type="text"
-                name="roomName"
-                value={appointment.roomName}
-                onChange={handleAppointmentChange}
-              />
-            </div>
-          </div>
-          <div className="button-group">
-            <Button className="appointment-button" onClick={handleAppointment}>
-              약속 잡기
-            </Button>
-            <Button className="invite-button" onClick={handleShowFriends}>
-              친구 초대
-            </Button>
-          </div>
-          {visible && renderFriendsList()}
-          {visibleAppoint && renderAppointmentList()}
         </div>
       </ReactModal>
       <ReactModal
