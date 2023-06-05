@@ -9,7 +9,7 @@ import "./MessageList.css";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import ReactModal from "react-modal";
 import Review from "../Review/Review";
-import { Button, Checkbox } from "antd";
+import { Button, Checkbox, Form } from "antd";
 import axios from "axios";
 import FriendList from "../FriendList/FriendList";
 import { DatePicker, Space, TimePicker, Input, Modal } from "antd";
@@ -18,19 +18,11 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 
 dayjs.extend(customParseFormat);
 const { RangePicker } = DatePicker;
-const dateFormat = "YYYY/MM/DD";
-const weekFormat = "MM/DD";
-const monthFormat = "YYYY/MM";
-
-
 
 //채팅방 구현
 export default function MessageList({ props }) {
-
   const MY_USER_ID = props.id;
   const MY_NAME = props.name;
-  
-  const format = 'HH:mm';
 
   const scrollRef = useRef();
 
@@ -54,17 +46,23 @@ export default function MessageList({ props }) {
   const [selectedFriendName, setSelectedFriendName] = useState([]);
   const [visible, setVisible] = useState(false);
   const [visibleAppoint, setAppoint] = useState(false);
- 
-  const customFormat = (value) => `custom format: ${value.format(dateFormat)}`;
-  const customWeekStartEndFormat = (value) =>
-    `${dayjs(value).startOf("week").format(weekFormat)} ~ ${dayjs(value)
-      .endOf("week")
-      .format(weekFormat)}`;
+
   const onChange = (time, timeString) => {
     console.log(time, timeString);
+    setAppointment((prevAppointment) => ({
+      ...prevAppointment,
+      time: timeString,
+    }));
+  };
+
+  const onOk = (time, timeString) => {
+    console.log(time, timeString);
+    setAppointment((prevAppointment) => ({
+      ...prevAppointment,
+      time: timeString,
+    }));
   };
   const [appointment, setAppointment] = useState({
-    date: dayjs("0000/00/00", dateFormat),
     time: "",
     location: "",
     roomName: "",
@@ -108,7 +106,7 @@ export default function MessageList({ props }) {
       getFriends();
       if (state.isAppoint) {
         const currentDate = new Date();
-        const appointmentDate = new Date(state.date + " " + state.time);
+        const appointmentDate = new Date(state.time);
 
         if (currentDate > appointmentDate) {
           console.log("약속 시간이 이미 지났습니다.");
@@ -153,19 +151,6 @@ export default function MessageList({ props }) {
     renderMessages();
     scrollToBottom();
   }, [messages]);
-  
-  const setTime = (value) => {
-    setAppointment((prevAppointment) => ({
-      ...prevAppointment,
-      time: value,
-    }));
-  };
-  const setDate = (value) => {
-    setAppointment((prevAppointment) => ({
-      ...prevAppointment,
-      date: value,
-    }));
-  };
 
   const handleAppointmentChange = (event) => {
     const { name, value } = event.target;
@@ -497,7 +482,6 @@ export default function MessageList({ props }) {
         userIds: selectedFriends,
         roomName: appointment.roomName,
         createTime: new Date().getTime(),
-        date: appointment.date,
         time: appointment.time,
         location: appointment.location,
       },
@@ -518,7 +502,6 @@ export default function MessageList({ props }) {
     setSelectedFriendName([]);
     setAppoint(!visibleAppoint);
   };
-  
 
   return (
     <div className="message-list" ref={scrollRef}>
@@ -573,27 +556,29 @@ export default function MessageList({ props }) {
             </div>
             <div className="appointment-info">
               <div>
-                약속 날짜
+                약속 시간
                 <Space direction="vertical" size={12}>
                   <DatePicker
-                    type="date"
-                    name="date"
-                    value={appointment.date}
-                    format={dateFormat}
-                    onChange={setDate}
+                    showTime={{
+                      format: "HH:mm",
+                    }}
+                    format="YYYY-MM-DD HH:mm"
+                    onChange={onChange}
+                    onOk={onOk}
                   />
                 </Space>
               </div>
-              <div>
+              {/* <div>
                 약속 시간
                 <TimePicker
                   type="time"
                   name="time"
                   onChange={setTime}
                   value={appointment.time}
-                  defaultValue={dayjs('12:08', format)} format={format} 
+                  defaultValue={dayjs("12:08", format)}
+                  format={format}
                 />
-              </div>
+              </div> */}
               <div>
                 약속 장소
                 <Input
@@ -616,7 +601,6 @@ export default function MessageList({ props }) {
             <div className="button-group">
               <Button
                 type="primary"
-                
                 className="appointment-button"
                 onClick={handleAppointment}
               >
@@ -641,7 +625,7 @@ export default function MessageList({ props }) {
         className={`modal ${reviewIsOpen ? "open" : ""}`}
         overlayClassName={`overlay ${reviewIsOpen ? "open" : ""}`}
       >
-        <Review props={roomPeople} />
+        <Review id={id} roomPeople={roomPeople} />
       </ReactModal>
     </div>
   );

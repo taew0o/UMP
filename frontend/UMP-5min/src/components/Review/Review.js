@@ -22,6 +22,7 @@ const Review = (props) => {
         "Content-Type": `application/json`,
       },
       data: {
+        roomId: props.id,
         evaluateAppointmentDTOs: review,
       },
       withCredentials: true,
