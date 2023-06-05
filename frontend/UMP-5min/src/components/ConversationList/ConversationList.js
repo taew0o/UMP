@@ -16,6 +16,7 @@ export default function ConversationList(props) {
   const [visible, setVisible] = useState(false);
   const [searchValue, setSearchValue] = useState(""); // New state for search value
   const [filteredConversations, setFilteredConversations] = useState([]); // New state for filtered conversations
+  const [isAppoint, setAppoint] = useState([]);
 
   useEffect(() => {
     getConversations();
@@ -45,6 +46,7 @@ export default function ConversationList(props) {
               member: value.numPerson,
               createTime: value.createTime,
               id: value.id,
+              isAppoint: value.date ? true : false,
             };
             acc.push(newChatRoom);
           }
