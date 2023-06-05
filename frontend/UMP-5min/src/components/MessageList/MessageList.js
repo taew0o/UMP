@@ -12,7 +12,7 @@ import Review from "../Review/Review";
 import { Button, Checkbox } from "antd";
 import axios from "axios";
 import FriendList from "../FriendList/FriendList";
-import { DatePicker, Space, TimePicker, Input } from 'antd';
+import { DatePicker, Space, TimePicker, Input, Modal} from 'antd';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 
