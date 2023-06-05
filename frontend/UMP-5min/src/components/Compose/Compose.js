@@ -1,8 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./Compose.css";
 
 export default function Compose(props) {
   const [msg, setMsg] = useState("");
+
+  const scrollRef = useRef();
+
+  useEffect(() => {
+    scrollToBottom();
+  }, []);
+
+  const scrollToBottom = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+    }
+  };
 
   const sendMessage = (e) => {
     // 메시지가 비어있는지 확인하세요.
@@ -19,7 +31,7 @@ export default function Compose(props) {
   };
 
   return (
-    <div className="compose">
+    <div className="compose" ref={scrollRef}>
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -46,7 +58,6 @@ export default function Compose(props) {
             }
           }}
         />
-        {/* <input type="submit" value="제출" /> */}
       </form>
 
       {props.rightItems}

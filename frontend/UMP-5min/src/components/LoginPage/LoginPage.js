@@ -31,6 +31,7 @@ const LoginPage = () => {
       .then((response) => {
         console.log("--------------------", response);
         console.log(document.cookie);
+        localStorage.setItem("location", "notRoom");
         toHome();
       })
       .catch(function (error) {

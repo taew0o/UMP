@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import ppkjch.ump.dto.GetMessageDTO;
 import ppkjch.ump.dto.MakeRoomDTO;
 import ppkjch.ump.dto.InviteRoomDTO;
+import ppkjch.ump.dto.RoomIdDTO;
 import ppkjch.ump.entity.ChattingRoom;
 import ppkjch.ump.entity.Message;
 import ppkjch.ump.entity.User;
@@ -83,9 +84,19 @@ public class ChattingRoomController {
         } catch (RoomFullException e) {
             return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
         }
-
         return ResponseEntity.status(HttpStatus.CREATED).body("성공적으로 초대");
 
+    }
+    @GetMapping("/chattingroom/members")
+    public ResponseEntity<List<User>> getMembers(@RequestParam(name = "roomId") Long roomId){
+        //방 id로 방 찾기
+        ChattingRoom room = chattingRoomService.findRoom(roomId);
+
+        //방에 있는 유저들 찾기
+        List<User> members = chattingRoomService.findRoomMember(room);
+
+        //찾으 유저 정보 넘겨주
+        return ResponseEntity.status(HttpStatus.CREATED).body(members);
     }
 
     @DeleteMapping("/chattingroom/member")
@@ -114,16 +125,10 @@ public class ChattingRoomController {
         //해당 방 ID로 유저채팅룸 객체 가져와서 user의 입장 시간 알아내기 (나중에 리팩토링 필요할듯)
         List<UserChattingRoom> userChattingRooms = chattingRoom.getUserChattingRooms();
         Long enterTime = null;
-        System.out.println("userChattingRooms = " + userChattingRooms.size());
-        System.out.println(userChattingRooms.get(0).getUser().getId()+"  " + userChattingRooms.get(0).getEnterTime());
-        System.out.println(userChattingRooms.get(1).getUser().getId()+"  " + userChattingRooms.get(1).getEnterTime());
+
         for (UserChattingRoom ucr:userChattingRooms) {
             if( ucr.getUser().getId().equals(user.getId())) {//해당 유저의 해당 방 입장시간을 가저옴
                 enterTime = ucr.getEnterTime();
-                System.out.println("ucr.getUser() = " + ucr.getUser().getId());
-                System.out.println("ucr.getEnterTime() = " + ucr.getEnterTime());
-                System.out.println("ucr = " + user.getId());
-                System.out.println("ucr = " + enterTime);
                 break;
             }
         }
@@ -148,3 +153,4 @@ public class ChattingRoomController {
         return ResponseEntity.status(HttpStatus.OK).body(messageDTOs);
     }
 }
+

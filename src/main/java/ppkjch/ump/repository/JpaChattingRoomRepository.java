@@ -34,6 +34,12 @@ public class JpaChattingRoomRepository {
                 .getResultList();
     }
 
+    public List<User> findUserByRoom(ChattingRoom cr){
+        return em.createQuery( "select ucr.user from UserChattingRoom ucr where ucr.chattingRoom = :cr", User.class)
+                .setParameter("cr", cr)
+                .getResultList();
+    }
+
     public List<ChattingRoom> findChattingRoomByUser(User user){
         return em.createQuery( "select ucr.chattingRoom from UserChattingRoom ucr where ucr.user = :user", ChattingRoom.class)
                 .setParameter("user", user)
