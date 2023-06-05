@@ -1,6 +1,6 @@
-import React from 'react';
-import moment from 'moment';
-import './Message.css';
+import React from "react";
+import moment from "moment";
+import "./Message.css";
 
 export default function Message(props) {
   const {
@@ -9,7 +9,7 @@ export default function Message(props) {
     startsSequence,
     endsSequence,
     showTimestamp,
-    senderName // Add the sender's name as a prop
+    senderName, // Add the sender's name as a prop
   } = props;
 
   let friendlyTimestamp = `${senderName} - ${moment().format("LT")}`;
@@ -26,11 +26,7 @@ export default function Message(props) {
         `${endsSequence ? "end" : ""}`,
       ].join(" ")}
     >
-      {showTimestamp && (
-        <div className="timestamp">
-          {friendlyTimestamp}
-        </div>
-      )}
+      {showTimestamp && <div className="timestamp">{friendlyTimestamp}</div>}
 
       <div className="bubble-container">
         <div className="bubble" title={friendlyTimestamp}>
@@ -38,6 +34,12 @@ export default function Message(props) {
             // Render the sender's name if the message is not from the current user
             <div className="sender-name">{senderName}</div>
           )}
+          <div
+            className="conversation-photo"
+            style={{ backgroundColor: `${localStorage.getItem(senderName)}` }}
+          >
+            <span>{senderName}</span>
+          </div>
           {data.message}
         </div>
       </div>
