@@ -36,14 +36,23 @@ const FriendPage = (props) => {
 
   const myProfile = () => {
     return (
-      <FriendList
-        key={props.myData.id}
-        data={props.myData}
-        MY_USER_ID={props.myData.id}
-      />
+      <>
+        <FriendList
+          key={props.myData.id}
+          data={props.myData}
+          MY_USER_ID={props.myData.id}
+        />
+        <hr
+          style={{
+            margin: "2px 0 10px 0",
+            backgroundColor: "lightgray",
+            height: "1px",
+            border: "none",
+          }}
+        />
+      </>
     );
   };
-
   const openModal = () => {
     setShowAddModal(true);
   };
@@ -293,8 +302,6 @@ const FriendPage = (props) => {
       <FriendSearch handleSearch={handleSearch} />
 
       {myProfile()}
-      <hr style={{ border: "1px solid black" }} />
-
       {friends.length === 0 ? (
         <div style={{ textAlign: "center", marginTop: "20px" }}>
           오른쪽 상단 플러스 버튼을 눌러 친구를 추가해주세요

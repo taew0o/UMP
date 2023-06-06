@@ -30,18 +30,19 @@ const Review = (props) => {
       },
       data: {
         roomId: props.id,
-          evaluationInfoList: review,
+        evaluationInfoList: review,
       },
       withCredentials: true,
     })
       .then((response) => {
         console.log("----------------", response);
+        alert(`평가 완료했습니다`);
       })
       .catch((error) => {
         console.log(error);
         alert(error.response.data);
       });
-    // navigate("/");
+    navigate("/");
   };
   // const users = props.roomPeople;
   // console.log(users);
