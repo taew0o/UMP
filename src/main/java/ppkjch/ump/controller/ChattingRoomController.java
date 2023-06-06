@@ -16,6 +16,7 @@ import ppkjch.ump.entity.ChattingRoom;
 import ppkjch.ump.entity.Message;
 import ppkjch.ump.entity.User;
 import ppkjch.ump.entity.UserChattingRoom;
+import ppkjch.ump.exception.NoFriendSelectedException;
 import ppkjch.ump.exception.RoomFullException;
 import ppkjch.ump.service.ChattingRoomService;
 import ppkjch.ump.service.MessageService;
@@ -51,7 +52,7 @@ public class ChattingRoomController {
             Long chattingRoomId = chattingRoomService.makeRoom(users, roomInfo.getRoomName(), roomInfo.getCreateTime());
             return new ResponseEntity<Long>(chattingRoomId, HttpStatus.OK);
         }
-        catch (RoomFullException e){
+        catch (RoomFullException | NoFriendSelectedException e ){
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -152,5 +153,7 @@ public class ChattingRoomController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(messageDTOs);
     }
+
+
 }
 

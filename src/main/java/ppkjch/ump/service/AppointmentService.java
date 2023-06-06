@@ -7,7 +7,6 @@ import ppkjch.ump.dto.EvaluateAppointmentDTO;
 import ppkjch.ump.entity.*;
 import ppkjch.ump.exception.RoomFullException;
 import ppkjch.ump.repository.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,13 +78,7 @@ public class AppointmentService {
             jpaAppointmentChattingRoomRepository.removeRoom(acr);
         }
 
-        //평가 튜플도 삭제
-        AppointmentEvaluation findAe = jpaAppointmentEvaluationRepository.findAppointmentEvaluationByRoomAndUser(acr, u);
-        jpaAppointmentEvaluationRepository.removeAppointmentEvaluation(findAe);
     }
-
-
-
 
 
     public List<AppointmentChattingRoom> findAppointments(User user){
@@ -123,5 +116,14 @@ public class AppointmentService {
         return jpaAppointmentEvaluationRepository.findAppointmentEvaluationByRoomAndUser(appointmentChattingRoom, user);
     }
 
+
+    public List<User> findUserByAppointmentChattingRoom(AppointmentChattingRoom apcr){
+        List<User> result =  new ArrayList<>();
+        List<AppointmentEvaluation> appointmentEvaluationList = jpaAppointmentEvaluationRepository.findAppointmentEvaluationByRoom(apcr);
+        for(AppointmentEvaluation ape : appointmentEvaluationList){
+            result.add(ape.getUser());
+        }
+        return result;
+    }
 
 }

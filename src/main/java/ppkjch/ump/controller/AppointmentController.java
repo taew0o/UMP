@@ -141,4 +141,17 @@ public class AppointmentController {
         appointmentService.goOutRoom(user,room);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    @GetMapping("/appointment-room/members") //약속 정보를 불러올 때 필요
+    public ResponseEntity<List<User>> getAppointmentRoomMembers(@RequestParam(name ="roomId") Long roomId){
+
+        System.out.println("roomId = " + roomId);
+        AppointmentChattingRoom appointmentChattingRoom = appointmentService.findAppointmentChattingRoom(roomId);
+
+        List<User> users = appointmentService.findUserByAppointmentChattingRoom(appointmentChattingRoom);
+
+        return ResponseEntity.status(HttpStatus.OK).body(users);
+    }
+
+
 }

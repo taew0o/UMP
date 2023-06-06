@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./CalendarPage.css";
 import { Badge, Calendar, Modal, Input, Button, List } from "antd";
+import axios from "axios";
+import moment from "moment";
 
 const CalendarPage = () => {
   const [events, setEvents] = useState([]);
@@ -9,10 +11,16 @@ const CalendarPage = () => {
   const [editEventIndex, setEditEventIndex] = useState(null);
   const [inputValue, setInputValue] = useState("");
 
+  const [newEvent, setNewEvent] = useState([]);
+
   const handleDateClick = (value) => {
     setSelectedDate(value);
     setModalVisible(true);
   };
+
+  useEffect(() => {
+    addAppointment();
+  }, []);
 
   const handleModalCancel = () => {
     setSelectedDate(null);
@@ -20,16 +28,52 @@ const CalendarPage = () => {
     setEditEventIndex(null);
   };
 
+  const addAppointment = () => {
+    axios({
+      method: "get",
+      url: "/appointment",
+      headers: {
+        "Content-Type": `application/json`,
+      },
+      withCredentials: true,
+    })
+      .then((response) => {
+        console.log("----------------", response);
+        const e = response.data
+          .filter((value) => value.time !== "")
+          .map((value) => {
+            const dateOnly = value.time.split(" ")[0];
+            const content = (
+              <div className="content">
+                약속 이름: {value.chattingRoomName}
+                <br />
+                약속 장소: {value.location}
+                <br />
+                약속 시간: {value.time}
+              </div>
+            );
+            const newEvent = { content: content, date: dateOnly };
+            return newEvent;
+          });
+
+        setEvents(e);
+      })
+      .catch((error) => {
+        console.log(error);
+        alert(error.response.data);
+      });
+  };
+
   const dateCellRender = (value) => {
-    const dateEvents = events.filter((event) =>
-      event.date.isSame(value, "day")
-    );
+    const dateEvents = events.filter((event) => {
+      return event.date === value.format("YYYY-MM-DD");
+    });
 
     return (
       <ul className="event-list">
         {dateEvents.map((elem, index) => (
           <li key={index}>
-            <Badge status="success" text={elem.content} />
+            <Badge status="success" text={elem.content} overflowCount={10} />
           </li>
         ))}
       </ul>
@@ -67,10 +111,14 @@ const CalendarPage = () => {
   };
 
   const getDateEvents = () => {
-    return events.filter((event) => event.date.isSame(selectedDate, "day"));
+    if (selectedDate) {
+      return events.filter(
+        (event) => event.date === selectedDate.format("YYYY-MM-DD")
+      );
+    }
+    return [];
   };
 
-  // 이벤트 수정 시 inputValue를 이벤트 내용으로 설정
   useEffect(() => {
     if (editEventIndex !== null) {
       setInputValue(events[editEventIndex].content);
@@ -81,36 +129,20 @@ const CalendarPage = () => {
     <div>
       <Calendar
         className="my-calendar"
-        dateCellRender={dateCellRender}
+        cellRender={dateCellRender}
         onSelect={handleDateClick}
       />
       <Modal
-        title={`event ${selectedDate ? selectedDate.format("YYYY-MM-DD") : ""}`}
+        title={`일정 ${selectedDate ? selectedDate.format("YYYY-MM-DD") : ""}`}
         visible={modalVisible}
         onCancel={handleModalCancel}
         footer={null}
       >
-        <Input
-          placeholder="Enter event"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onPressEnter={() => handleOk()}
-        />
-        <Button onClick={handleOk}>Save</Button>
         <List
           dataSource={getDateEvents()}
           renderItem={(item, index) => (
             <List.Item>
-              <span>{item.content}</span>
-              <Button
-                onClick={() => {
-                  setEditEventIndex(index);
-                  setInputValue(events[index].content);
-                }}
-              >
-                Edit
-              </Button>
-              <Button onClick={() => handleDeleteEvent(index)}>Delete</Button>
+              <span className="event-text">{item.content}</span>
             </List.Item>
           )}
         />
