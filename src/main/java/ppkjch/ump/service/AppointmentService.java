@@ -116,14 +116,4 @@ public class AppointmentService {
         return jpaAppointmentEvaluationRepository.findAppointmentEvaluationByRoomAndUser(appointmentChattingRoom, user);
     }
 
-
-    public List<User> findUserByAppointmentChattingRoom(AppointmentChattingRoom apcr){
-        List<User> result =  new ArrayList<>();
-        List<AppointmentEvaluation> appointmentEvaluationList = jpaAppointmentEvaluationRepository.findAppointmentEvaluationByRoom(apcr);
-        for(AppointmentEvaluation ape : appointmentEvaluationList){
-            result.add(ape.getUser());
-        }
-        return result;
-    }
-
 }
