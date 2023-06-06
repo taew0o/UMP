@@ -64,14 +64,6 @@ class FriendServiceTest {
         U.setPhone_num("01011111111");
         U.setPhone_num("01012345678");
         userService.join(U);
-//        M.setId("jordan");
-//        M.setPassword("456");
-//        M.setName("henderson");
-//        userService.join(M);
-//        P.setId("mohamed");
-//        P.setPassword("789");
-//        P.setName("salah");
-//        userService.join(P);
         M.setId("jordan");
         M.setPassword("456");
         M.setName("henderson");
@@ -83,8 +75,6 @@ class FriendServiceTest {
         P.setPhone_num("01012345678");
         userService.join(P);
         //친구요청
-//        friendService.request(U, M);
-//        friendService.request(M, P);
         friendService.request(U, M);
         friendService.request(P, U);
     }
