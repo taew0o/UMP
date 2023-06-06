@@ -25,6 +25,10 @@ public class User{
     @Embedded
     private AppointmentScore appointmentScore = new AppointmentScore();
 
+    public void updateAppointmentScore(int maxScore){
+        this.getAppointmentScore().applyEvaluate(maxScore);
+    }
+
 }
 
 @Embeddable
@@ -39,4 +43,15 @@ class AppointmentScore{
     private int numNotAttend;
     private int numLate;
 
+    public void applyEvaluate(int maxScore){
+        if(maxScore == 1){
+            this.numAttend += 1;
+        }
+        else if (maxScore == -1) {
+            this.numNotAttend += 1;
+        }
+        else if (maxScore == 0){
+            this.numLate += 1;
+        }
+    }
 }

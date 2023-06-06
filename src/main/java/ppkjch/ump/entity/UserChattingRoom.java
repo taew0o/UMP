@@ -25,15 +25,6 @@ public class UserChattingRoom {
 
     private Long enterTime;
 
-    private int numAttend;
-    private int numNotAttend;
-    private int numLate;
-
-    public void sumScore(int numAttend, int numNotAttend, int numLate){
-        this.numAttend += numAttend;
-        this.numNotAttend += numNotAttend;
-        this.numLate += numLate;
-    }
 
     @Override
     public String toString() {
