@@ -587,7 +587,9 @@ export default function MessageList({ props }) {
           ]}
         />
 
-        <div className="modal-content">
+          <div className="modal-content" style={{ maxHeight: '800px', overflowY: 'auto' }}>
+          
+          
           <div className="room-info">
             <div>채팅방 정보: {state.name}</div>
             <div className="room-people">
