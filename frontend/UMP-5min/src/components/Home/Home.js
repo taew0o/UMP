@@ -80,12 +80,12 @@ const Home = () => {
   }, []);
 
   function setSelectedPage(key) {
+    localStorage.setItem("location", "notRoom");
     setSelectedPageKey(key);
     localStorage.setItem("selectedKey", key);
   }
 
   useEffect(() => {
-    // localStorage.setItem("location", "notRoom");
     renderContent();
   }, [selectedPage]);
 

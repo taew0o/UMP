@@ -13,6 +13,7 @@ export default function Message(props) {
     endsSequence,
     showTimestamp,
     senderName, // Add the sender's name as a prop
+    isServer,
   } = props;
 
   const COLORS = ["#4caf50", "#f44336", "#ff9800"];
@@ -143,7 +144,7 @@ export default function Message(props) {
 
   return (
     <div className="container">
-      {startsSequence && !isMine && (
+      {!isServer && startsSequence && !isMine && (
         <>
           <div
             className="conversation-photo"
@@ -175,12 +176,14 @@ export default function Message(props) {
           footer={null}
         >
           <div className="friend-modal-content">
-            <div className="friend-list-item">
+            <div className="friend-modal-item">
               <div className="friend-photo" style={photoStyle}>
                 {senderName}
               </div>
               <div className="friend-info">
-                <h1 className="friend-title">{senderName}</h1>
+                <h1 className="friend-title">
+                  {senderName + "(" + data.author + ")"}
+                </h1>
               </div>
             </div>
             <div className="attendance-rate-container">
