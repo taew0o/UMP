@@ -7,7 +7,6 @@ import ppkjch.ump.dto.EvaluateAppointmentDTO;
 import ppkjch.ump.entity.*;
 import ppkjch.ump.exception.RoomFullException;
 import ppkjch.ump.repository.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,9 +79,6 @@ public class AppointmentService {
         }
 
     }
-
-
-
 
 
     public List<AppointmentChattingRoom> findAppointments(User user){

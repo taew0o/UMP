@@ -80,7 +80,7 @@ export default function FriendList(props) {
 
     // 각 막대 끝에 표시할 레이블
     const labelText =
-      index === 0 ? "참석" : index === 1 ? "지각" : index === 2 ? "불참" : "";
+      index === 0 ? "참석" : index === 1 ? "불참" : index === 2 ? "지각" : "";
 
     return (
       <text
@@ -174,25 +174,27 @@ export default function FriendList(props) {
             </PieChart>
           </div>
         </div>
-        <div
-          className="friend-modal-buttons"
-          style={{
-            marginTop: "10px",
-            display: "flex",
-            justifyContent: "flex-end",
-          }}
-        >
-          <Button
-            type="primary"
-            onClick={handleDeleteClick}
-            style={{ marginRight: "10px" }}
+        {props.MY_USER_ID !== id && (
+          <div
+            className="friend-modal-buttons"
+            style={{
+              marginTop: "10px",
+              display: "flex",
+              justifyContent: "flex-end",
+            }}
           >
-            삭제
-          </Button>
-          <Button type="primary" onClick={handleBlockClick}>
-            차단
-          </Button>
-        </div>
+            <Button
+              type="primary"
+              onClick={handleDeleteClick}
+              style={{ marginRight: "10px" }}
+            >
+              삭제
+            </Button>
+            <Button type="primary" onClick={handleBlockClick}>
+              차단
+            </Button>
+          </div>
+        )}
       </Modal>
       <Modal
         title={confirmModalTitle}

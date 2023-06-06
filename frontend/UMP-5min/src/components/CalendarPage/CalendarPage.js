@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./CalendarPage.css";
 import { Badge, Calendar, Modal, Input, Button, List } from "antd";
+import axios from "axios";
+import moment from "moment";
 
 const CalendarPage = () => {
   const [events, setEvents] = useState([]);
@@ -9,10 +11,17 @@ const CalendarPage = () => {
   const [editEventIndex, setEditEventIndex] = useState(null);
   const [inputValue, setInputValue] = useState("");
 
+  const [newEvent, setNewEvent] = useState([]);
+
   const handleDateClick = (value) => {
     setSelectedDate(value);
     setModalVisible(true);
   };
+
+  useEffect(() => {
+    addAppointment();
+    console.log(events);
+  }, []);
 
   const handleModalCancel = () => {
     setSelectedDate(null);
@@ -20,10 +29,53 @@ const CalendarPage = () => {
     setEditEventIndex(null);
   };
 
+  const addAppointment = () => {
+    axios({
+      method: "get",
+      url: "/appointment",
+      headers: {
+        "Content-Type": `application/json`,
+      },
+      withCredentials: true,
+    })
+      .then((response) => {
+        console.log("----------------", response);
+        const e = response.data
+          .filter((value) => value.time !== "")
+          .map((value) => {
+            const dateOnly = value.time.split(" ")[0];
+            // console.log(tempDate);
+            // const dateOnly = new Date(moment(tempDate));
+            // console.log(new Date(dateOnly));
+            const content = (
+              <div>
+                약속 이름: {value.chattingRoomName}
+                <br />
+                약속 장소: {value.location}
+                <br />
+                약속 시간: {value.time}
+              </div>
+            );
+            const newEvent = { content: content, date: dateOnly };
+            return newEvent;
+          });
+
+        setEvents(e);
+      })
+      .catch((error) => {
+        console.log(error);
+        alert(error.response.data);
+      });
+  };
+
   const dateCellRender = (value) => {
-    const dateEvents = events.filter((event) =>
-      event.date.isSame(value, "day")
-    );
+    console.log(value.format("YYYY-MM-DD"));
+    const dateEvents = events.filter((event) => {
+      return event.date === value.format("YYYY-MM-DD");
+      // event.date.isSame(value, "day");
+      // console.log(event.date, value);
+    });
+    console.log(dateEvents);
 
     return (
       <ul className="event-list">
@@ -67,7 +119,9 @@ const CalendarPage = () => {
   };
 
   const getDateEvents = () => {
-    return events.filter((event) => event.date.isSame(selectedDate, "day"));
+    console.log(events);
+    console.log(selectedDate);
+    // return events.filter((event) => event.date.isSame(selectedDate, "day"));
   };
 
   // 이벤트 수정 시 inputValue를 이벤트 내용으로 설정
@@ -81,7 +135,7 @@ const CalendarPage = () => {
     <div>
       <Calendar
         className="my-calendar"
-        dateCellRender={dateCellRender}
+        cellRender={dateCellRender}
         onSelect={handleDateClick}
       />
       <Modal
