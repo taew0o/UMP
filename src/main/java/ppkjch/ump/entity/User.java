@@ -44,6 +44,7 @@ class AppointmentScore{
     private int numLate;
 
     public void applyEvaluate(int maxScore){
+        System.out.println("maxScore  = " + maxScore );
         if(maxScore == 1){
             this.numAttend += 1;
         }
@@ -53,5 +54,10 @@ class AppointmentScore{
         else if (maxScore == 0){
             this.numLate += 1;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "numAttend:" + this.numAttend + " numNotAttend:" + this.numAttend +" numLate:" + this.numAttend;
     }
 }

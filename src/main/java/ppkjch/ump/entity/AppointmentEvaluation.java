@@ -4,6 +4,7 @@ package ppkjch.ump.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Cascade;
 
 @Entity
 @Getter
@@ -13,7 +14,7 @@ public class AppointmentEvaluation {
     @GeneratedValue
     private Long id;
 
-    @ManyToOne(targetEntity = ChattingRoom.class, fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name="chattingRoom_id")
     private AppointmentChattingRoom appointmentchattingRoom;
 
