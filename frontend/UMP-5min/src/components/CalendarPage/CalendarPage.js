@@ -49,7 +49,7 @@ const CalendarPage = () => {
                 <br />
                 약속 장소: {value.location}
                 <br />
-                약속 시간: {value.time}
+                약속 시간: {value.time.split(" ")[1]}
               </div>
             );
             const newEvent = { content: content, date: dateOnly };
@@ -70,13 +70,18 @@ const CalendarPage = () => {
     });
 
     return (
-      <ul className="event-list">
+      <div className="event-list">
         {dateEvents.map((elem, index) => (
-          <li key={index}>
-            <Badge status="success" text={elem.content} overflowCount={10} />
-          </li>
+          // <li key={index}>
+          <Badge
+            className="badge"
+            status="success"
+            text={elem.content}
+            overflowCount={10}
+          />
+          // </li>
         ))}
-      </ul>
+      </div>
     );
   };
 
