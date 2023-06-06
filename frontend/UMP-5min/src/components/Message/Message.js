@@ -40,11 +40,14 @@ export default function Message(props) {
   }, [props]);
 
   useEffect(() => {
-    setAttendance([
-      { name: "참석", value: user.appointmentScore.numAttend }, // appointscore 들어가야됨
-      { name: "불참", value: user.appointmentScore.numNotAttend },
-      { name: "지각", value: user.appointmentScore.numLate },
-    ]);
+    console.log("user~~~~~~~", user);
+    if (user && user.appointmentScore) {
+      setAttendance([
+        { name: "참석", value: user.appointmentScore.numAttend },
+        { name: "불참", value: user.appointmentScore.numNotAttend },
+        { name: "지각", value: user.appointmentScore.numLate },
+      ]);
+    }
   }, [user]);
 
   const handleDeleteClick = () => {
@@ -168,6 +171,7 @@ export default function Message(props) {
 
   return (
     <div className="container">
+      {showTimestamp && <div className="timestamp">{friendlyTimestamp}</div>}
       {!isServer && startsSequence && !isMine && (
         <>
           <div
@@ -188,8 +192,6 @@ export default function Message(props) {
           `${endsSequence ? "end" : ""}`,
         ].join(" ")}
       >
-        {showTimestamp && <div className="timestamp">{friendlyTimestamp}</div>}
-
         <div className="bubble-container">
           <div className="bubble" title={friendlyTimestamp}>
             {data.message}
