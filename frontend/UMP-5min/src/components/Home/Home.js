@@ -68,7 +68,6 @@ const Home = () => {
       withCredentials: true,
     })
       .then((response) => {
-        console.log("----------------", response.data);
         setMyData(response.data);
         setLoad(true);
       })

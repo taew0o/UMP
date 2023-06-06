@@ -38,7 +38,6 @@ export default function FriendList(props) {
       withCredentials: true,
     })
       .then((response) => {
-        console.log("----------------", response);
         alert(`${name}님을 친구 삭제하였습니다`);
         setConfirmModalIsOpen(false);
         setModalIsOpen(false);

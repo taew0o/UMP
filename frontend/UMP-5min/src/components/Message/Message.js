@@ -36,11 +36,11 @@ export default function Message(props) {
 
   useEffect(() => {
     getAppointment();
-    console.log(data);
+    // console.log(data);
   }, [props]);
 
   useEffect(() => {
-    console.log("user~~~~~~~", user);
+    // console.log("user~~~~~~~", user);
     if (user && user.appointmentScore) {
       setAttendance([
         { name: "참석", value: user.appointmentScore.numAttend },
@@ -71,7 +71,7 @@ export default function Message(props) {
       withCredentials: true,
     })
       .then((response) => {
-        console.log("----------------", response);
+        // console.log("----------------", response);
         setUser(response.data);
       })
       .catch((error) => {
@@ -171,7 +171,8 @@ export default function Message(props) {
 
   return (
     <div className="container">
-      {showTimestamp && <div className="timestamp">{friendlyTimestamp}</div>}
+      {startsSequence ||
+        (showTimestamp && <div className="timestamp">{friendlyTimestamp}</div>)}
       {!isServer && startsSequence && !isMine && (
         <>
           <div
