@@ -56,6 +56,7 @@ export default function FriendList(props) {
     color: "black",
     marginRight: "20px",
     backgroundColor: backgroundColor,
+    fontSize: "14px",
   };
 
   const attendanceData = [
@@ -122,7 +123,7 @@ export default function FriendList(props) {
     <>
       <div className="friend-list-item" onClick={() => setModalIsOpen(true)}>
         <div className="friend-photo" style={photoStyle}>
-          {id}
+          {name}
         </div>
         <div className="friend-info">
           <div className="friend-title">{name}</div>
@@ -135,12 +136,12 @@ export default function FriendList(props) {
         footer={null}
       >
         <div className="friend-modal-content">
-          <div className="friend-list-item">
+          <div className="friend-modal-item">
             <div className="friend-photo" style={photoStyle}>
-              {id}
+              {name}
             </div>
             <div className="friend-info">
-              <h1 className="friend-title">{name}</h1>
+              <h1 className="friend-title">{name + "(" + id + ")"}</h1>
             </div>
           </div>
           <div className="attendance-rate-container">

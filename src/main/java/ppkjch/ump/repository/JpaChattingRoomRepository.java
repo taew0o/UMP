@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ppkjch.ump.entity.ChattingRoom;
+import ppkjch.ump.entity.Friend;
 import ppkjch.ump.entity.User;
 import ppkjch.ump.entity.UserChattingRoom;
 
@@ -28,11 +29,13 @@ public class JpaChattingRoomRepository {
     }
 
     //채팅룸 - 유저 관계 List를 전체 조회할 필요가 있는지?
-    public List<UserChattingRoom> findChatRoomByUser(User user){
-        return em.createQuery( "select ucr from UserChattingRoom ucr where ucr.user = :user", UserChattingRoom.class)
+    public List<UserChattingRoom> findUserChatRoomByUser(User user, ChattingRoom cr){
+        return em.createQuery( "select ucr from UserChattingRoom ucr where ucr.user = :user and ucr.chattingRoom = :cr", UserChattingRoom.class)
                 .setParameter("user", user)
+                .setParameter("cr", cr)
                 .getResultList();
     }
+
 
     public List<User> findUserByRoom(ChattingRoom cr){
         return em.createQuery( "select ucr.user from UserChattingRoom ucr where ucr.chattingRoom = :cr", User.class)

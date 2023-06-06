@@ -1,4 +1,4 @@
-.conversation-button{
+.conversation-button {
   display: inline-block;
   padding: 20px;
 }
@@ -7,6 +7,26 @@
   display: flex;
   align-items: center;
   padding: 10px;
+}
+
+.conversation-photo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  color: black;
+  margin-right: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.conversation-time {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .conversation-list-item:hover {

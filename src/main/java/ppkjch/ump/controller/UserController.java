@@ -78,6 +78,14 @@ public class UserController {
 
         return ResponseEntity.ok(user);
     }
+    @GetMapping("/other")
+    public ResponseEntity<User> getUserInfo(@RequestParam(name ="userId") String userId ){
+        // 유저 ID를 사용하여 유저 정보 조회
+        User user = userService.findUser(userId);
+
+        return ResponseEntity.ok(user);
+    }
+
 
     @PutMapping("/user")
     public ResponseEntity<User> getUserInfo(HttpServletRequest request, @RequestBody ChangeUserDTO changeUserDTO){
@@ -150,6 +158,8 @@ public class UserController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+
     @DeleteMapping("friend")
     public ResponseEntity<?> removeFriend(HttpServletRequest request, @RequestBody FriendIdDTO friendId){
         // 세션에서 유저 ID 가져오기
@@ -166,5 +176,7 @@ public class UserController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+
 
 }

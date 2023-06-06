@@ -28,8 +28,6 @@ public class ChattingRoomService {
         return jpaChattingRoomRepository.findOne(roomId);
     }
 
-
-
     @Transactional
     public Long makeRoom(List<User> users, String roomName, Long createTime){
         //유저 채팅방 생성
@@ -127,5 +125,9 @@ public class ChattingRoomService {
 
     public List<User> findRoomMember(ChattingRoom cr){
         return jpaChattingRoomRepository.findUserByRoom(cr);
+    }
+
+    public UserChattingRoom findUserChattingRoom(User user, ChattingRoom chattingRoom){
+        return jpaChattingRoomRepository.findUserChatRoomByUser(user, chattingRoom).get(0);
     }
 }

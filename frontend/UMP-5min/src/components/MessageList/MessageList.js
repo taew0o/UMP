@@ -9,9 +9,15 @@ import "./MessageList.css";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import ReactModal from "react-modal";
 import Review from "../Review/Review";
-import { Button, Checkbox } from "antd";
+import { Button, Checkbox, Form } from "antd";
 import axios from "axios";
 import FriendList from "../FriendList/FriendList";
+import { DatePicker, Space, TimePicker, Input, Modal } from "antd";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+
+dayjs.extend(customParseFormat);
+const { RangePicker } = DatePicker;
 
 //채팅방 구현
 export default function MessageList({ props }) {
@@ -39,19 +45,29 @@ export default function MessageList({ props }) {
   const [selectedFriends, setSelectedFriends] = useState([]);
   const [selectedFriendName, setSelectedFriendName] = useState([]);
   const [visible, setVisible] = useState(false);
+  const [visibleAppoint, setAppoint] = useState(false);
 
+  const onChange = (time, timeString) => {
+    console.log(time, timeString);
+    setAppointment((prevAppointment) => ({
+      ...prevAppointment,
+      time: timeString,
+    }));
+  };
+
+  const onOk = (time) => {
+    console.log(time);
+  };
   const [appointment, setAppointment] = useState({
-    date: "",
     time: "",
     location: "",
     roomName: "",
   });
 
-  const webSocketUrl = "ws://52.78.99.250:8080/websocket?roomId=" + id;
+  const webSocketUrl = "ws://localhost:8080/websocket?roomId=" + id;
   const ws = useRef(null);
 
   useEffect(() => {
-    scrollToBottom();
     localStorage.setItem("location", "room");
     if (!ws.current) {
       ws.current = new WebSocket(webSocketUrl);
@@ -84,11 +100,26 @@ export default function MessageList({ props }) {
       getMessages();
       getRoomPeople();
       getFriends();
+      if (state.isAppoint) {
+        const currentDate = new Date();
+        const appointmentDate = new Date(state.time);
+
+        if (currentDate > appointmentDate) {
+          console.log("약속 시간이 이미 지났습니다.");
+          setReviewIsOpen(true);
+        } else {
+          console.log("약속 시간이 아직 남았습니다.");
+        }
+      }
     }
+    scrollToBottom();
+    window.addEventListener("load", scrollToBottom); // 페이지 로드될 때 스크롤 이벤트 처리
 
     return () => {
       console.log("clean up");
-      localStorage.setItem("location", "notRoom");
+      // localStorage.setItem("location", "notRoom");
+      window.removeEventListener("load", scrollToBottom); // 컴포넌트 언마운트 시 이벤트 리스너 제거
+
       ws.current.close();
     };
   }, []);
@@ -141,6 +172,7 @@ export default function MessageList({ props }) {
         response.data.map((value) => {
           setRoomPeople((prevPeople) => [...prevPeople, value]);
         });
+        console.log(roomPeople);
       })
       .catch((error) => {
         console.log(error);
@@ -152,7 +184,7 @@ export default function MessageList({ props }) {
     if (scrollRef.current) {
       // scrollRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
       window.scrollBy({
-        top: 2200,
+        top: 9999999999999,
         behavior: "smooth", // 스크롤 애니메이션 적용 (optional)
       });
     }
@@ -271,6 +303,7 @@ export default function MessageList({ props }) {
       const senderName = isMine ? MY_NAME : current.name;
 
       const isServer = current.author === `server`;
+      console.log("isServer", isServer);
 
       tempMessages.push(
         <Message
@@ -305,6 +338,30 @@ export default function MessageList({ props }) {
           </div>
         ))}
         <Button onClick={addFriend}>초대</Button>
+      </div>
+    ) : (
+      <div>초대할 사람이 없습니다</div>
+    );
+  };
+
+  const renderAppointmentList = () => {
+    return roomPeople.length !== 0 ? (
+      <div>
+        {roomPeople.map((friend, index) =>
+          friend.id !== MY_USER_ID ? (
+            <div key={index}>
+              <Checkbox
+                onChange={(e) => handleSelectFriend(e, friend.id, friend.name)}
+                checked={selectedFriends.includes(friend.id)}
+              >
+                {friend.name}
+              </Checkbox>
+            </div>
+          ) : (
+            <></>
+          )
+        )}
+        <Button onClick={addAppointment}>약속 확정</Button>
       </div>
     ) : (
       <div>초대할 사람이 없습니다</div>
@@ -353,6 +410,7 @@ export default function MessageList({ props }) {
         setMessages((prevMessages) => [...prevMessages, tempMsg]);
 
         alert(`${friendNames}님을 초대했습니다`);
+        setVisible(!visible);
       })
       .catch((error) => {
         console.log(error);
@@ -388,10 +446,13 @@ export default function MessageList({ props }) {
   };
 
   const handleShowFriends = () => {
+    setSelectedFriends([]);
+    setSelectedFriendName([]);
     getFriends();
     console.log("friends", friends);
     setVisible(!visible);
   };
+
   const handleSelectFriend = (e, selectedFriend, FriendName) => {
     if (e.target.checked) {
       setSelectedFriends([...selectedFriends, selectedFriend]);
@@ -405,6 +466,40 @@ export default function MessageList({ props }) {
       );
     }
   };
+
+  const addAppointment = () => {
+    console.log("약속 데이터들", selectedFriends, appointment.roomName);
+    axios({
+      method: "post",
+      url: "/appointment-room",
+      headers: {
+        "Content-Type": `application/json`,
+      },
+      data: {
+        userIds: selectedFriends,
+        roomName: appointment.roomName,
+        createTime: new Date().getTime(),
+        time: appointment.time,
+        location: appointment.location,
+      },
+      withCredentials: true,
+    })
+      .then((response) => {
+        console.log(response);
+        setAppoint(!visibleAppoint);
+      })
+      .catch((error) => {
+        console.log(error);
+        alert(error.response.data);
+      });
+  };
+
+  const handleAppointment = () => {
+    setSelectedFriends([]);
+    setSelectedFriendName([]);
+    setAppoint(!visibleAppoint);
+  };
+
   return (
     <div className="message-list" ref={scrollRef}>
       <Toolbar
@@ -456,61 +551,65 @@ export default function MessageList({ props }) {
                 <FriendList key={friend.name} data={friend} />
               ))}
             </div>
+            <div className="appointment-info">
+              <div>
+                약속 시간
+                <Space direction="vertical" size={12}>
+                  <DatePicker
+                    showTime={{
+                      format: "HH:mm",
+                    }}
+                    format="YYYY-MM-DD HH:mm"
+                    onChange={onChange}
+                    onOk={onOk}
+                  />
+                </Space>
+              </div>
+              <div>
+                약속 장소
+                <Input
+                  placeholder="약속장소"
+                  name="location"
+                  value={appointment.location}
+                  onChange={handleAppointmentChange}
+                />
+              </div>
+              <div>
+                약속 이름
+                <Input
+                  placeholder="약속이름"
+                  name="roomName"
+                  value={appointment.roomName}
+                  onChange={handleAppointmentChange}
+                />
+              </div>
+            </div>
+            <div className="button-group">
+              <Button
+                type="primary"
+                className="appointment-button"
+                onClick={handleAppointment}
+              >
+                약속잡기
+              </Button>
+              <Button
+                type="primary"
+                className="invite-button"
+                onClick={handleShowFriends}
+              >
+                친구초대
+              </Button>
+            </div>
+            {visibleAppoint && renderAppointmentList()}
+            {visible && renderFriendsList()}
           </div>
-          <div className="appointment-info">
-            <div>
-              약속 날짜:
-              <input
-                type="date"
-                name="date"
-                value={appointment.date}
-                onChange={handleAppointmentChange}
-              />
-            </div>
-            <div>
-              약속 시간:
-              <input
-                type="time"
-                name="time"
-                value={appointment.time}
-                onChange={handleAppointmentChange}
-              />
-            </div>
-            <div>
-              약속 장소:
-              <input
-                type="text"
-                name="location"
-                value={appointment.location}
-                onChange={handleAppointmentChange}
-              />
-            </div>
-            <div>
-              약속 이름:
-              <input
-                type="text"
-                name="name"
-                value={appointment.name}
-                onChange={handleAppointmentChange}
-              />
-            </div>
-          </div>
-          <div className="button-group">
-            <Button className="appointment-button">약속 잡기</Button>
-            <Button className="invite-button" onClick={handleShowFriends}>
-              친구 초대
-            </Button>
-          </div>
-          {visible && renderFriendsList()}
         </div>
       </ReactModal>
       <ReactModal
         isOpen={reviewIsOpen}
         onRequestClose={() => setReviewIsOpen(false)}
-        className={`modal ${reviewIsOpen ? "open" : ""}`}
-        overlayClassName={`overlay ${reviewIsOpen ? "open" : ""}`}
       >
-        <Review />
+        <Review id={id} roomPeople={roomPeople} MY_USER_ID={MY_USER_ID} />
       </ReactModal>
     </div>
   );
