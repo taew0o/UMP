@@ -568,17 +568,6 @@ export default function MessageList({ props }) {
                   />
                 </Space>
               </div>
-              {/* <div>
-                약속 시간
-                <TimePicker
-                  type="time"
-                  name="time"
-                  onChange={setTime}
-                  value={appointment.time}
-                  defaultValue={dayjs("12:08", format)}
-                  format={format}
-                />
-              </div> */}
               <div>
                 약속 장소
                 <Input
@@ -622,10 +611,8 @@ export default function MessageList({ props }) {
       <ReactModal
         isOpen={reviewIsOpen}
         onRequestClose={() => setReviewIsOpen(false)}
-        className={`modal ${reviewIsOpen ? "open" : ""}`}
-        overlayClassName={`overlay ${reviewIsOpen ? "open" : ""}`}
       >
-        <Review id={id} roomPeople={roomPeople} />
+        <Review id={id} roomPeople={roomPeople} MY_USER_ID={MY_USER_ID} />
       </ReactModal>
     </div>
   );

@@ -1,5 +1,5 @@
 import { Button } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Review.css"; // Review 컴포넌트를 위한 CSS 파일 import
 import React from "react";
@@ -7,6 +7,12 @@ import axios from "axios";
 
 //props = roomPeople에 방에 있는 사람 정보 다 들어있음
 const Review = (props) => {
+  const [userReviews, setUserReviews] = useState([]);
+  const [result, setResult] = useState();
+  const [totalAbsence, setAbsence] = useState();
+  const [totalLate, setLate] = useState();
+  const [totalAttend, setAttend] = useState();
+  const [users, setUser] = useState([]);
   const navigate = useNavigate();
   const onFinish = () => {
     const review = userReviews.map((value) => ({
@@ -22,8 +28,8 @@ const Review = (props) => {
         "Content-Type": `application/json`,
       },
       data: {
-          roomId: props.id,
-          evaluateAppointmentDTOs: review,
+        roomId: props.id,
+        evaluateAppointmentDTOs: review,
       },
       withCredentials: true,
     })
@@ -36,17 +42,71 @@ const Review = (props) => {
       });
     // navigate("/");
   };
-  const users = props.roomPeople;
+  // const users = props.roomPeople;
+  // console.log(users);
+  useEffect(() => {
+    setUser(props.roomPeople);
+  }, [props.roomPeople]);
 
-  const initialUserReviews = users.map((user) => ({
-    id: user.id,
-    name: user.name,
-    attend: 0,
-    late: 0,
-    numNotAttend: 0,
-  }));
+  useEffect(() => {
+    const initialUserReviews = users
+      .map(
+        (user) =>
+          user.id !== props.MY_USER_ID && {
+            id: user.id,
+            name: user.name,
+            attend: 0,
+            late: 0,
+            absence: 0,
+          }
+      )
+      .filter(Boolean);
+    setUserReviews(initialUserReviews);
+  }, [users]);
 
-  const [userReviews, setUserReviews] = useState(initialUserReviews);
+  useEffect(() => {
+    const userReview = userReviews.map((review, index) => (
+      <div key={index}>
+        <span>{review.name + "에 대한 평가 "}</span>
+        <Button
+          onClick={() => handleReviewClick(index, "attend")}
+          type={review.attend > 0 ? "primary" : ""}
+        >
+          참석
+        </Button>
+        <Button
+          onClick={() => handleReviewClick(index, "late")}
+          type={review.late > 0 ? "primary" : ""}
+        >
+          지각
+        </Button>
+        <Button
+          onClick={() => handleReviewClick(index, "absence")}
+          type={review.absence > 0 ? "primary" : ""}
+        >
+          불참
+        </Button>
+      </div>
+    ));
+    setResult(userReview);
+
+    const tempAttend = userReviews.reduce(
+      (total, review) => total + review.attend,
+      0
+    );
+    const tempLate = userReviews.reduce(
+      (total, review) => total + review.late,
+      0
+    );
+    const tempAbsence = userReviews.reduce(
+      (total, review) => total + review.absence,
+      0
+    );
+
+    setAbsence(tempAbsence);
+    setAttend(tempAttend);
+    setLate(tempLate);
+  }, [userReviews]);
 
   const handleReviewClick = (index, type) => {
     setUserReviews((prevState) => {
@@ -67,50 +127,16 @@ const Review = (props) => {
     });
   };
 
-  const userReview = userReviews.map((review, index) => (
-    <div key={index}>
-      <span>{review.name + "에 대한 평가 "}</span>
-      <Button
-        onClick={() => handleReviewClick(index, "attend")}
-        type={review.attend > 0 ? "primary" : ""}
-      >
-        참석
-      </Button>
-      <Button
-        onClick={() => handleReviewClick(index, "late")}
-        type={review.late > 0 ? "primary" : ""}
-      >
-        지각
-      </Button>
-      <Button
-        onClick={() => handleReviewClick(index, "absence")}
-        type={review.absence > 0 ? "primary" : ""}
-      >
-        불참
-      </Button>
-    </div>
-  ));
-
-  const totalAttend = userReviews.reduce(
-    (total, review) => total + review.attend,
-    0
-  );
-  const totalLate = userReviews.reduce(
-    (total, review) => total + review.late,
-    0
-  );
-  const totalAbsence = userReviews.reduce(
-    (total, review) => total + review.absence,
-    0
-  );
-
   return (
     <div className="review-container">
-      <div className="review-heading">평가</div>
-      <div className="user-review">{userReview}</div>
+      <div className="review-heading">
+        약속이 종료되었습니다. <br />
+        상대방을 평가해주세요.
+      </div>
+      <div className="user-review">{result}</div>
       <span className="total-stats">
-        총 인원 {users.length}명 (참석 {totalAttend}명 / 지각 {totalLate}명 /
-        불참 {totalAbsence}명)
+        총 인원 {userReviews.length}명 (참석 {totalAttend}명 / 지각 {totalLate}
+        명 / 불참 {totalAbsence}명)
       </span>
       <Button className="to-chat-button" onClick={onFinish}>
         제출
