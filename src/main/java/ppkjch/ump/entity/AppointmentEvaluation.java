@@ -56,8 +56,13 @@ public class AppointmentEvaluation {
                 return 2; //늦참 불참 동률
             }
         }
-        else{
-            return 2; //불참 참삭 동률
+        else{ //불참 참석 동률
+            if(sumAttend >= sumLate){ //가장 높은 것이 동률
+                return 2;
+            }
+            else{ //늦참이 가장 높은것
+                return 0;
+            }
         }
     }
 
