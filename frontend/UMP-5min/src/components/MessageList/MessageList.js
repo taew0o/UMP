@@ -169,9 +169,10 @@ export default function MessageList({ props }) {
     })
       .then((response) => {
         console.log("----------------", response);
-        response.data.map((value) => {
-          setRoomPeople((prevPeople) => [...prevPeople, value]);
+        const newPeople = response.data.map((value) => {
+          return value;
         });
+        setRoomPeople(newPeople);
         console.log(roomPeople);
       })
       .catch((error) => {
@@ -224,7 +225,7 @@ export default function MessageList({ props }) {
       })
       .catch((error) => {
         console.log(error);
-        alert(error.response.data);
+        // alert(error.response.data);
       });
   };
 
@@ -302,7 +303,7 @@ export default function MessageList({ props }) {
 
       const senderName = isMine ? MY_NAME : current.name;
 
-      const isServer = current.author === `server`;
+      const isServer = current.name === `server`;
       console.log("isServer", isServer);
 
       tempMessages.push(
@@ -486,7 +487,22 @@ export default function MessageList({ props }) {
     })
       .then((response) => {
         console.log(response);
+        let friendNames;
+        if (selectedFriendName.length === 1) {
+          friendNames = selectedFriendName[0]; // 선택된 친구가 한 명인 경우
+        } else {
+          friendNames = selectedFriendName.join("님, "); // 선택된 친구 이름들을 쉼표로 구분하여 하나의 문자열로 변환
+        }
+        alert(
+          `${friendNames}님과 ${appointment.time}에 약속을 잡았습니다. \n채팅방 목록에서 약속채팅방을 확인하실 수 있습니다.`
+        );
         setAppoint(!visibleAppoint);
+        setModalIsOpen(false);
+        setAppointment({
+          time: "",
+          location: "",
+          roomName: "",
+        });
       })
       .catch((error) => {
         console.log(error);
@@ -495,6 +511,7 @@ export default function MessageList({ props }) {
   };
 
   const handleAppointment = () => {
+    getRoomPeople();
     setSelectedFriends([]);
     setSelectedFriendName([]);
     setAppoint(!visibleAppoint);
@@ -507,6 +524,7 @@ export default function MessageList({ props }) {
         rightItems={[
           <div
             onClick={() => {
+              getRoomPeople();
               setModalIsOpen(true);
             }}
           >
@@ -553,7 +571,7 @@ export default function MessageList({ props }) {
             </div>
             <div className="appointment-info">
               <div>
-                약속 시간
+                <p>약속 시간</p>
                 <Space direction="vertical" size={12}>
                   <DatePicker
                     showTime={{
@@ -566,7 +584,7 @@ export default function MessageList({ props }) {
                 </Space>
               </div>
               <div>
-                약속 장소
+                <p>약속 장소</p>
                 <Input
                   placeholder="약속장소"
                   name="location"
@@ -575,7 +593,7 @@ export default function MessageList({ props }) {
                 />
               </div>
               <div>
-                약속 이름
+                <p>약속 이름</p>
                 <Input
                   placeholder="약속이름"
                   name="roomName"

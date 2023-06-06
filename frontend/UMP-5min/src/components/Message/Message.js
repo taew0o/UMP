@@ -22,6 +22,8 @@ export default function Message(props) {
   const [confirmModalIsOpen, setConfirmModalIsOpen] = useState(false);
   const [confirmModalTitle, setConfirmModalTitle] = useState("");
   const [backgroundColor, setBackgroundColor] = useState("");
+  const [user, setUser] = useState();
+  const [attendanceData, setAttendance] = useState([]);
 
   useEffect(() => {
     let storedColor = localStorage.getItem(senderName);
@@ -31,6 +33,22 @@ export default function Message(props) {
     }
     setBackgroundColor(storedColor);
   }, []);
+
+  useEffect(() => {
+    getAppointment();
+    console.log(data);
+  }, [props]);
+
+  useEffect(() => {
+    console.log("user~~~~~~~", user);
+    if (user && user.appointmentScore) {
+      setAttendance([
+        { name: "참석", value: user.appointmentScore.numAttend },
+        { name: "불참", value: user.appointmentScore.numNotAttend },
+        { name: "지각", value: user.appointmentScore.numLate },
+      ]);
+    }
+  }, [user]);
 
   const handleDeleteClick = () => {
     setConfirmModalTitle("친구 삭제");
@@ -42,11 +60,25 @@ export default function Message(props) {
     setConfirmModalIsOpen(true);
   };
 
-  // const getUser = () => {
-  //   axios({
-  //     url:"/user"
-  //   })
-  // };
+  const getAppointment = () => {
+    axios({
+      method: "get",
+      url: "/other",
+      headers: {
+        "Content-Type": `application/json`,
+      },
+      params: { userId: data.author },
+      withCredentials: true,
+    })
+      .then((response) => {
+        console.log("----------------", response);
+        setUser(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+        alert(error.response.data);
+      });
+  };
 
   const getRandomColor = () => {
     const colors = [
@@ -77,11 +109,6 @@ export default function Message(props) {
     cursor: "pointer",
   };
 
-  const attendanceData = [
-    { name: "참석", value: 10 }, // appointscore 들어가야됨
-    { name: "불참", value: 7 },
-    { name: "지각", value: 3 },
-  ];
   const renderCustomizedLabel = ({
     cx,
     cy,
@@ -144,6 +171,7 @@ export default function Message(props) {
 
   return (
     <div className="container">
+      {showTimestamp && <div className="timestamp">{friendlyTimestamp}</div>}
       {!isServer && startsSequence && !isMine && (
         <>
           <div
@@ -159,12 +187,11 @@ export default function Message(props) {
         className={[
           "message",
           `${isMine ? "mine" : ""}`,
+          `${isServer ? "server" : ""}`,
           `${startsSequence ? "start" : ""}`,
           `${endsSequence ? "end" : ""}`,
         ].join(" ")}
       >
-        {showTimestamp && <div className="timestamp">{friendlyTimestamp}</div>}
-
         <div className="bubble-container">
           <div className="bubble" title={friendlyTimestamp}>
             {data.message}

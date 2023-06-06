@@ -6,9 +6,7 @@ import org.springframework.stereotype.Service;
 import ppkjch.ump.dto.EvaluateAppointmentDTO;
 import ppkjch.ump.entity.*;
 import ppkjch.ump.exception.RoomFullException;
-import ppkjch.ump.repository.JpaAppointmentChattingRoomRepository;
-import ppkjch.ump.repository.JpaChattingRoomRepository;
-import ppkjch.ump.repository.JpaMessageRepository;
+import ppkjch.ump.repository.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +20,8 @@ public class AppointmentService {
     private final JpaAppointmentChattingRoomRepository jpaAppointmentChattingRoomRepository;
     private final JpaChattingRoomRepository jpaChattingRoomRepository;
     private final JpaMessageRepository jpaMessageRepository;
+    private final JpaAppointmentEvaluationRepository jpaAppointmentEvaluationRepository;
+    private final JpaUserRepository jpaUserRepository;
     @Transactional
     public Long saveAppointment(List<User> users, String roomName, Long createTime, String time, String location){
         int numPerson = users.size();
@@ -44,20 +44,48 @@ public class AppointmentService {
     }
 
     @Transactional
-    public void goOutRoom(User u, AppointmentChattingRoom cr){
+    public void goOutRoom(User u, AppointmentChattingRoom acr){
+
         //userChattingroom DB에서 지우고 채팅방 인원 수를 갱신
-        jpaChattingRoomRepository.goOutRoom(u,cr);
-        cr.updateNumPerson(-1);
+        jpaAppointmentChattingRoomRepository.goOutRoom(u,acr);
+        acr.updateNumPerson(-1);
 
         //만약 빈방이 되었다면 해당 방의 메세지 및 방 정보 삭제
-        if(cr.isEmptyRoom()){
-            jpaAppointmentChattingRoomRepository.removeRoom(cr);
-            List<Message> messages = jpaMessageRepository.findMessageByRoom(cr);
+        if(acr.isEmptyRoom()){
+            System.out.println(" = asdasdsaasdasdakldldksd" );
+            List<Message> messages = jpaMessageRepository.findMessageByRoom(acr);
             for (Message m: messages) {
                 jpaMessageRepository.removeMessage(m);
             }
+
+            //모든 유저에 대해 가장 큰 것을 판별하여 해당 User에 넣어줌
+            List<AppointmentEvaluation> appointmentEvaluations = jpaAppointmentEvaluationRepository.findAppointmentEvaluationByRoom(acr);
+            System.out.println("appointmentEvaluations.size() = " + appointmentEvaluations.size());
+            for (AppointmentEvaluation ae:appointmentEvaluations) {
+                //maxScore를 판단하여 유저에 Score갱신
+                System.out.println("ae.getSumAttend() = " + ae.getSumAttend());
+                System.out.println("ae.getSumAttend() = " + ae.getSumNotAttend());
+                System.out.println("ae.getSumAttend() = " + ae.getSumLate());
+                int maxScore = ae.getMaxScore();
+                User user = ae.getUser();
+                user.updateAppointmentScore(maxScore);
+                jpaUserRepository.mergeUser(user);
+                System.out.println("ae.getUser() = " + ae.getUser().getAppointmentScore());
+            }
+
+
+            //평가테이블, 약속방 모두 삭제
+            jpaAppointmentEvaluationRepository.removeAppointmentEvaluations(acr);
+            jpaAppointmentChattingRoomRepository.removeRoom(acr);
         }
+
+        //평가 튜플도 삭제
+        AppointmentEvaluation findAe = jpaAppointmentEvaluationRepository.findAppointmentEvaluationByRoomAndUser(acr, u);
+        jpaAppointmentEvaluationRepository.removeAppointmentEvaluation(findAe);
     }
+
+
+
 
 
     public List<AppointmentChattingRoom> findAppointments(User user){
@@ -69,4 +97,24 @@ public class AppointmentService {
     public AppointmentChattingRoom findAppointmentChattingRoom(Long roomId){
         return jpaAppointmentChattingRoomRepository.findOne(roomId);
     }
+
+    @Transactional
+    public void saveAppointmentEvaluation(List<User> users, AppointmentChattingRoom appointmentChattingRoom ){
+        List<AppointmentEvaluation> appointmentEvaluationList = new ArrayList<>();
+
+        for (User u: users) {
+            AppointmentEvaluation appointmentEvaluation = new AppointmentEvaluation();
+            appointmentEvaluation.setUser(u);
+            appointmentEvaluation.setAppointmentchattingRoom(appointmentChattingRoom);
+            appointmentEvaluationList.add(appointmentEvaluation);
+            jpaAppointmentEvaluationRepository.save(appointmentEvaluation);
+        }
+
+    }
+
+    public AppointmentEvaluation findAppointmentEvaluation(User user, AppointmentChattingRoom appointmentChattingRoom){
+        return jpaAppointmentEvaluationRepository.findAppointmentEvaluationByRoomAndUser(appointmentChattingRoom, user);
+    }
+
+
 }

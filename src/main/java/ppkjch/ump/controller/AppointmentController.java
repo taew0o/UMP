@@ -7,18 +7,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 import ppkjch.ump.dto.EvaluateAppointmentDTO;
 import ppkjch.ump.dto.EvaluationInfo;
 import ppkjch.ump.dto.InviteRoomDTO;
 import ppkjch.ump.dto.MakeAppointmentRoomDTO;
-import ppkjch.ump.entity.AppointmentChattingRoom;
-import ppkjch.ump.entity.ChattingRoom;
-import ppkjch.ump.entity.User;
-import ppkjch.ump.entity.UserChattingRoom;
+import ppkjch.ump.entity.*;
 import ppkjch.ump.exception.RoomFullException;
 import ppkjch.ump.service.AppointmentService;
 import ppkjch.ump.service.ChattingRoomService;
@@ -52,6 +46,10 @@ public class AppointmentController {
         //유저 정보로 채팅방 만들기
         try{
             Long chattingRoomId = appointmentService.saveAppointment(users, roomInfo.getRoomName(), roomInfo.getCreateTime(), roomInfo.getTime(), roomInfo.getLocation());
+            AppointmentChattingRoom appointmentChattingRoom = appointmentService.findAppointmentChattingRoom(chattingRoomId);
+
+            //약속 평가될 유저 추가
+            appointmentService.saveAppointmentEvaluation(users, appointmentChattingRoom);
             return new ResponseEntity<Long>(chattingRoomId, HttpStatus.OK);
         }
         catch (RoomFullException e ){
@@ -81,8 +79,11 @@ public class AppointmentController {
                 User invitee = userService.findUser(id);
                 invitees.add(invitee);
             }
-            ChattingRoom chattingRoom = appointmentService.findAppointmentChattingRoom(inviteDTO.getRoomId());
-            chattingRoomService.inviteRoom(chattingRoom, invitees, inviteDTO.getEnterTime());
+            AppointmentChattingRoom appointmentChattingRoom = appointmentService.findAppointmentChattingRoom(inviteDTO.getRoomId());
+            chattingRoomService.inviteRoom(appointmentChattingRoom, invitees, inviteDTO.getEnterTime());
+
+            //평가 방에 튜플 추가
+            appointmentService.saveAppointmentEvaluation(invitees, appointmentChattingRoom);
 
         } catch (RoomFullException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -109,9 +110,8 @@ public class AppointmentController {
         //유저 및 유저 채팅룸 조회하여 해당 유저 결과 계산
         for (EvaluationInfo e : evaluateAppointmentDTO.getEvaluationInfoList()) {
             User user = userService.findUser(e.getUserId());
-            UserChattingRoom userChattingRoom = chattingRoomService.findUserChattingRoom(user,room);
-            userChattingRoom.sumScore(e.getNumAttend(), e.getNumNotAttend(), e.getNumLate());
-
+            AppointmentEvaluation appointmentEvaluation = appointmentService.findAppointmentEvaluation(user, room);
+            appointmentEvaluation.sumScore(e.getNumAttend(),e.getNumNotAttend(),e.getNumLate());
         }
         /**
          *  방 나가는 로직
@@ -122,9 +122,23 @@ public class AppointmentController {
         // 유저 ID를 사용하여 유저 정보 조회
         User user = userService.findUser(userId);
 
-        //appointmentService.goOutRoom(user,room);
+        appointmentService.goOutRoom(user,room);
 
         return ResponseEntity.status(HttpStatus.OK).body("평가 정보가 입력 되었습니다");
     }
 
+    @DeleteMapping("/appointment-room/member")
+    public ResponseEntity<?> goOutChattingRoom(HttpServletRequest request, @RequestParam("roomId") Long roomId){
+        // 세션에서 유저 ID 가져오기
+        HttpSession session = request.getSession(false);
+        String userId = (String)session.getAttribute("userId");
+        // 유저 ID를 사용하여 유저 정보 조회
+        User user = userService.findUser(userId);
+        //방ID 사용하여 방 조회
+        AppointmentChattingRoom room = appointmentService.findAppointmentChattingRoom(roomId);
+        //goOutRoom(User, ChattingRoom): void - 태우 추가 완. 테스트 필요
+
+        appointmentService.goOutRoom(user,room);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }

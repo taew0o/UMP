@@ -15,15 +15,20 @@ const FriendPage = (props) => {
   const [friendId, setFriendId] = useState();
   const [friendRequests, setFriendRequests] = useState([]);
   const [search, setSearch] = useState("");
+  const [isNew, setNew] = useState(false);
 
   useEffect(() => {
     getFriend();
     getFriendRequestList();
   }, []);
 
-  // useEffect(() => {
-  //   getFriend();
-  // }, [friendRequests]);
+  useEffect(() => {
+    if (friendRequests.length > 0) {
+      setNew(true);
+    } else {
+      setNew(false);
+    }
+  }, [friendRequests]);
 
   const openModal = () => {
     setShowAddModal(true);
@@ -209,6 +214,7 @@ const FriendPage = (props) => {
         title="Friend"
         leftItems={[
           <UserAddOutlined
+            className={`${isNew ? "newFriend" : ""}`}
             style={{ fontSize: "24px", color: "#1C75D4" }}
             onClick={openRequestsModal}
           />,

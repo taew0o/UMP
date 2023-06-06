@@ -3,14 +3,19 @@
   flex-direction: column;
 }
 
-.message .timestamp {
+.message,
+.timestamp {
   display: flex;
   justify-content: center;
   color: #999;
   font-weight: 600;
   font-size: 12px;
-  margin: 10px 0px;
+  /* margin: 10px 0px; */
   text-transform: uppercase;
+}
+
+.timestamp {
+  margin: 10px;
 }
 
 .message .bubble-container {
@@ -22,8 +27,12 @@
   justify-content: flex-end;
 }
 
+.message.server .bubble-container {
+  justify-content: center;
+}
+
 .message.start .bubble-container .bubble {
-  /* margin-top: 10px; */
+  margin-top: 10px;
   border-top-left-radius: 20px;
 }
 
@@ -44,7 +53,7 @@
 
 .message .bubble-container .bubble {
   margin: 1px 0px;
-  background:  #ebeef0;
+  background: #ebeef0;
   color: #333333;
   padding: 10px 15px;
   border-radius: 20px;
