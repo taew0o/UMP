@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import ppkjch.ump.dto.EvaluateAppointmentDTO;
+import ppkjch.ump.dto.EvaluationInfo;
 import ppkjch.ump.dto.InviteRoomDTO;
 import ppkjch.ump.dto.MakeAppointmentRoomDTO;
 import ppkjch.ump.entity.AppointmentChattingRoom;
@@ -36,6 +37,7 @@ public class AppointmentController {
     @PostMapping("/appointment-room")
     public ResponseEntity<?> makeChattingRoom(HttpServletRequest request, @RequestBody MakeAppointmentRoomDTO roomInfo){
         // 세션에서 유저 ID 가져오기
+        System.out.println("roomInfo.getTime() = " + roomInfo.getTime());
         HttpSession session = request.getSession(false);
         String userId = (String)session.getAttribute("userId");
         // 유저 ID를 사용하여 유저 정보 조회
@@ -88,18 +90,28 @@ public class AppointmentController {
         return ResponseEntity.status(HttpStatus.CREATED).body("성공적으로 초대");
     }
     @PostMapping("/appointment-score")
-    public ResponseEntity<?> evaluateAppointment(HttpServletRequest request, @RequestBody List<EvaluateAppointmentDTO> evaluateAppointmentDTOs){
+    public ResponseEntity<?> evaluateAppointment(HttpServletRequest request, @RequestBody EvaluateAppointmentDTO evaluateAppointmentDTO){
         /**
          *  평가 더하는 로직
          */
+        System.out.println("asdasdsdadds");
+        System.out.println("evaluateAppointmentDTO.getEvaluationInfoList().size() = " + evaluateAppointmentDTO.getEvaluationInfoList().size());
+        for (EvaluationInfo e: evaluateAppointmentDTO.getEvaluationInfoList()) {
+            System.out.println("e.getNumAttend() = " + e.getNumAttend());;
+            System.out.println("e.getNumAttend() = " + e.getNumNotAttend());;
+            System.out.println("e.getNumAttend() = " + e.getNumLate());;
+            System.out.println("e.getUserId() = " + e.getUserId());
+        }
+        //System.out.println("evaluateAppointmentDTO.getEvaluationInfoList(). = " + evaluateAppointmentDTO.getEvaluationInfoList().);
         //방 조회
-        Long roomId = Long.parseLong(evaluateAppointmentDTOs.get(0).getRoomId());
+        Long roomId = Long.parseLong(evaluateAppointmentDTO.getRoomId());
         AppointmentChattingRoom room = appointmentService.findAppointmentChattingRoom(roomId);
         //유저 및 유저 채팅룸 조회하여 해당 유저 결과 계산
-        for (EvaluateAppointmentDTO e : evaluateAppointmentDTOs) {
+        for (EvaluationInfo e : evaluateAppointmentDTO.getEvaluationInfoList()) {
             User user = userService.findUser(e.getUserId());
             UserChattingRoom userChattingRoom = chattingRoomService.findUserChattingRoom(user,room);
             userChattingRoom.sumScore(e.getNumAttend(), e.getNumNotAttend(), e.getNumLate());
+
         }
         /**
          *  방 나가는 로직
@@ -110,7 +122,7 @@ public class AppointmentController {
         // 유저 ID를 사용하여 유저 정보 조회
         User user = userService.findUser(userId);
 
-        appointmentService.goOutRoom(user,room);
+        //appointmentService.goOutRoom(user,room);
 
         return ResponseEntity.status(HttpStatus.OK).body("평가 정보가 입력 되었습니다");
     }

@@ -35,7 +35,7 @@ class MessageServiceTest {
         User user = userService.findUser("taewoo9240");
         ChattingRoom chattingRoom = chattingRoomService.findRoom(id);
         String text = "반갑습니다";
-        messageService.createMessage(text,user,chattingRoom, Long.parseLong("sdfsf"));
+        messageService.createMessage(text,user,chattingRoom, Long.parseLong("20230602181822111"));
     }
 
     @Test
@@ -50,6 +50,23 @@ class MessageServiceTest {
     }
 
     @Test
+    @Rollback(value = false)
+    void filterMessage() {
+        ArrayList<Message> msgList = new ArrayList<>();
+
+        int i = 54;
+        long id = i;
+        User U = new User();
+        ChattingRoom chattingRoom = chattingRoomService.findRoom(id);
+
+        String text = "반갑습니다";
+        messageService.createMessage(text,U,chattingRoom, Long.parseLong("20230602181822111"));
+        text = "안녕하세요";
+        messageService.createMessage(text,U,chattingRoom, Long.parseLong("20230602181822115"));
+        text = "뭐요";
+        messageService.createMessage(text,U,chattingRoom, Long.parseLong("20230602181822119"));
+
+
     void findMessage() {
     }
 }
