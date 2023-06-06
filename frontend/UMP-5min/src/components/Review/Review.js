@@ -21,7 +21,6 @@ const Review = (props) => {
       numLate: value.late,
       numNotAttend: value.absence,
     }));
-    console.log("review", review);
     axios({
       method: "post",
       url: "/appointment-score",
@@ -35,7 +34,6 @@ const Review = (props) => {
       withCredentials: true,
     })
       .then((response) => {
-        console.log("----------------", response);
         alert(`평가 완료했습니다`);
       })
       .catch((error) => {

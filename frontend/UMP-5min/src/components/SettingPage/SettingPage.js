@@ -40,7 +40,6 @@ const SettingPage = ({ props }) => {
       withCredentials: true,
     })
       .then((response) => {
-        console.log("--------------------", response);
         alert(`변경했습니다!`);
       })
       .catch(function (error) {

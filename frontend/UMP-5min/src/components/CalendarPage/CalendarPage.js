@@ -38,7 +38,6 @@ const CalendarPage = () => {
       withCredentials: true,
     })
       .then((response) => {
-        console.log("----------------", response);
         const e = response.data
           .filter((value) => value.time !== "")
           .map((value) => {
@@ -59,7 +58,6 @@ const CalendarPage = () => {
         setEvents(e);
       })
       .catch((error) => {
-        console.log(error);
         alert(error.response.data);
       });
   };

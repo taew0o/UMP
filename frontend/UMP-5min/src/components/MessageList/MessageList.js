@@ -48,7 +48,6 @@ export default function MessageList({ props }) {
   const [visibleAppoint, setAppoint] = useState(false);
 
   const onChange = (time, timeString) => {
-    console.log(time, timeString);
     setAppointment((prevAppointment) => ({
       ...prevAppointment,
       time: timeString,
@@ -87,7 +86,6 @@ export default function MessageList({ props }) {
       };
       ws.current.onmessage = (evt) => {
         const data = JSON.parse(evt.data);
-        console.log(data);
         const tempMsg = {
           author: data.senderId,
           message: data.textMsg,
@@ -127,8 +125,6 @@ export default function MessageList({ props }) {
   }, []);
 
   useEffect(() => {
-    console.log("My id???????????????", MY_USER_ID);
-    console.log(text);
     makeMsg();
     if (socketConnected && text) {
       ws.current.send(
@@ -140,9 +136,7 @@ export default function MessageList({ props }) {
           sendName: MY_NAME,
         })
       );
-      console.log("메시지 보낸다");
     }
-    console.log("message!!!!!!!", messages);
   }, [text]);
 
   useEffect(() => {
@@ -156,7 +150,6 @@ export default function MessageList({ props }) {
       ...prevAppointment,
       [name]: value,
     }));
-    console.log("appointment", appointment);
   };
 
   const getPreRoomPeople = () => {
@@ -170,12 +163,10 @@ export default function MessageList({ props }) {
       withCredentials: true,
     })
       .then((response) => {
-        console.log("----------------", response);
         const newPeople = response.data.map((value) => {
           return value;
         });
         setRoomPeople(newPeople);
-        console.log(roomPeople);
       })
       .catch((error) => {
         console.log(error);
@@ -194,12 +185,10 @@ export default function MessageList({ props }) {
       withCredentials: true,
     })
       .then((response) => {
-        console.log("----------------", response);
         const newPeople = response.data.map((value) => {
           return value;
         });
         setRoomPeople(newPeople);
-        console.log(roomPeople);
       })
       .catch((error) => {
         console.log(error);
@@ -238,7 +227,6 @@ export default function MessageList({ props }) {
       withCredentials: true,
     })
       .then((response) => {
-        console.log("----------------", response);
         response.data.map((value) => {
           const tempMsg = {
             author: value.senderId,
@@ -266,7 +254,6 @@ export default function MessageList({ props }) {
       withCredentials: true,
     })
       .then((response) => {
-        console.log("----------------", response);
         ws.current.send(
           JSON.stringify({
             roomId: id,
@@ -330,7 +317,6 @@ export default function MessageList({ props }) {
       const senderName = isMine ? MY_NAME : current.name;
 
       const isServer = current.name === `server`;
-      console.log("isServer", isServer);
 
       tempMessages.push(
         <Message
@@ -476,7 +462,6 @@ export default function MessageList({ props }) {
     setSelectedFriends([]);
     setSelectedFriendName([]);
     getFriends();
-    console.log("friends", friends);
     setVisible(!visible);
   };
 
@@ -495,7 +480,6 @@ export default function MessageList({ props }) {
   };
 
   const addAppointment = () => {
-    console.log("약속 데이터들", selectedFriends, appointment.roomName);
     axios({
       method: "post",
       url: "/appointment-room",
@@ -512,7 +496,6 @@ export default function MessageList({ props }) {
       withCredentials: true,
     })
       .then((response) => {
-        console.log(response);
         let friendNames;
         if (selectedFriendName.length === 1) {
           friendNames = selectedFriendName[0]; // 선택된 친구가 한 명인 경우
@@ -587,7 +570,9 @@ export default function MessageList({ props }) {
           ]}
         />
 
-        <div className="modal-content">
+          <div className="modal-content" style={{ maxHeight: '800px', overflowY: 'auto' }}>
+          
+          
           <div className="room-info">
             <div>채팅방 정보: {state.name}</div>
             <div className="room-people">
