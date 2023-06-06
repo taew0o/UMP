@@ -59,6 +59,7 @@ public class AppointmentEvaluation {
         else{
             return 2; //불참 참삭 동률
         }
+        
     }
 
 
