@@ -12,7 +12,6 @@ import ppkjch.ump.entity.Message;
 import ppkjch.ump.entity.User;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -68,5 +67,6 @@ class MessageServiceTest {
         messageService.createMessage(text,U,chattingRoom, Long.parseLong("20230602181822119"));
 
 
+    void findMessage() {
     }
 }

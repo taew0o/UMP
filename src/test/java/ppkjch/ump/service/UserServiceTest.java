@@ -15,6 +15,7 @@ class UserServiceTest {
     User U = new User();
     User M = new User();
     @Test
+
     void join() {
         U.setId("alexander");
         U.setPassword("66");

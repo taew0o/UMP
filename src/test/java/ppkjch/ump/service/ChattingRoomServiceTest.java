@@ -56,6 +56,7 @@ class ChattingRoomServiceTest {
         for(int j = 0 ; j < userChattingRoomList.size() ; j++){
             System.out.println(userChattingRoomList.get(j).getChattingRoom().getChattingRoomName());
             System.out.println(userChattingRoomList.get(j).getUser().getName());
+
         }
 
     }
@@ -65,12 +66,41 @@ class ChattingRoomServiceTest {
         long j = i;
         User user3 = userService.findUser("taewoo9240");
         ChattingRoom chattingRoom = chattingRoomService.findRoom(j);
+    }
 
-
+    @Test
+    void testFindRoom() {
     }
 
     @Test
     void goOutRoom() {
+    }
 
+    @Test
+    void messageTimeArray() {
+    }
+
+    @Test
+    void testFindRoom1() {
+    }
+
+    @Test
+    void testMakeRoom1() {
+    }
+
+    @Test
+    void testInviteRoom() {
+    }
+
+    @Test
+    void testFindRoom2() {
+    }
+
+    @Test
+    void testGoOutRoom() {
+    }
+
+    @Test
+    void testMessageTimeArray() {
     }
 }
