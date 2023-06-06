@@ -98,7 +98,7 @@ export default function MessageList({ props }) {
       };
 
       getMessages();
-      getRoomPeople();
+
       getFriends();
       if (state.isAppoint) {
         const currentDate = new Date();
@@ -106,9 +106,11 @@ export default function MessageList({ props }) {
 
         if (currentDate > appointmentDate) {
           console.log("약속 시간이 이미 지났습니다.");
+          getPreRoomPeople();
           setReviewIsOpen(true);
         } else {
           console.log("약속 시간이 아직 남았습니다.");
+          getRoomPeople();
         }
       }
     }
@@ -155,6 +157,30 @@ export default function MessageList({ props }) {
       [name]: value,
     }));
     console.log("appointment", appointment);
+  };
+
+  const getPreRoomPeople = () => {
+    axios({
+      method: "get",
+      url: "/appointment-room/members",
+      headers: {
+        "Content-Type": `application/json`,
+      },
+      params: { roomId: id },
+      withCredentials: true,
+    })
+      .then((response) => {
+        console.log("----------------", response);
+        const newPeople = response.data.map((value) => {
+          return value;
+        });
+        setRoomPeople(newPeople);
+        console.log(roomPeople);
+      })
+      .catch((error) => {
+        console.log(error);
+        alert(error.response.data);
+      });
   };
 
   const getRoomPeople = () => {
