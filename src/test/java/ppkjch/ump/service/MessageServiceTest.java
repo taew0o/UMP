@@ -12,6 +12,7 @@ import ppkjch.ump.entity.Message;
 import ppkjch.ump.entity.User;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -52,6 +53,20 @@ class MessageServiceTest {
     @Test
     @Rollback(value = false)
     void filterMessage() {
-        
+        ArrayList<Message> msgList = new ArrayList<>();
+
+        int i = 54;
+        long id = i;
+        User U = new User();
+        ChattingRoom chattingRoom = chattingRoomService.findRoom(id);
+
+        String text = "반갑습니다";
+        messageService.createMessage(text,U,chattingRoom, Long.parseLong("20230602181822111"));
+        text = "안녕하세요";
+        messageService.createMessage(text,U,chattingRoom, Long.parseLong("20230602181822115"));
+        text = "뭐요";
+        messageService.createMessage(text,U,chattingRoom, Long.parseLong("20230602181822119"));
+
+
     }
 }
