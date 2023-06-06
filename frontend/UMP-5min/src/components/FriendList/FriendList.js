@@ -127,7 +127,9 @@ export default function FriendList(props) {
         </div>
         <div className="friend-info">
           <div className="friend-title">{name}</div>
-          <p className="friend-snippet">{text}</p>
+          <p className="friend-snippet">
+            {props.MY_USER_ID !== id ? text : "내 정보"}
+          </p>
         </div>
       </div>
       <Modal
