@@ -91,18 +91,6 @@ public class ChattingRoomService {
         }
     }
 
-    //이 함수는 여러명 한꺼번에 초대하는 것 같긴 한데 방 객체 생성 방식 몰라서 아직 냅둠
-//    public Long invite(List<String> userIds) {
-//        try{
-//            for(int i = 0 ; i < userIds.size() ; i++){
-//
-//            }
-//        }catch(RoomFullException e){
-//            System.out.println(e.toString());
-//        }finally {
-//
-//        }
-//    }
     public List<Message> messageTimeArray(ChattingRoom CR){
         List <Message> result = new ArrayList<>();
         result = jpaMessageRepository.findMessageByRoom(CR);
