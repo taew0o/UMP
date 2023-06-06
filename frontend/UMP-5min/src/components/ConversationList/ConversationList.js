@@ -7,6 +7,7 @@ import { Button, Popover, Input } from "antd";
 import "./ConversationList.css";
 import ConversationSearch from "../ConversationSearch/ConversationSearch";
 import { Checkbox } from "antd";
+import { BiTimeFive } from "react-icons/bi";
 
 export default function ConversationList(props) {
   const [conversations, setConversations] = useState([]);
@@ -177,6 +178,15 @@ export default function ConversationList(props) {
     <div className="conversation-list">
       <Toolbar
         title="Messenger"
+        leftItems={[
+          <BiTimeFive
+            style={{ display: "flex", fontSize: "24px", color: "blue" }}
+          />,
+          <span style={{ fontSize: "16px", fontWeight: "bold" }}>
+            {" "}
+            : 약속 채팅방
+          </span>,
+        ]}
         rightItems={[
           <ToolbarButton
             key="add"

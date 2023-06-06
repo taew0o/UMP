@@ -524,6 +524,7 @@ export default function MessageList({ props }) {
         rightItems={[
           <div
             onClick={() => {
+              getRoomPeople();
               setModalIsOpen(true);
             }}
           >
