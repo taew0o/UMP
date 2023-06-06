@@ -22,6 +22,10 @@
   justify-content: flex-end;
 }
 
+.message.server .bubble-container {
+  justify-content: center;
+}
+
 .message.start .bubble-container .bubble {
   /* margin-top: 10px; */
   border-top-left-radius: 20px;
@@ -44,7 +48,7 @@
 
 .message .bubble-container .bubble {
   margin: 1px 0px;
-  background:  #ebeef0;
+  background: #ebeef0;
   color: #333333;
   padding: 10px 15px;
   border-radius: 20px;

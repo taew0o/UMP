@@ -224,7 +224,7 @@ export default function MessageList({ props }) {
       })
       .catch((error) => {
         console.log(error);
-        alert(error.response.data);
+        // alert(error.response.data);
       });
   };
 
@@ -302,7 +302,7 @@ export default function MessageList({ props }) {
 
       const senderName = isMine ? MY_NAME : current.name;
 
-      const isServer = current.author === `server`;
+      const isServer = current.name === `server`;
       console.log("isServer", isServer);
 
       tempMessages.push(
