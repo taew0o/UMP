@@ -161,13 +161,13 @@ public class UserController {
 
 
     @DeleteMapping("/friend")
-    public ResponseEntity<?> removeFriend(HttpServletRequest request, @RequestBody FriendIdDTO friendId){
+    public ResponseEntity<?> removeFriend(HttpServletRequest request, @RequestParam(name ="friendId") String friendId){
         // 세션에서 유저 ID 가져오기
         HttpSession session = request.getSession(false);
         String userId = (String)session.getAttribute("userId");
         // 유저 ID를 사용하여 유저 정보 조회
         User user = userService.findUser(userId);
-        User friend = userService.findUser(friendId.getFriendId());
+        User friend = userService.findUser(friendId);
         try {
             friendService.removeFriend(user, friend);
             return ResponseEntity.noContent().build();
