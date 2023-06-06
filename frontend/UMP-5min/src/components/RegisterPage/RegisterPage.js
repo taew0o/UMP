@@ -50,7 +50,6 @@ const RegisterPage = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const onFinish = (values) => {
-    console.log("Received values of form: ", values);
     axios({
       method: "post",
       url: "/signup",
@@ -65,7 +64,6 @@ const RegisterPage = () => {
       },
     })
       .then((response) => {
-        console.log(response.data);
         alert(`반갑습니다! ${response.data.name}님`);
         navigate("/login");
       })

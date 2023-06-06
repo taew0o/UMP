@@ -22,7 +22,6 @@ export default function ConversationList(props) {
   useEffect(() => {
     getConversations();
     getFriends();
-    console.log(friends);
   }, []);
 
   useEffect(() => {
@@ -39,7 +38,6 @@ export default function ConversationList(props) {
       withCredentials: true,
     })
       .then((response) => {
-        console.log("----------------", response);
         const newConversations = response.data.reduce((acc, value) => {
           if (value.chattingRoomName !== "") {
             const newChatRoom = {
@@ -104,7 +102,6 @@ export default function ConversationList(props) {
       withCredentials: true,
     })
       .then((response) => {
-        console.log("----------------", response);
         setInputValue("");
         setVisible(false);
         setSelectedFriends([]);

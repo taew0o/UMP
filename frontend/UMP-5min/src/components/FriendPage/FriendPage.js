@@ -152,7 +152,6 @@ const FriendPage = (props) => {
     })
       .then((response) => {
         alert(`${response.data.name}님에게 친구요청을 보냈습니다.`);
-        console.log("----------------", response);
       })
       .catch((error) => {
         alert(error.response.data);
@@ -178,7 +177,6 @@ const FriendPage = (props) => {
       withCredentials: true,
     })
       .then((response) => {
-        console.log("----------------", response);
         getFriend();
       })
       .catch((error) => {
