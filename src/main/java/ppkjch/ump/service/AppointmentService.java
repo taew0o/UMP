@@ -90,12 +90,19 @@ public class AppointmentService {
 
     public List<AppointmentChattingRoom> findAppointments(User user){
         return jpaAppointmentChattingRoomRepository.findAppointmentByUser(user);
-
-
     }
 
     public AppointmentChattingRoom findAppointmentChattingRoom(Long roomId){
         return jpaAppointmentChattingRoomRepository.findOne(roomId);
+    }
+
+    public List<User> findUserByAppointmentChattingRoom(AppointmentChattingRoom apcr){
+        List<User> result =  new ArrayList<>();
+        List<AppointmentEvaluation> appointmentEvaluationList = jpaAppointmentEvaluationRepository.findAppointmentEvaluationByRoom(apcr);
+        for(AppointmentEvaluation ape : appointmentEvaluationList){
+            result.add(ape.getUser());
+        }
+        return result;
     }
 
     @Transactional

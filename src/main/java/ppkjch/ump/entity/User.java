@@ -39,9 +39,9 @@ class AppointmentScore{
     public AppointmentScore() {
     }
 
-    private int numAttend;
-    private int numNotAttend;
-    private int numLate;
+    private int numAttend = 0;
+    private int numNotAttend = 0;
+    private int numLate = 0;
 
     public void applyEvaluate(int maxScore){
         System.out.println("maxScore  = " + maxScore );

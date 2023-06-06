@@ -29,6 +29,7 @@ public class JpaAppointmentEvaluationRepository {
                 .setParameter("acr", acr)
                 .getResultList();
     }
+
     public void removeAppointmentEvaluation(AppointmentEvaluation ae){
         em.remove(ae);
     }
@@ -38,6 +39,7 @@ public class JpaAppointmentEvaluationRepository {
                 .setParameter("acr", acr)
                  .executeUpdate();
     }
+
 
 
 }
