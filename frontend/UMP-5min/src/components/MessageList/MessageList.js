@@ -625,7 +625,10 @@ export default function MessageList({ props }) {
       </ReactModal>
       <ReactModal
         isOpen={reviewIsOpen}
-        onRequestClose={() => setReviewIsOpen(false)}
+        onRequestClose={() => {
+          setReviewIsOpen(false);
+          navigate("/");
+        }}
       >
         <Review id={id} roomPeople={roomPeople} MY_USER_ID={MY_USER_ID} />
       </ReactModal>

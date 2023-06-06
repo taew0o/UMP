@@ -152,7 +152,10 @@ const Home = () => {
                 >
                   <Routes>
                     <Route path="/" exact element={<ChatPage />} />
-                    <Route path="/friend" element={<FriendPage />} />
+                    <Route
+                      path="/friend"
+                      element={<FriendPage myData={myData} />}
+                    />
                     <Route path="/calendar" element={<CalendarPage />} />
                     <Route
                       path="/setting"
