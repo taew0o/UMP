@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import ppkjch.ump.dto.EvaluateAppointmentDTO;
+import ppkjch.ump.dto.EvaluationInfo;
 import ppkjch.ump.dto.InviteRoomDTO;
 import ppkjch.ump.dto.MakeAppointmentRoomDTO;
 import ppkjch.ump.entity.AppointmentChattingRoom;
@@ -88,15 +89,15 @@ public class AppointmentController {
         return ResponseEntity.status(HttpStatus.CREATED).body("성공적으로 초대");
     }
     @PostMapping("/appointment-score")
-    public ResponseEntity<?> evaluateAppointment(HttpServletRequest request, @RequestBody List<EvaluateAppointmentDTO> evaluateAppointmentDTOs){
+    public ResponseEntity<?> evaluateAppointment(HttpServletRequest request, @RequestBody EvaluateAppointmentDTO evaluateAppointmentDTO){
         /**
          *  평가 더하는 로직
          */
         //방 조회
-        Long roomId = Long.parseLong(evaluateAppointmentDTOs.get(0).getRoomId());
+        Long roomId = Long.parseLong(evaluateAppointmentDTO.getRoomId());
         AppointmentChattingRoom room = appointmentService.findAppointmentChattingRoom(roomId);
         //유저 및 유저 채팅룸 조회하여 해당 유저 결과 계산
-        for (EvaluateAppointmentDTO e : evaluateAppointmentDTOs) {
+        for (EvaluationInfo e : evaluateAppointmentDTO.getEvaluationInfoList()) {
             User user = userService.findUser(e.getUserId());
             UserChattingRoom userChattingRoom = chattingRoomService.findUserChattingRoom(user,room);
             userChattingRoom.sumScore(e.getNumAttend(), e.getNumNotAttend(), e.getNumLate());

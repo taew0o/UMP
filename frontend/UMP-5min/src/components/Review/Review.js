@@ -22,8 +22,8 @@ const Review = (props) => {
         "Content-Type": `application/json`,
       },
       data: {
-        roomId: props.id,
-        evaluateAppointmentDTOs: review,
+          roomId: props.id,
+          evaluateAppointmentDTOs: review,
       },
       withCredentials: true,
     })
@@ -43,7 +43,7 @@ const Review = (props) => {
     name: user.name,
     attend: 0,
     late: 0,
-    absence: 0,
+    numNotAttend: 0,
   }));
 
   const [userReviews, setUserReviews] = useState(initialUserReviews);

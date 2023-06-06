@@ -68,7 +68,7 @@ export default function MessageList({ props }) {
     roomName: "",
   });
 
-  const webSocketUrl = "ws://52.78.99.250:8080/websocket?roomId=" + id;
+  const webSocketUrl = "ws://localhost:8080/websocket?roomId=" + id;
   const ws = useRef(null);
 
   useEffect(() => {
