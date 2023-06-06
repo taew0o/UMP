@@ -14,10 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ppkjch.ump.dto.*;
 import ppkjch.ump.entity.User;
-import ppkjch.ump.exception.FriendExistException;
-import ppkjch.ump.exception.FriendNotExistException;
-import ppkjch.ump.exception.FriendRequestExistException;
-import ppkjch.ump.exception.NotValidUserId;
+import ppkjch.ump.exception.*;
 import ppkjch.ump.service.FriendService;
 import ppkjch.ump.service.UserService;
 
@@ -126,7 +123,7 @@ public class UserController {
             friendService.request(user1, user2);
             return ResponseEntity.ok(user2);
         }
-        catch (FriendExistException | FriendRequestExistException | NotValidUserId e){
+        catch (FriendExistException | FriendRequestExistException | NotValidUserId | FriendMyselfException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
