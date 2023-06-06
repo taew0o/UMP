@@ -69,38 +69,19 @@ class ChattingRoomServiceTest {
     }
 
     @Test
-    void testFindRoom() {
-    }
-
-    @Test
     void goOutRoom() {
+        int i = 2;
+        long j = i;
+        User user3 = userService.findUser("taewoo9240");
+        ChattingRoom chattingRoom = chattingRoomService.findRoom(j);
     }
 
     @Test
     void messageTimeArray() {
+        int i = 2;
+        long j = i;
+        User user3 = userService.findUser("taewoo9240");
+        ChattingRoom chattingRoom = chattingRoomService.findRoom(j);
     }
 
-    @Test
-    void testFindRoom1() {
-    }
-
-    @Test
-    void testMakeRoom1() {
-    }
-
-    @Test
-    void testInviteRoom() {
-    }
-
-    @Test
-    void testFindRoom2() {
-    }
-
-    @Test
-    void testGoOutRoom() {
-    }
-
-    @Test
-    void testMessageTimeArray() {
-    }
 }
