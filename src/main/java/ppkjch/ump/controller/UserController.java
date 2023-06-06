@@ -160,7 +160,7 @@ public class UserController {
     }
 
 
-    @DeleteMapping("friend")
+    @DeleteMapping("/friend")
     public ResponseEntity<?> removeFriend(HttpServletRequest request, @RequestBody FriendIdDTO friendId){
         // 세션에서 유저 ID 가져오기
         HttpSession session = request.getSession(false);
@@ -173,7 +173,7 @@ public class UserController {
             return ResponseEntity.noContent().build();
         }
         catch (FriendNotExistException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
