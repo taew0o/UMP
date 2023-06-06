@@ -59,14 +59,12 @@ const ConversationListItem = (props) => {
           {/* <p className="conversation-snippet">{text}</p> */}
         </div>
 
-        {isAppoint ? (
+        {isAppoint && (
           <div className="conversation-appoint">
             <BiTimeFive
               style={{ display: "flex", fontSize: "24px", color: "blue" }}
             />
           </div>
-        ) : (
-          <></>
         )}
       </div>
     </div>

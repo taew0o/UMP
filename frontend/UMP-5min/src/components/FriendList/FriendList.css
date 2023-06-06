@@ -1,52 +1,60 @@
-.friend-button{
-    display: inline-block;
-    padding: 20px;
-  }
-  
-  .friend-list-item {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-  }
-  
-  .friend-list-item:hover {
-    background: #eeeef1;
-    cursor: pointer;
-  }
-  
-  .friend-photo {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-right: 10px;
-  }
-  
-  .friend-title {
-    font-size: 14px;
-    font-weight: bold;
-    margin: 0;
-  }
-  
-  .friend-snippet {
-    font-size: 14px;
-    color: #888;
-    margin: 0;
-  }
-  .attendance-rate-box {
-    border: 2px solid black;
-    width: 100%;
-    height: 300px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  /* 기존 css의 수정 및 추가 */
+.friend-button {
+  display: inline-block;
+  padding: 20px;
+}
+
+.friend-list-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+
+.friend-list-item:hover {
+  background: #eeeef1;
+  cursor: pointer;
+}
+
+.friend-photo {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+.friend-title {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.friend-info {
+  align-items: center;
+  justify-content: center;
+}
+
+.friend-snippet {
+  font-size: 14px;
+  color: #888;
+  margin: 0;
+}
+.attendance-rate-box {
+  border: 2px solid black;
+  width: 100%;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 기존 css의 수정 및 추가 */
 .friend-modal-content {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+
+.friend-modal-item {
+  display: flex;
 }
 
 .attendance-rate-container h2 {

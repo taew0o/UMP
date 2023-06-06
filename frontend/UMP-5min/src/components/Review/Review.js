@@ -21,6 +21,7 @@ const Review = (props) => {
       numLate: value.late,
       numNotAttend: value.absence,
     }));
+    console.log("review", review);
     axios({
       method: "post",
       url: "/appointment-score",
@@ -117,7 +118,7 @@ const Review = (props) => {
         selectedReview[type]++;
 
         Object.keys(selectedReview).forEach((key) => {
-          if (key !== type && key !== "name") {
+          if (key !== type && key !== "name" && key !== "id") {
             selectedReview[key] = 0;
           }
         });

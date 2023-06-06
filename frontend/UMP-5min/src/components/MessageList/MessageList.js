@@ -55,12 +55,8 @@ export default function MessageList({ props }) {
     }));
   };
 
-  const onOk = (time, timeString) => {
-    console.log(time, timeString);
-    setAppointment((prevAppointment) => ({
-      ...prevAppointment,
-      time: timeString,
-    }));
+  const onOk = (time) => {
+    console.log(time);
   };
   const [appointment, setAppointment] = useState({
     time: "",
@@ -121,7 +117,7 @@ export default function MessageList({ props }) {
 
     return () => {
       console.log("clean up");
-      localStorage.setItem("location", "notRoom");
+      // localStorage.setItem("location", "notRoom");
       window.removeEventListener("load", scrollToBottom); // 컴포넌트 언마운트 시 이벤트 리스너 제거
 
       ws.current.close();
@@ -307,6 +303,7 @@ export default function MessageList({ props }) {
       const senderName = isMine ? MY_NAME : current.name;
 
       const isServer = current.author === `server`;
+      console.log("isServer", isServer);
 
       tempMessages.push(
         <Message
