@@ -36,5 +36,9 @@ public class JpaUserRepository {
     public User findOne(String id){
         return em.find(User.class, id);
     }
+
+    public User mergeUser(User user){
+        return em.merge(user);
+    }
 }
 

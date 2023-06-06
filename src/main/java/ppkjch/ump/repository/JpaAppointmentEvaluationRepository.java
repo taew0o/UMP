@@ -34,8 +34,10 @@ public class JpaAppointmentEvaluationRepository {
     }
 
     public void removeAppointmentEvaluations(AppointmentChattingRoom acr){
-         em.createQuery( "delete from AppointmentEvaluation ae where ae.appointmentchattingRoom = :acr", AppointmentEvaluation.class)
+         em.createQuery( "delete from AppointmentEvaluation ae where ae.appointmentchattingRoom = :acr")
                 .setParameter("acr", acr)
                  .executeUpdate();
     }
+
+
 }
