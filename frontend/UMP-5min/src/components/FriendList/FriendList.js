@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./FriendList.css";
 import { Button, Modal } from "antd";
 import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
+import axios from "axios";
 
 export default function FriendList(props) {
   const { id, name, text, appointmentScore } = props.data;
@@ -24,6 +25,29 @@ export default function FriendList(props) {
   const handleDeleteClick = () => {
     setConfirmModalTitle("친구 삭제");
     setConfirmModalIsOpen(true);
+  };
+
+  const deleteFriend = () => {
+    axios({
+      method: "delete",
+      url: "/friend",
+      headers: {
+        "Content-Type": `application/json`,
+      },
+      params: { friendId: id },
+      withCredentials: true,
+    })
+      .then((response) => {
+        console.log("----------------", response);
+        alert(`${name}님을 친구 삭제하였습니다`);
+        setConfirmModalIsOpen(false);
+        setModalIsOpen(false);
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.log(error);
+        alert(error.response.data);
+      });
   };
 
   const handleBlockClick = () => {
@@ -83,19 +107,20 @@ export default function FriendList(props) {
       index === 0 ? "참석" : index === 1 ? "불참" : index === 2 ? "지각" : "";
 
     return (
-      <text
-        x={x}
-        y={y}
-        fill="black"
-        textAnchor="middle"
-        dominantBaseline="central"
-      >
-        {`${(percent * 100).toFixed(0)}%`}
-        <tspan x={x} dy={15}>
-          {labelText}
-        </tspan>{" "}
-        {/* 막대 끝에 레이블 표시 */}
-      </text>
+      percent && (
+        <text
+          x={x}
+          y={y}
+          fill="black"
+          textAnchor="middle"
+          dominantBaseline="central"
+        >
+          {`${(percent * 100).toFixed(0)}%`}
+          <tspan x={x} dy={15}>
+            {labelText}
+          </tspan>
+        </text>
+      )
     );
   };
 
@@ -105,15 +130,15 @@ export default function FriendList(props) {
     return (
       <ul className="pie-chart-legend">
         {payload.map((entry, index) => (
-          <li key={`legend-${index}`}>
-            <span
-              className="legend-icon"
-              style={{ backgroundColor: COLORS[index % COLORS.length] }}
-            ></span>
-            <span className="legend-label">
-              {attendanceData[index].name}: {attendanceData[index].value}
-            </span>
-          </li>
+          // <li key={`legend-${index}`}>
+          <span
+            className="legend-icon"
+            style={{ backgroundColor: COLORS[index % COLORS.length] }}
+          ></span>
+          //   {/* <span className="legend-label">
+          //     {attendanceData[index].name}: {attendanceData[index].value}
+          //   </span> */}
+          // // </li>
         ))}
       </ul>
     );
@@ -147,7 +172,10 @@ export default function FriendList(props) {
             </div>
           </div>
           <div className="attendance-rate-container">
-            <h2>약속 참여율:</h2>
+            <h2>
+              약속 참여율: 참석 : {appointmentScore.numAttend}, 불참 :{" "}
+              {appointmentScore.numNotAttend}, 지각 : {appointmentScore.numLate}
+            </h2>
             <PieChart width={400} height={400}>
               <Pie
                 data={attendanceData}
@@ -190,9 +218,6 @@ export default function FriendList(props) {
             >
               삭제
             </Button>
-            <Button type="primary" onClick={handleBlockClick}>
-              차단
-            </Button>
           </div>
         )}
       </Modal>
@@ -200,7 +225,7 @@ export default function FriendList(props) {
         title={confirmModalTitle}
         visible={confirmModalIsOpen}
         onCancel={() => setConfirmModalIsOpen(false)}
-        onOk={() => console.log(`${confirmModalTitle} 완료`)}
+        onOk={deleteFriend}
         okButtonProps={{ style: { float: "left" } }}
         okText="예"
         cancelText="아니오"
