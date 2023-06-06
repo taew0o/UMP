@@ -39,6 +39,7 @@ public class AppointmentService {
         //약속 채팅방 생성
         AppointmentChattingRoom acr = AppointmentChattingRoom.createAppointmentChattingRoom(numPerson,userChattingRooms,roomName, time, location);
         jpaAppointmentChattingRoomRepository.save(acr);
+        System.out.println("time = " + time);
         return acr.getId();
     }
 

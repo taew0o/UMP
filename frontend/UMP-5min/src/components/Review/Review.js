@@ -29,7 +29,7 @@ const Review = (props) => {
       },
       data: {
         roomId: props.id,
-        evaluateAppointmentDTOs: review,
+          evaluationInfoList: review,
       },
       withCredentials: true,
     })
