@@ -26,6 +26,25 @@ export default function FriendList(props) {
     setConfirmModalIsOpen(true);
   };
 
+  const deleteFriend = (friendId) => {
+    axios({
+      method: "delete",
+      url: "/friend",
+      headers: {
+        "Content-Type": `application/json`,
+      },
+      params: { friendId: friendId },
+      withCredentials: true,
+    })
+      .then((response) => {
+        console.log("----------------", response);
+      })
+      .catch((error) => {
+        console.log(error);
+        alert(error.response.data);
+      });
+  };
+
   const handleBlockClick = () => {
     setConfirmModalTitle("친구 차단");
     setConfirmModalIsOpen(true);
@@ -185,13 +204,10 @@ export default function FriendList(props) {
           >
             <Button
               type="primary"
-              onClick={handleDeleteClick}
+              onClick={handleDeleteClick()}
               style={{ marginRight: "10px" }}
             >
               삭제
-            </Button>
-            <Button type="primary" onClick={handleBlockClick}>
-              차단
             </Button>
           </div>
         )}
@@ -200,7 +216,7 @@ export default function FriendList(props) {
         title={confirmModalTitle}
         visible={confirmModalIsOpen}
         onCancel={() => setConfirmModalIsOpen(false)}
-        onOk={() => console.log(`${confirmModalTitle} 완료`)}
+        onOk={() => deleteFriend(id)}
         okButtonProps={{ style: { float: "left" } }}
         okText="예"
         cancelText="아니오"
