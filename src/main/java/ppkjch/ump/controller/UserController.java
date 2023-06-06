@@ -79,7 +79,7 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
     @GetMapping("/other")
-    public ResponseEntity<User> getUserInfo(@RequestParam("userId") String userId ){
+    public ResponseEntity<User> getUserInfo(@RequestParam(name ="userId") String userId ){
         // 유저 ID를 사용하여 유저 정보 조회
         User user = userService.findUser(userId);
 
