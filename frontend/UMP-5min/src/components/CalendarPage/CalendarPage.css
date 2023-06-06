@@ -1,6 +1,6 @@
 .events {
-  margin: 10;
-  padding: 0;
+  /* margin: 10; */
+  /* padding: 0; */
   list-style: none;
 }
 .events .ant-badge-status {
@@ -19,8 +19,8 @@
 }
 
 .events {
-  margin: 0 10px;
-  padding: 0;
+  /* margin: 0 10px; */
+  /* padding: 0; */
   list-style: none;
 }
 
@@ -49,7 +49,7 @@
   margin-bottom: 8px;
 }
 
-.content {
-  font-size: 8pt;
-  text-overflow: ellipsis;
+.badge .content {
+  display: flex;
+  font-size: 10pt;
 }
