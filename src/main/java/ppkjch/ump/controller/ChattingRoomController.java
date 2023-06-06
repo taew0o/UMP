@@ -152,5 +152,7 @@ public class ChattingRoomController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(messageDTOs);
     }
+
+
 }
 
