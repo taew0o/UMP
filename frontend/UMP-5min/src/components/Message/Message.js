@@ -24,6 +24,7 @@ export default function Message(props) {
   const [backgroundColor, setBackgroundColor] = useState("");
   const [user, setUser] = useState();
   const [attendanceData, setAttendance] = useState([]);
+  const [content, setContent] = useState();
 
   useEffect(() => {
     let storedColor = localStorage.getItem(senderName);
@@ -36,7 +37,7 @@ export default function Message(props) {
 
   useEffect(() => {
     getAppointment();
-    // console.log(data);
+    console.log(data);
   }, [props]);
 
   useEffect(() => {
@@ -47,6 +48,9 @@ export default function Message(props) {
         { name: "불참", value: user.appointmentScore.numNotAttend },
         { name: "지각", value: user.appointmentScore.numLate },
       ]);
+      setContent(
+        `참석 : ${user.appointmentScore.numAttend}, 불참 : ${user.appointmentScore.numNotAttend}, 지각 :${user.appointmentScore.numLate}`
+      );
     }
   }, [user]);
 
@@ -71,7 +75,7 @@ export default function Message(props) {
       withCredentials: true,
     })
       .then((response) => {
-        // console.log("----------------", response);
+        console.log("----------------", response);
         setUser(response.data);
       })
       .catch((error) => {
@@ -128,19 +132,21 @@ export default function Message(props) {
       index === 0 ? "참석" : index === 1 ? "지각" : index === 2 ? "불참" : "";
 
     return (
-      <text
-        x={x}
-        y={y}
-        fill="black"
-        textAnchor="middle"
-        dominantBaseline="central"
-      >
-        {`${(percent * 100).toFixed(0)}%`}
-        <tspan x={x} dy={15}>
-          {labelText}
-        </tspan>{" "}
-        {/* 막대 끝에 레이블 표시 */}
-      </text>
+      percent && (
+        <text
+          x={x}
+          y={y}
+          fill="black"
+          textAnchor="middle"
+          dominantBaseline="central"
+        >
+          {`${(percent * 100).toFixed(0)}%`}
+          <tspan x={x} dy={15}>
+            {labelText}
+          </tspan>{" "}
+          {/* 막대 끝에 레이블 표시 */}
+        </text>
+      )
     );
   };
 
@@ -150,15 +156,10 @@ export default function Message(props) {
     return (
       <ul className="pie-chart-legend">
         {payload.map((entry, index) => (
-          <li key={`legend-${index}`}>
-            <span
-              className="legend-icon"
-              style={{ backgroundColor: COLORS[index % COLORS.length] }}
-            ></span>
-            <span className="legend-label">
-              {attendanceData[index].name}: {attendanceData[index].value}
-            </span>
-          </li>
+          <span
+            className="legend-icon"
+            style={{ backgroundColor: COLORS[index % COLORS.length] }}
+          ></span>
         ))}
       </ul>
     );
@@ -215,7 +216,7 @@ export default function Message(props) {
               </div>
             </div>
             <div className="attendance-rate-container">
-              <h2>약속 참여율:</h2>
+              <h2>약속 참여율: {content}</h2>
               <PieChart width={400} height={400}>
                 <Pie
                   data={attendanceData}
