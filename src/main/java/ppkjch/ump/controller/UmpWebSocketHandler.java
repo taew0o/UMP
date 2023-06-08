@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -48,6 +49,11 @@ public class UmpWebSocketHandler extends TextWebSocketHandler {
         session.getAttributes().put("roomId", roomId);
     }
 
+    @Async
+    protected void saveMessage(String text,User sender,ChattingRoom room, Long sendTime){
+        messageService.createMessage(text, sender, room, sendTime);
+    }
+
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         super.handleTextMessage(session, message);
@@ -61,15 +67,17 @@ public class UmpWebSocketHandler extends TextWebSocketHandler {
         ChattingRoom room = chattingRoomService.findRoom(Long.parseLong(textMessageDTO.getRoomId()));
         Long sendTime = Long.parseLong(textMessageDTO.getSendTime());
         String text = textMessageDTO.getTextMsg();
+        String senderId = textMessageDTO.getSenderId();
 
         //유저 가져오기
-        String senderId = textMessageDTO.getSenderId();
         User sender = userService.findUser(textMessageDTO.getSenderId());
         //가져온 유저 이름 바인딩 (server 이면 id가 server인 것을 가져옴 server는 예약된 유저)
         textMessageDTO.setSendName(sender.getName());
 
-        //메세지 저장하고 다시 JSON 형식으로 직렬화
-        messageService.createMessage(text, sender, room, sendTime);
+        //메세지 저장(비동기적 호출)
+       this.saveMessage(text, sender, room, sendTime);
+
+        // JSON 형식으로 직렬화
         String jsonMessage = objectMapper.writeValueAsString(textMessageDTO);
 
         //해당 메세지의 출처방에 소켓이 연결되어 있는 모든 유저에게 메세지 정보 전달
