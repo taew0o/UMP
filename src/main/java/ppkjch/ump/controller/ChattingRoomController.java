@@ -72,7 +72,6 @@ public class ChattingRoomController {
     @PostMapping("/chattingroom/member")
     public ResponseEntity<String> inviteChattingRoom(@RequestBody InviteRoomDTO inviteDTO){
         //유저 ID정보로 채팅방에 user정보 추가하고 추가된 방을 반환
-        System.out.println("inviteDTO.getEnterTime() = " + inviteDTO.getEnterTime());
         try {
             List<User> invitees = new ArrayList<>();
             for (String id: inviteDTO.getInviteeIds()) {

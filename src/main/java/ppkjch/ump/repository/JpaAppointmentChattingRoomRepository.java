@@ -36,7 +36,6 @@ public class JpaAppointmentChattingRoomRepository {
                 .setParameter("user", user)
                 .getResultList();
     }
-
     public void goOutRoom(User user, AppointmentChattingRoom acr){
         em.createQuery("delete from UserChattingRoom ucr where ucr.user =:user and ucr.chattingRoom =:acr")
                 .setParameter("user",user)

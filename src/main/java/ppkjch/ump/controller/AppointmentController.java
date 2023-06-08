@@ -31,7 +31,6 @@ public class AppointmentController {
     @PostMapping("/appointment-room")
     public ResponseEntity<?> makeChattingRoom(HttpServletRequest request, @RequestBody MakeAppointmentRoomDTO roomInfo){
         // 세션에서 유저 ID 가져오기
-        System.out.println("roomInfo.getTime() = " + roomInfo.getTime());
         HttpSession session = request.getSession(false);
         String userId = (String)session.getAttribute("userId");
         // 유저 ID를 사용하여 유저 정보 조회
@@ -72,7 +71,6 @@ public class AppointmentController {
     @PostMapping("/appointment-room/member")
     public ResponseEntity<String> inviteAptChattingRoom(@RequestBody InviteRoomDTO inviteDTO) {
         //유저 ID정보로 채팅방에 user정보 추가하고 추가된 방을 반환
-        System.out.println("inviteDTO.getEnterTime() = " + inviteDTO.getEnterTime());
         try {
             List<User> invitees = new ArrayList<>();
             for (String id : inviteDTO.getInviteeIds()) {
@@ -95,15 +93,7 @@ public class AppointmentController {
         /**
          *  평가 더하는 로직
          */
-        System.out.println("asdasdsdadds");
-        System.out.println("evaluateAppointmentDTO.getEvaluationInfoList().size() = " + evaluateAppointmentDTO.getEvaluationInfoList().size());
-        for (EvaluationInfo e: evaluateAppointmentDTO.getEvaluationInfoList()) {
-            System.out.println("e.getNumAttend() = " + e.getNumAttend());;
-            System.out.println("e.getNumAttend() = " + e.getNumNotAttend());;
-            System.out.println("e.getNumAttend() = " + e.getNumLate());;
-            System.out.println("e.getUserId() = " + e.getUserId());
-        }
-        //System.out.println("evaluateAppointmentDTO.getEvaluationInfoList(). = " + evaluateAppointmentDTO.getEvaluationInfoList().);
+
         //방 조회
         Long roomId = Long.parseLong(evaluateAppointmentDTO.getRoomId());
         AppointmentChattingRoom room = appointmentService.findAppointmentChattingRoom(roomId);
@@ -145,7 +135,6 @@ public class AppointmentController {
     @GetMapping("/appointment-room/members") //약속 정보를 불러올 때 필요
     public ResponseEntity<List<User>> getAppointmentRoomMembers(@RequestParam(name ="roomId") Long roomId){
 
-        System.out.println("roomId = " + roomId);
         AppointmentChattingRoom appointmentChattingRoom = appointmentService.findAppointmentChattingRoom(roomId);
 
         List<User> users = appointmentService.findUserByAppointmentChattingRoom(appointmentChattingRoom);

@@ -42,7 +42,6 @@ public class ChattingRoom {
         ChattingRoom chattingRoom = new ChattingRoom();
         chattingRoom.setNumPerson(numPerson);
         chattingRoom.setChattingRoomName(roomName);
-        //System.out.println("userChattingRooms.isEmpty() = " + userChattingRooms.isEmpty());
         for (UserChattingRoom userChattingRoom : userChattingRooms) {
             chattingRoom.addUserChattingRoom(userChattingRoom);
         }
@@ -55,12 +54,7 @@ public class ChattingRoom {
     public boolean isEmptyRoom(){
         return this.numPerson == 0;
     }
-    public static void deleteChattingroom(){
 
-        //roomId로 room찾아 삭제
-        //roomId로 message찾아 삭제
-
-    }
 }
 
 
