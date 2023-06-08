@@ -14,18 +14,29 @@ export default function Message(props) {
     showTimestamp,
     senderName, // Add the sender's name as a prop
     isServer,
+    prevBySameAuthor,
   } = props;
 
   const COLORS = ["#4caf50", "#f44336", "#ff9800"];
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [confirmModalIsOpen, setConfirmModalIsOpen] = useState(false);
-  const [confirmModalTitle, setConfirmModalTitle] = useState("");
   const [backgroundColor, setBackgroundColor] = useState("");
-  const [user, setUser] = useState();
+
   const [attendanceData, setAttendance] = useState([]);
+  const [content, setContent] = useState();
+  const [appointment, setAppointment] = useState();
 
   useEffect(() => {
+    // console.log(
+    //   [
+    //     "message",
+    //     `${isMine ? "mine" : ""}`,
+    //     `${isServer ? "server" : ""}`,
+    //     `${startsSequence ? "start" : ""}`,
+    //     `${endsSequence ? "end" : ""}`,
+    //   ].join(" ")
+    // );
+    // console.log(startsSequence, endsSequence, prevBySameAuthor);
     let storedColor = localStorage.getItem(senderName);
     if (!storedColor) {
       storedColor = getRandomColor();
@@ -35,50 +46,18 @@ export default function Message(props) {
   }, []);
 
   useEffect(() => {
-    getAppointment();
-    // console.log(data);
-  }, [props]);
-
-  useEffect(() => {
-    // console.log("user~~~~~~~", user);
-    if (user && user.appointmentScore) {
+    // console.log("currentUser~~~~~~~", currentUser);
+    if (appointment) {
       setAttendance([
-        { name: "참석", value: user.appointmentScore.numAttend },
-        { name: "불참", value: user.appointmentScore.numNotAttend },
-        { name: "지각", value: user.appointmentScore.numLate },
+        { name: "참석", value: appointment.numAttend },
+        { name: "불참", value: appointment.numNotAttend },
+        { name: "지각", value: appointment.numLate },
       ]);
+      setContent(
+        `참석 : ${appointment.numAttend}, 불참 : ${appointment.numNotAttend}, 지각 :${appointment.numLate}`
+      );
     }
-  }, [user]);
-
-  const handleDeleteClick = () => {
-    setConfirmModalTitle("친구 삭제");
-    setConfirmModalIsOpen(true);
-  };
-
-  const handleBlockClick = () => {
-    setConfirmModalTitle("친구 차단");
-    setConfirmModalIsOpen(true);
-  };
-
-  const getAppointment = () => {
-    axios({
-      method: "get",
-      url: "/other",
-      headers: {
-        "Content-Type": `application/json`,
-      },
-      params: { userId: data.author },
-      withCredentials: true,
-    })
-      .then((response) => {
-        // console.log("----------------", response);
-        setUser(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-        alert(error.response.data);
-      });
-  };
+  }, [appointment]);
 
   const getRandomColor = () => {
     const colors = [
@@ -128,19 +107,21 @@ export default function Message(props) {
       index === 0 ? "참석" : index === 1 ? "지각" : index === 2 ? "불참" : "";
 
     return (
-      <text
-        x={x}
-        y={y}
-        fill="black"
-        textAnchor="middle"
-        dominantBaseline="central"
-      >
-        {`${(percent * 100).toFixed(0)}%`}
-        <tspan x={x} dy={15}>
-          {labelText}
-        </tspan>{" "}
-        {/* 막대 끝에 레이블 표시 */}
-      </text>
+      percent && (
+        <text
+          x={x}
+          y={y}
+          fill="black"
+          textAnchor="middle"
+          dominantBaseline="central"
+        >
+          {`${(percent * 100).toFixed(0)}%`}
+          <tspan x={x} dy={15}>
+            {labelText}
+          </tspan>{" "}
+          {/* 막대 끝에 레이블 표시 */}
+        </text>
+      )
     );
   };
 
@@ -150,15 +131,10 @@ export default function Message(props) {
     return (
       <ul className="pie-chart-legend">
         {payload.map((entry, index) => (
-          <li key={`legend-${index}`}>
-            <span
-              className="legend-icon"
-              style={{ backgroundColor: COLORS[index % COLORS.length] }}
-            ></span>
-            <span className="legend-label">
-              {attendanceData[index].name}: {attendanceData[index].value}
-            </span>
-          </li>
+          <span
+            className="legend-icon"
+            style={{ backgroundColor: COLORS[index % COLORS.length] }}
+          ></span>
         ))}
       </ul>
     );
@@ -169,16 +145,35 @@ export default function Message(props) {
     friendlyTimestamp = `${senderName} - ${moment().format("LLLL")}`;
   }
 
+  const profileClick = () => {
+    setModalIsOpen(true);
+    axios({
+      method: "get",
+      url: "/other",
+      headers: {
+        "Content-Type": `application/json`,
+      },
+      params: { userId: data.author },
+      withCredentials: true,
+    })
+      .then((response) => {
+        setAppointment(response.data.appointmentScore);
+      })
+      .catch((error) => {
+        alert(error.response.data);
+      });
+  };
+
   return (
     <div className="container">
       {startsSequence ||
         (showTimestamp && <div className="timestamp">{friendlyTimestamp}</div>)}
-      {!isServer && startsSequence && !isMine && (
+      {!prevBySameAuthor && !isServer && startsSequence && !isMine && (
         <>
           <div
             className="conversation-photo"
             style={photoStyle}
-            onClick={() => setModalIsOpen(true)}
+            onClick={profileClick}
           >
             <span>{senderName}</span>
           </div>
@@ -215,7 +210,7 @@ export default function Message(props) {
               </div>
             </div>
             <div className="attendance-rate-container">
-              <h2>약속 참여율:</h2>
+              <h2>약속 참여율: {content}</h2>
               <PieChart width={400} height={400}>
                 <Pie
                   data={attendanceData}
@@ -242,40 +237,6 @@ export default function Message(props) {
               </PieChart>
             </div>
           </div>
-          <div
-            className="friend-modal-buttons"
-            style={{
-              marginTop: "10px",
-              display: "flex",
-              justifyContent: "flex-end",
-            }}
-          >
-            <Button
-              type="primary"
-              onClick={handleDeleteClick}
-              style={{ marginRight: "10px" }}
-            >
-              삭제
-            </Button>
-            <Button type="primary" onClick={handleBlockClick}>
-              차단
-            </Button>
-          </div>
-        </Modal>
-        <Modal
-          title={confirmModalTitle}
-          visible={confirmModalIsOpen}
-          onCancel={() => setConfirmModalIsOpen(false)}
-          onOk={() => console.log(`${confirmModalTitle} 완료`)}
-          okButtonProps={{ style: { float: "left" } }}
-          okText="예"
-          cancelText="아니오"
-        >
-          {`${
-            confirmModalTitle === "친구 삭제"
-              ? `${name}을(를) 삭제`
-              : `${name}을(를) 차단`
-          }하시겠습니까?`}
         </Modal>
       </div>
     </div>
