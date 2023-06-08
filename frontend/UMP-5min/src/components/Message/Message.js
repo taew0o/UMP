@@ -14,6 +14,7 @@ export default function Message(props) {
     showTimestamp,
     senderName, // Add the sender's name as a prop
     isServer,
+    currentUser,
   } = props;
 
   const COLORS = ["#4caf50", "#f44336", "#ff9800"];
@@ -22,7 +23,7 @@ export default function Message(props) {
   const [confirmModalIsOpen, setConfirmModalIsOpen] = useState(false);
   const [confirmModalTitle, setConfirmModalTitle] = useState("");
   const [backgroundColor, setBackgroundColor] = useState("");
-  const [user, setUser] = useState();
+
   const [attendanceData, setAttendance] = useState([]);
   const [content, setContent] = useState();
 
@@ -36,23 +37,18 @@ export default function Message(props) {
   }, []);
 
   useEffect(() => {
-    getAppointment();
-    console.log(data);
-  }, [props]);
-
-  useEffect(() => {
-    // console.log("user~~~~~~~", user);
-    if (user && user.appointmentScore) {
+    // console.log("currentUser~~~~~~~", currentUser);
+    if (currentUser && currentUser.appointmentScore) {
       setAttendance([
-        { name: "참석", value: user.appointmentScore.numAttend },
-        { name: "불참", value: user.appointmentScore.numNotAttend },
-        { name: "지각", value: user.appointmentScore.numLate },
+        { name: "참석", value: currentUser.appointmentScore.numAttend },
+        { name: "불참", value: currentUser.appointmentScore.numNotAttend },
+        { name: "지각", value: currentUser.appointmentScore.numLate },
       ]);
       setContent(
-        `참석 : ${user.appointmentScore.numAttend}, 불참 : ${user.appointmentScore.numNotAttend}, 지각 :${user.appointmentScore.numLate}`
+        `참석 : ${currentUser.appointmentScore.numAttend}, 불참 : ${currentUser.appointmentScore.numNotAttend}, 지각 :${currentUser.appointmentScore.numLate}`
       );
     }
-  }, [user]);
+  }, [currentUser]);
 
   const handleDeleteClick = () => {
     setConfirmModalTitle("친구 삭제");
@@ -62,26 +58,6 @@ export default function Message(props) {
   const handleBlockClick = () => {
     setConfirmModalTitle("친구 차단");
     setConfirmModalIsOpen(true);
-  };
-
-  const getAppointment = () => {
-    axios({
-      method: "get",
-      url: "/other",
-      headers: {
-        "Content-Type": `application/json`,
-      },
-      params: { userId: data.author },
-      withCredentials: true,
-    })
-      .then((response) => {
-        console.log("----------------", response);
-        setUser(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-        alert(error.response.data);
-      });
   };
 
   const getRandomColor = () => {
