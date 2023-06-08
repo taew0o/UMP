@@ -21,7 +21,6 @@ public class FriendService {
 
     private final JpaFriendRequestRepository jpaFriendRequestRepository;
 
-
     public List<User> findFriendList(User user){
         return jpaFriendRepository.findFriendList(user);
     }

@@ -1,9 +1,6 @@
 package ppkjch.ump.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import jakarta.persistence.EntityManager;
-import jakarta.websocket.Session;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,16 +11,12 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import ppkjch.ump.dto.TextMessageDTO;
 import ppkjch.ump.entity.ChattingRoom;
-import ppkjch.ump.entity.Message;
 import ppkjch.ump.entity.User;
 import ppkjch.ump.service.ChattingRoomService;
 import ppkjch.ump.service.MessageService;
 import ppkjch.ump.service.UserService;
 
 import java.io.IOException;
-import java.net.URI;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 
@@ -52,49 +45,38 @@ public class UmpWebSocketHandler extends TextWebSocketHandler {
                 break;
             }
         }
-        System.out.println("roomId" + roomId);
         session.getAttributes().put("roomId", roomId);
     }
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         super.handleTextMessage(session, message);
-        //System.out.println(message.getPayload());
-        //유저 가져오기
 
+        // JSON 문자열을 받아와 Java 객체로 바인딩받기
         String jsonString = message.getPayload();
-        System.out.println("jsonString = " + jsonString);
         ObjectMapper objectMapper = new ObjectMapper();
-        // JSON 문자열을 Java 객체로 파싱
+
+        //바인딩할 객체 만들고 바인딩
         TextMessageDTO textMessageDTO = objectMapper.readValue(jsonString, TextMessageDTO.class);
-        //방 가져오기
-        System.out.println("textMessageDTO.getRoomId() = " + textMessageDTO.getRoomId());
         ChattingRoom room = chattingRoomService.findRoom(Long.parseLong(textMessageDTO.getRoomId()));
-        //날짜 가져오기
         Long sendTime = Long.parseLong(textMessageDTO.getSendTime());
-        //텍스트 가져오기
         String text = textMessageDTO.getTextMsg();
 
         //유저 가져오기
-        User sender = null;
-
         String senderId = textMessageDTO.getSenderId();
-       //server일 때는 안함
-        sender = userService.findUser(textMessageDTO.getSenderId());
-        //유저 이름 가져오기 (server 이면 id가 server인 것을 가져옴 server는 예약된 유저
+        User sender = userService.findUser(textMessageDTO.getSenderId());
+        //가져온 유저 이름 바인딩 (server 이면 id가 server인 것을 가져옴 server는 예약된 유저)
         textMessageDTO.setSendName(sender.getName());
 
-        //메세지 저장
+        //메세지 저장하고 다시 JSON 형식으로 직렬화
         messageService.createMessage(text, sender, room, sendTime);
-        //sender이름 추가하여 다시 json 형태로 직렬화
         String jsonMessage = objectMapper.writeValueAsString(textMessageDTO);
-        //System.out.println("jsonMessage = " + jsonMessage);
 
+        //해당 메세지의 출처방에 소켓이 연결되어 있는 모든 유저에게 메세지 정보 전달
         for (WebSocketSession s : clients) {
-            System.out.println("세션 룸 아이디" + s.getAttributes().get("roomId"));
-            //세션set 순회하며 자기 세션이 아니고 같은 방id를 가진 session이면 정보를 전달
             String sessionRoomId = (String)s.getAttributes().get("roomId");
-//            System.out.println("sessionRoomId = " + session.getId());
+
+            //같은방이고 자기자신이 아닌 소켓 연결 유저에게 메세지 전달
             if(textMessageDTO.getRoomId().equals(sessionRoomId) && !(s.getId().equals(session.getId()))){
                 logger.info("send data : {}", message);
                 try{
@@ -109,7 +91,6 @@ public class UmpWebSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         super.afterConnectionClosed(session, status);
-        System.out.println("status = " + status);
         clients.remove(session);
         System.out.println(session.getId() + "세션 연결 종료 및 clients에서 제거");
         

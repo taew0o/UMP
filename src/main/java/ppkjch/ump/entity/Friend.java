@@ -25,32 +25,3 @@ public class Friend {
     private User user2;
 
 }
-
-//@Entity
-//@Table(name = "friend")
-//public class Friend {
-//    @EmbeddedId
-//    private FriendId id;
-//
-//
-//    @ManyToOne
-//    @MapsId("userId1")
-//    @JoinColumn(name = "user_id_1")
-//    private User user1;
-//
-//    @ManyToOne
-//    @MapsId("userId2")
-//    @JoinColumn(name = "user_id_2")
-//    private User user2;
-//
-//}
-//
-//@Embeddable
-//class FriendId implements Serializable {
-//    @Column(name = "user_id_1")
-//    private Long userId1;
-//
-//    @Column(name = "user_id_2")
-//    private Long userId2;
-//
-//}

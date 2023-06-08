@@ -40,7 +40,8 @@ public class UserService {
         return user;
     }
 
-    public void signUp(String id, String name, String pw, String pw_re){
+    @Transactional
+    public void signUp(String id, String name, String pw, String phoneNum ){
         if(id.equals("server")){
             throw new NotValidUserId("해당 아이디는 사용하실 수 없습니다.");
         }
@@ -52,6 +53,7 @@ public class UserService {
             user.setId(id);
             user.setName(name);
             user.setPassword(pw);
+            user.setPhone_num(phoneNum);
             jpaUserRepository.save(user);
         }
     }
@@ -76,12 +78,10 @@ public class UserService {
     }
 
 
-
     public void checkMyself(String sender, String receiver){
         if (sender.equals(receiver)){
             throw new FriendMyselfException("자신에게는 친구추가를 할 수 없습니다.");
         }
-        return;
     }
 
 }

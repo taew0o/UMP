@@ -31,16 +31,14 @@ public class UserController {
     //회원가입 처리 메서드
     @PostMapping("/signup")
     @ResponseBody
-    public User signup(@RequestBody SignupForm signupForm) {
-        System.out.printf(signupForm.toString());
-
-        User user = new User(); //유저 새로 만들어 form정보 받아 저장
-        user.setId(signupForm.getId());
-        user.setName(signupForm.getName());
-        user.setPassword(signupForm.getPassword());
-        user.setPhone_num(signupForm.getPhone_num());
-        userService.join(user);
-        return user;
+    public ResponseEntity<String> signup(@RequestBody SignupForm signupForm) {
+        try {
+            userService.signUp(signupForm.getId(), signupForm.getName(), signupForm.getPassword(), signupForm.getPhone_num());
+            return ResponseEntity.ok("회원가입이 성공적으로 완료되었습니다.");
+        }
+        catch (IdDuplicateException | NotValidUserId e){
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     //로그인 처리 메서드
