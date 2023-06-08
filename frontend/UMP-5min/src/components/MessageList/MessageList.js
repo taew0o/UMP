@@ -288,14 +288,14 @@ export default function MessageList({ props }) {
       let endsSequence = true;
       let showTimestamp = true;
 
-      let currentUser;
-      if (roomPeople.length > 0) {
-        for (let j = 0; j < roomPeople.length; j++) {
-          if (current.author === roomPeople[j].id) {
-            currentUser = roomPeople[j];
-          }
-        }
-      }
+      // let currentUser;
+      // if (roomPeople.length > 0) {
+      //   for (let j = 0; j < roomPeople.length; j++) {
+      //     if (current.author === roomPeople[j].id) {
+      //       currentUser = roomPeople[j];
+      //     }
+      //   }
+      // }
 
       if (previous) {
         let previousMoment = moment(previous.timestamp);
@@ -305,6 +305,7 @@ export default function MessageList({ props }) {
         prevBySameAuthor = previous.author === current.author;
 
         if (prevBySameAuthor && previousDuration.as("hours") < 1) {
+          console.log("여기 오나?");
           startsSequence = false;
         }
 
@@ -333,11 +334,12 @@ export default function MessageList({ props }) {
           isMine={isMine}
           startsSequence={startsSequence}
           endsSequence={endsSequence}
+          prevBySameAuthor={prevBySameAuthor}
           showTimestamp={showTimestamp}
           data={current}
           senderName={senderName} // Pass senderId as senderName prop
           isServer={isServer}
-          currentUser={currentUser}
+          // currentUser={currentUser}
         />
       );
 
